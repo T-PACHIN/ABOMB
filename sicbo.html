@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>骰寶 | 圓形禮物盒選項 | 遊戲房抽屜</title>
+    <!-- Google Fonts + Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: radial-gradient(circle at 10% 20%, #0a0a1a, #02010a); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .compact-container { display: flex; flex-direction: column; gap: 0; position: relative; min-height: 100vh; padding-bottom: 0; }
+        .glass-panel {
+            background: rgba(6, 10, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 12px rgba(0, 255, 255, 0.2);
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+        .glass-panel:first-child { border-top-left-radius: 24px; border-top-right-radius: 24px; }
+        .glass-panel:last-child { border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        .glass-panel:not(:last-child) { border-bottom: 1px solid rgba(0, 255, 255, 0.2); }
+
+        /* ===== 導航欄 - 百家樂風格 ===== */
+        .premium-nav {
+            background: linear-gradient(145deg, #1e243b, #0b0f1a);
+            border-radius: 28px 28px 0 0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-bottom: none;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            backdrop-filter: blur(4px);
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 30;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-icon {
+            background: linear-gradient(145deg, #ffdd55, #e6a800);
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #1a1f2f;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+        .logo-text {
+            font-weight: bold;
+            font-size: 16px;
+            color: #ffcc00;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.5);
+        }
+        .player-info-compact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            padding: 5px 16px 5px 10px;
+            border-radius: 60px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .compact-avatar {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(145deg, #ffcc44, #ff9933);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #1a1f2f;
+            box-shadow: 0 0 8px #ffcc44;
+        }
+        .compact-name {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff0cc;
+        }
+        .compact-detail {
+            display: flex;
+            gap: 12px;
+            font-size: 9px;
+            font-weight: bold;
+            color: #bbddff;
+        }
+        .player-points {
+            color: #ffdd88;
+            font-weight: bold;
+        }
+
+        /* ===== 視訊區 ===== */
+        .dice-video-area {
+            position: relative;
+            background: linear-gradient(145deg, #0a1428, #010614);
+            border-radius: 0;
+            overflow: visible;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px;
+        }
+        .dice-container { display: flex; gap: 20px; justify-content: center; align-items: center; }
+        .dice-cup-wrapper { position: relative; }
+        .dice-cup {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(145deg, #2a1a2a, #1a0f1a);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,215,0,0.4);
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+        .dice-cup.shaking { animation: cupShake 0.3s ease-in-out 0s infinite; }
+        @keyframes cupShake {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            25% { transform: translate(-4px, 3px) rotate(-3deg); }
+            75% { transform: translate(4px, -2px) rotate(3deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
+        .clear-dice {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .clear-dice.reveal { animation: dicePop 0.4s cubic-bezier(0.34, 1.2, 0.64, 1); }
+        @keyframes dicePop {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .dice-dot-grid-large {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            width: 52px;
+            height: 52px;
+            background: transparent;
+            padding: 6px;
+        }
+        .dot-cell-large { display: flex; align-items: center; justify-content: center; }
+        .dot-large { width: 9px; height: 9px; background-color: #1a1a2e; border-radius: 50%; box-shadow: 0 0 1px rgba(0,0,0,0.3); }
+        .dot-large-red { width: 9px; height: 9px; background-color: #e3342f; border-radius: 50%; box-shadow: 0 0 1px rgba(0,0,0,0.3); }
+        .dealer-msg-area { text-align: center; margin-top: 12px; }
+        .dealer-status-cup {
+            display: inline-block;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: #ffcc99;
+            border: 1px solid rgba(255,215,0,0.4);
+        }
+        .radar-countdown {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border: 2px solid #ffaa33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: opacity 0.2s ease;
+        }
+        .radar-countdown.hidden-countdown { opacity: 0; pointer-events: none; }
+        .radar-scan {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, rgba(0,255,255,0) 0%, rgba(0,255,255,0.3) 50%, rgba(0,255,255,0) 100%);
+            animation: radarSpin 2s linear infinite;
+        }
+        @keyframes radarSpin { 100% { transform: rotate(360deg); } }
+        .countdown-number { font-size: 20px; font-weight: 800; color: #ffcc66; text-shadow: 0 0 5px gold; z-index: 3; }
+        .radar-countdown.urgent .countdown-number { color: #ff6666; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* 視訊區抽屜拉把 */
+        .video-drawer-handle {
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 42px;
+            background: rgba(0, 150, 150, 0.3);
+            border-radius: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 45;
+            backdrop-filter: blur(4px);
+            border-left: 1px solid rgba(0, 255, 255, 0.5);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            border-right: none;
+        }
+        .video-drawer-handle i {
+            font-size: 10px;
+            color: rgba(200, 230, 255, 0.5);
+            text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+        .video-drawer-handle:hover {
+            background: linear-gradient(145deg, #0ff, #00aacc);
+            width: 24px;
+            box-shadow: -2px 0 10px rgba(0, 255, 255, 0.6);
+            border-left: 1px solid rgba(255,255,200,0.9);
+            border-top: 1px solid rgba(255,255,200,0.7);
+            border-bottom: 1px solid rgba(255,255,200,0.7);
+        }
+        .video-drawer-handle:hover i {
+            color: #1a1f2f;
+            text-shadow: 0 0 3px white;
+            transform: scale(1.05);
+        }
+
+        /* 右側抽屜面板 - 遊戲房選擇（與大廳相同） */
+        .global-drawer-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 180px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(24px);
+            border-left: 2px solid rgba(0, 255, 255, 0.8);
+            border-radius: 20px 0 0 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.8);
+            z-index: 20000;
+        }
+        .global-drawer-panel.open {
+            transform: translateX(0);
+        }
+        .global-drawer-panel .drawer-header {
+            padding: 16px 14px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .global-drawer-panel .drawer-header span {
+            font-size: 13px;
+            font-weight: bold;
+            color: #ffdd99;
+        }
+        .global-drawer-panel .drawer-close {
+            cursor: pointer;
+            font-size: 22px;
+            color: #ffaa88;
+            width: 30px;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .global-drawer-panel .drawer-close:hover {
+            color: #ff6666;
+            transform: scale(1.1);
+        }
+        .global-drawer-panel .room-list {
+            flex: 1;
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+        .global-drawer-panel .room-item {
+            background: rgba(20, 30, 50, 0.85);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 10px 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .global-drawer-panel .room-item:hover {
+            background: rgba(0, 255, 255, 0.25);
+            border-color: #ffcc88;
+            transform: translateX(-4px);
+        }
+        .global-drawer-panel .room-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #eef5ff;
+        }
+        .global-drawer-panel .room-players {
+            font-size: 9px;
+            color: #88ffdd;
+            margin-top: 2px;
+        }
+        .global-drawer-panel .room-status {
+            font-size: 9px;
+            color: #ffaa66;
+            margin-top: 2px;
+        }
+
+        /* 第一頁卡片樣式 */
+        .bet-card {
+            background: #0a0e2a;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.2s, background 0.1s;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        .bet-card:active { transform: scale(0.96); }
+        .bet-card.selected {
+            background: rgba(0, 200, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 14px rgba(0, 255, 255, 0.7), inset 0 0 6px rgba(0, 255, 255, 0.3);
+        }
+        .dice-grid-single {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 5px;
+            padding: 3px;
+            margin: 0 auto;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .dot-red-single { width: 5px; height: 5px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .dot-black-single { width: 5px; height: 5px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+        .dice-grid-double {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 4px;
+            padding: 2px;
+            margin: 0 auto;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .dot-red-double { width: 4px; height: 4px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .dot-black-double { width: 4px; height: 4px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+        .double-dice-group { display: flex; gap: 3px; justify-content: center; margin-bottom: 2px; }
+        .chip-btn {
+            transition: transform 0.1s ease, box-shadow 0.2s, filter 0.2s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3), 0 3px 10px rgba(0, 0, 0, 0.5);
+        }
+        .chip-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3); }
+        .chip-btn.active-chip {
+            box-shadow: 0 0 0 2px cyan, 0 0 0 4px rgba(0, 255, 255, 0.4), 0 4px 0 rgba(0, 0, 0, 0.3);
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+        .chip-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3), 0 6px 15px rgba(0, 255, 255, 0.3); }
+        .odds-label-group {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+        .odds-label-group span { font-size: 7px; font-weight: 800; color: #7df9ff; text-shadow: 0 0 2px cyan; }
+        .combo-card {
+            background: #0a0e2a;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.2s, background 0.1s;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            padding: 3px 1px;
+        }
+        .combo-card:active { transform: scale(0.96); }
+        .combo-card.selected {
+            background: rgba(0, 200, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.7), inset 0 0 4px rgba(0, 255, 255, 0.3);
+        }
+        .combo-label { font-size: 14px; font-weight: 800; line-height: 1.2; }
+        .combo-sub { font-size: 5px; opacity: 0.9; }
+        .combo-odds { font-size: 6px; margin-top: 1px; font-weight: 700; }
+        .dice-animation-area { min-height: 280px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+
+        /* 第二、三、四頁版面 */
+        .double-dice-combo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        .combo-bet-card {
+            background: #0a0e2a;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.2s, background 0.1s;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            padding: 10px 6px;
+            text-align: center;
+        }
+        .combo-bet-card:active { transform: scale(0.96); }
+        .combo-bet-card.selected {
+            background: rgba(0, 200, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 14px rgba(0, 255, 255, 0.7), inset 0 0 6px rgba(0, 255, 255, 0.3);
+        }
+        .two-dice-row { display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .dice-combo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 5px;
+            padding: 3px;
+            box-shadow: inset 0 0 0 0.5px #ccc;
+        }
+        .dot-red-combo { width: 4.5px; height: 4.5px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .dot-black-combo { width: 4.5px; height: 4.5px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+
+        .triple-betting-container {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0 4px 0;
+        }
+        .triple-side { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .triple-side-grid { display: flex; flex-direction: column; gap: 10px; }
+        .triple-card {
+            background: #0a0e2a;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 6px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            backdrop-filter: blur(4px);
+        }
+        .triple-card:hover { border-color: #0ff; box-shadow: 0 0 14px rgba(0, 255, 255, 0.6); transform: translateY(-2px); }
+        .triple-card:active { transform: scale(0.97); }
+        .triple-card.selected {
+            background: rgba(0, 200, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), inset 0 0 8px rgba(0, 255, 255, 0.3);
+        }
+        .three-dice-row { display: flex; justify-content: center; align-items: center; gap: 4px; margin-bottom: 5px; }
+        .triple-dice-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 4px;
+            padding: 2px;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .triple-dot-red { width: 4px; height: 4px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .triple-dot-black { width: 4px; height: 4px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+        .triple-odds { font-size: 11px; font-weight: 800; color: #ffdd99; background: rgba(0,0,0,0.5); display: inline-block; padding: 1px 10px; border-radius: 30px; margin-top: 3px; }
+        .triple-center {
+            flex: 1.8;
+            background: linear-gradient(145deg, #0f143a, #080c24);
+            border: 2px solid rgba(0, 255, 255, 0.7);
+            border-radius: 18px;
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: softPulse 2s infinite alternate;
+        }
+        .triple-center:hover { border-color: #0ff; box-shadow: 0 0 24px rgba(0, 255, 255, 0.7); transform: scale(1.01); }
+        .triple-center:active { transform: scale(0.98); }
+        .triple-center.selected {
+            background: rgba(0, 200, 255, 0.25);
+            border-color: #0ff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.9), inset 0 0 12px rgba(0, 255, 255, 0.4);
+        }
+        @keyframes softPulse {
+            0% { box-shadow: 0 0 0px rgba(0,255,255,0.3); border-color: rgba(0,255,255,0.5);}
+            100% { box-shadow: 0 0 16px rgba(0,255,255,0.7); border-color: #0ff;}
+        }
+        .center-title { font-size: 16px; font-weight: 800; color: #ffdd99; text-shadow: 0 0 6px cyan; letter-spacing: 2px; margin-bottom: 5px; }
+        .center-odds { font-size: 13px; font-weight: 800; color: #7df9ff; background: rgba(0,0,0,0.5); display: inline-block; padding: 2px 14px; border-radius: 40px; margin-top: 6px; }
+        .center-triple-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            justify-items: center;
+            align-items: center;
+            margin: 2px 0;
+        }
+        .center-triple-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+        .center-triple-dice-row { display: flex; justify-content: center; align-items: center; gap: 2px; }
+        .center-dice-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 3px;
+            padding: 2px;
+            box-shadow: inset 0 0 0 0.5px #ccc;
+        }
+        .center-dot-red { width: 3.5px; height: 3.5px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .center-dot-black { width: 3.5px; height: 3.5px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+
+        .carousel-wrapper {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            gap: 0;
+        }
+        .carousel-wrapper::-webkit-scrollbar { display: none; }
+        .bet-page {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 6px 0;
+        }
+        .dot-page { width: 8px; height: 8px; border-radius: 50%; background: rgba(0, 255, 255, 0.4); transition: all 0.2s; cursor: pointer; }
+        .dot-page.active { background: #0ff; width: 20px; border-radius: 4px; }
+        
+        .swipe-indicator {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+            padding: 6px 16px;
+            border-radius: 40px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 255, 255, 0.7);
+            pointer-events: none;
+            animation: swipeHint 2s ease-in-out infinite;
+        }
+        .swipe-indicator i { font-size: 12px; color: #0ff; text-shadow: 0 0 4px cyan; }
+        .swipe-indicator span { font-size: 10px; font-weight: 600; color: #ffffff; text-shadow: 0 0 2px rgba(0,255,255,0.5); }
+        @keyframes swipeHint {
+            0% { opacity: 0.7; transform: translateX(-2px); }
+            50% { opacity: 1; transform: translateX(2px); }
+            100% { opacity: 0.7; transform: translateX(-2px); }
+        }
+
+        .total-bet-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 0;
+            margin: 0 auto;
+            width: fit-content;
+            max-width: 100%;
+        }
+        .total-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+        .total-card {
+            background: linear-gradient(145deg, #0f143a, #080c24);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5px 3px;
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+        }
+        .total-card:hover { border-color: #0ff; box-shadow: 0 0 12px rgba(0, 255, 255, 0.7); transform: translateY(-2px) scale(1.02); }
+        .total-card:active { transform: scale(0.98); }
+        .total-card.selected {
+            background: rgba(0, 200, 255, 0.25);
+            border-color: #0ff;
+            box-shadow: 0 0 18px rgba(0, 255, 255, 0.9), inset 0 0 6px rgba(0, 255, 255, 0.4);
+        }
+        .total-number { font-size: 16px; font-weight: 800; color: #ffdd99; text-shadow: 0 0 3px cyan; line-height: 1.2; }
+        .total-odds { font-size: 8px; font-weight: 700; color: #7df9ff; background: rgba(0,0,0,0.5); display: inline-block; padding: 1px 4px; border-radius: 30px; margin-top: 2px; }
+        .roadmap-container {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            padding: 8px 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+        }
+        .roadmap-container::-webkit-scrollbar { display: none; }
+        .roadmap-track { display: flex; flex-direction: row; gap: 5px; }
+        .road-column {
+            display: inline-flex;
+            flex-direction: column;
+            width: 56px;
+            flex-shrink: 0;
+            background: transparent;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            border-radius: 6px;
+            padding: 4px 2px;
+        }
+        .dice-area-vertical {
+            background: white;
+            border: 1px solid #1e1a2a;
+            border-radius: 6px;
+            width: 100%;
+            min-height: 88px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 2px;
+        }
+        .vertical-dice-item { display: flex; justify-content: center; align-items: center; }
+        .road-dice-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 4px;
+            padding: 2px;
+            box-shadow: inset 0 0 0 0.5px #ccc;
+        }
+        .road-dot-red { width: 4px; height: 4px; background-color: #e3342f; border-radius: 50%; margin: 0 auto; }
+        .road-dot-black { width: 4px; height: 4px; background-color: #1a1a2e; border-radius: 50%; margin: 0 auto; }
+        .total-cell-mini { background: #e6b422; color: white; font-weight: 800; font-size: 11px; text-align: center; padding: 2px 0; border-radius: 4px; margin-top: 5px; width: 100%; }
+        .result-cell-mini { text-align: center; font-weight: 800; font-size: 8px; padding: 3px 0; border-radius: 4px; margin-top: 2px; width: 100%; }
+        .big-bg { background: #dc2626; color: white; }
+        .small-bg { background: #2563eb; color: white; }
+        .odd-bg { background: #2563eb; color: white; }
+        .even-bg { background: #dc2626; color: white; }
+        .custom-scroll::-webkit-scrollbar { height: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f122e; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #0ff; border-radius: 10px; }
+
+        /* ===== 聊天室樣式 - 浮動蓋過牌路 ===== */
+        .chat-room {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(12px);
+            border-radius: 28px 28px 0 0;
+            border-top: 1px solid rgba(0, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+            max-height: 70%;
+            min-height: 54px;
+            transition: all 0.2s ease;
+        }
+        .chat-room.collapsed {
+            min-height: 54px;
+            max-height: 54px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .chat-room.collapsed .chat-messages,
+        .chat-room.collapsed .chat-input-area {
+            display: none;
+        }
+        .chat-header {
+            background: rgba(0, 5, 10, 0.25);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .chat-header .gift-icon {
+            font-size: 18px;
+            color: #ffaa88;
+            cursor: pointer;
+        }
+        .chat-header span {
+            flex: 1;
+            font-size: 12px;
+            color: #eef5ff;
+        }
+        .collapse-icon {
+            transition: transform 0.2s;
+            font-size: 14px;
+            color: #ffcc88;
+            cursor: pointer;
+        }
+        .chat-room.collapsed .collapse-icon {
+            transform: rotate(180deg);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            max-height: 280px;
+            background: rgba(0, 0, 0, 0.03);
+            scrollbar-width: thin;
+            scrollbar-color: #0ff #1e2a3a;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #1e2a3a;
+            border-radius: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #0ff;
+            border-radius: 8px;
+        }
+        .chat-msg {
+            font-size: 13px;
+            padding: 8px 12px;
+            background: rgba(5, 15, 25, 0.4);
+            border-radius: 20px;
+            border-left: 3px solid #0ff;
+            color: #fff;
+            margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+        .msg-name {
+            font-weight: 800;
+            margin-right: 10px;
+        }
+        .msg-time {
+            font-size: 9px;
+            color: #cceeff;
+            float: right;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .chat-input-area input {
+            flex: 1;
+            background: rgba(20, 28, 44, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 10px;
+            color: white;
+            outline: none;
+        }
+        .chat-input-area button {
+            background: linear-gradient(145deg, #0ff, #00aacc);
+            border: none;
+            border-radius: 40px;
+            padding: 0 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 禮物面板樣式 */
+        .gift-modal {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 200, 80, 0.9);
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.3);
+            z-index: 200;
+            width: calc(100% - 32px);
+            max-width: 400px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .gift-modal::-webkit-scrollbar {
+            width: 4px;
+            background: #1e2a3a;
+            border-radius: 4px;
+        }
+        .gift-modal::-webkit-scrollbar-thumb {
+            background: cyan;
+            border-radius: 4px;
+        }
+        .gift-modal.hide {
+            display: none;
+        }
+        .gift-option {
+            background: linear-gradient(145deg, #1e2a3a, #0a101c);
+            border-radius: 48px;
+            padding: 6px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 200, 100, 0.6);
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 68px;
+        }
+        .gift-option:hover {
+            transform: scale(1.05);
+            background: #2a3a4a;
+            border-color: gold;
+            box-shadow: 0 0 8px gold;
+        }
+        .gift-emoji {
+            font-size: 26px;
+            display: block;
+        }
+        .gift-name {
+            font-size: 9px;
+            color: #ffdd99;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        .gift-price {
+            font-size: 8px;
+            color: #88ffaa;
+            margin-top: 2px;
+            font-family: monospace;
+        }
+        
+        .gift-animation {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            font-size: 24px;
+            z-index: 100;
+            animation: floatGift 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes floatGift {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+            80% { transform: translateY(-40px) scale(1); opacity: 1; }
+            100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+        }
+        
+        .compact-container {
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="max-w-md mx-auto relative compact-container" style="padding-bottom: 0;">
+    <!-- 導航欄 -->
+    <div class="premium-nav">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fas fa-dice-d6"></i>
+            </div>
+            <div class="logo-text">骰寶</div>
+        </div>
+        <div class="player-info-compact">
+            <div class="compact-avatar">
+                <i class="fas fa-user-astronaut"></i>
+            </div>
+            <div class="compact-stats">
+                <div class="compact-name">炫風俠客 ✦ 鑽石VIP</div>
+                <div class="compact-detail">
+                    <span><i class="fas fa-coins"></i> <span id="pointsDisplay" class="player-points">888,000</span></span>
+                    <span><i class="fas fa-chart-line"></i> 68%</span>
+                    <span><i class="fas fa-users"></i> 2,341</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 骰子動畫模擬區（視訊區） -->
+    <div class="glass-panel relative" style="border-bottom: 1px solid rgba(0, 255, 255, 0.3);">
+        <!-- 抽屜拉把 -->
+        <div class="video-drawer-handle" id="videoDrawerHandle">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="dice-video-area">
+            <div class="dice-container" id="diceContainer">
+                <div class="dice-cup-wrapper"><div class="dice-cup" id="diceCup1"><div class="clear-dice" id="dice1"><div class="dice-dot-grid-large" id="dice1Dots"></div></div></div></div>
+                <div class="dice-cup-wrapper"><div class="dice-cup" id="diceCup2"><div class="clear-dice" id="dice2"><div class="dice-dot-grid-large" id="dice2Dots"></div></div></div></div>
+                <div class="dice-cup-wrapper"><div class="dice-cup" id="diceCup3"><div class="clear-dice" id="dice3"><div class="dice-dot-grid-large" id="dice3Dots"></div></div></div></div>
+            </div>
+            <div class="dealer-msg-area"><div class="dealer-status-cup" id="dealerMsg">✨ 搖骰準備中 ✨</div></div>
+            <div class="text-center mt-2 text-xl font-mono font-bold text-cyan-300" id="totalResult">總和: 0</div>
+            <div class="radar-countdown" id="countdownRing"><div class="radar-scan"></div><div class="countdown-number" id="countdownNum">15</div></div>
+        </div>
+    </div>
+
+    <!-- 其餘主下注面板 -->
+    <div class="glass-panel" style="border-bottom: 1px solid rgba(0, 255, 255, 0.3);">
+        <div class="swipe-indicator" id="swipeIndicator"><i class="fas fa-chevron-left"></i><span>左右滑動切換頁面</span><i class="fas fa-chevron-right"></i></div>
+        <div class="carousel-wrapper" id="carouselWrapper">
+            <div class="bet-page"><div class="mb-2"><div class="flex justify-between items-center mb-2"><div class="flex items-center gap-1.5"><i class="fas fa-dice-d6 text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold tracking-wide text-cyan-200">單顆骰子 · 出現次數賠率</span></div><div class="odds-label-group"><span>單骰 1:1</span><span>雙骰 1:2</span><span>三骰 1:3</span></div></div><div class="grid grid-cols-6 gap-1" id="singleDiceGrid"></div></div><div class="mb-2"><div class="flex justify-between items-center mb-2"><div class="flex items-center gap-1.5"><i class="fas fa-cubes text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold text-cyan-200">雙骰 (對子)</span></div><div class="text-cyan-300 font-black text-[9px] bg-black/40 px-1.5 py-0.5 rounded-full border border-cyan-500/50">1:10</div></div><div class="grid grid-cols-6 gap-1" id="doubleDiceGrid"></div></div><div><div class="flex items-center gap-1.5 mb-2"><i class="fas fa-chart-simple text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold text-cyan-200">組合下注 · 1:1</span></div><div class="grid grid-cols-4 gap-1" id="comboGrid"></div></div></div>
+            <div class="bet-page"><div class="flex items-center gap-1.5 mb-2"><i class="fas fa-dice-d6 text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold text-cyan-200">兩粒骰子組合 · 賠率 1:5</span></div><div class="double-dice-combo-grid" id="doubleComboGrid"></div></div>
+            <div class="bet-page"><div class="flex items-center gap-1.5 mb-2"><i class="fas fa-dice-d6 text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold text-cyan-200">圍骰押注區 · 三同骰</span></div><div class="triple-betting-container" id="tripleBettingContainer"></div></div>
+            <div class="bet-page"><div class="flex items-center gap-1.5 mb-2"><i class="fas fa-chart-line text-cyan-400 text-[10px]"></i><span class="text-[10px] font-bold text-cyan-200">總和押注區 · 4~17點</span></div><div class="total-bet-wrapper" id="totalBetWrapper"></div></div>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <div class="p-3 pt-0"><div class="mt-2 pt-2 border-t border-cyan-500/40"><div class="text-[9px] text-cyan-300 mb-1 flex items-center gap-1.5"><i class="fas fa-coins text-[8px]"></i> 選擇籌碼</div><div class="flex flex-wrap justify-center gap-1.5" id="chipsContainer"></div><div class="flex justify-between items-center mt-2 gap-1"><div class="bg-black/50 rounded-full px-2 py-0.5 text-[9px] text-cyan-200 border border-cyan-500/40 backdrop-blur"><i class="fas fa-hand-holding-usd text-[8px]"></i> <span id="selectedChipVal" class="font-bold text-yellow-300">100</span></div><div class="bg-black/50 rounded-full px-2 py-0.5 text-[9px] text-cyan-200 border border-cyan-500/40 backdrop-blur">總注: <span id="totalBetAmount" class="font-bold text-yellow-300">0</span></div><button id="confirmBtn" class="bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 px-2.5 py-0.5 rounded-full text-[9px] font-bold shadow-lg transition-all active:scale-95 border border-cyan-300/40"><i class="fas fa-check-circle text-[8px]"></i> 確認</button><button id="cancelBtn" class="bg-gray-800 hover:bg-gray-700 px-2.5 py-0.5 rounded-full text-[9px] font-bold transition-all active:scale-95 border border-gray-500/40"><i class="fas fa-eraser text-[8px]"></i> 清除</button></div></div></div>
+    </div>
+
+    <!-- 歷史牌路區 -->
+    <div class="roadmap-container" id="roadmapContainer"><div class="roadmap-track" id="historyRoadmapTrack"></div></div>
+
+    <!-- 聊天室 -->
+    <div class="chat-room" id="chatRoom">
+        <div class="chat-header" id="chatToggleBtn">
+            <i class="fas fa-gift gift-icon" id="giftIconBtn"></i>
+            <span>💬 下注滿200點，開始聊天</span>
+            <i class="fas fa-chevron-up collapse-icon"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg"><span class="msg-name">🎲 荷官</span><span class="msg-time">--:--</span><span> : 點擊禮物盒🎁 選擇圓形禮物</span></div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="下注滿200點後可聊天..." disabled>
+            <button id="sendChatBtn" disabled>發送</button>
+        </div>
+    </div>
+</div>
+
+<!-- 右側抽屜面板 - 遊戲房選擇（與大廳 lobby_baccarat 完全相同） -->
+<div class="global-drawer-panel" id="roomDrawerPanel">
+    <div class="drawer-header">
+        <span>🎲 骰寶遊戲房</span>
+        <div class="drawer-close" id="drawerCloseBtn">&times;</div>
+    </div>
+    <div class="room-list">
+        <!-- 百家樂房間 -->
+        <div class="room-item" data-room="A1001">
+            <div class="room-name">🎰 百家樂 A1001</div>
+            <div class="room-players">👥 小寶荷官 | 607人</div>
+            <div class="room-status">🔥 熱門</div>
+        </div>
+        <div class="room-item" data-room="A1002">
+            <div class="room-name">🎰 百家樂 A1002</div>
+            <div class="room-players">👥 安娜荷官 | 342人</div>
+            <div class="room-status">✨ 熱門</div>
+        </div>
+        <div class="room-item" data-room="B2001">
+            <div class="room-name">🎰 百家樂 B2001</div>
+            <div class="room-players">👥 艾莉絲荷官 | 891人</div>
+            <div class="room-status">⚡ 極速</div>
+        </div>
+        <!-- 骰寶房間 -->
+        <div class="room-item" data-room="S3001">
+            <div class="room-name">🎲 骰寶 S3001</div>
+            <div class="room-players">👥 小珍荷官 | 234人</div>
+            <div class="room-status">🎯 熱門</div>
+        </div>
+        <!-- 龍虎房間 -->
+        <div class="room-item" data-room="D4001">
+            <div class="room-name">🐉 龍虎 D4001</div>
+            <div class="room-players">👥 大衛荷官 | 512人</div>
+            <div class="room-status">💥 高限紅</div>
+        </div>
+    </div>
+</div>
+
+<!-- 精緻禮物面板 -->
+<div id="giftModal" class="gift-modal hide">
+    <div class="gift-option" data-gift="🌸 鮮花" data-price="500"><span class="gift-emoji">🌸</span><span class="gift-name">鮮花</span><span class="gift-price">500</span></div>
+    <div class="gift-option" data-gift="🎈 氣球" data-price="1000"><span class="gift-emoji">🎈</span><span class="gift-name">氣球</span><span class="gift-price">1,000</span></div>
+    <div class="gift-option" data-gift="🎉 派對" data-price="1500"><span class="gift-emoji">🎉</span><span class="gift-name">派對</span><span class="gift-price">1,500</span></div>
+    <div class="gift-option" data-gift="💎 鑽石" data-price="2000"><span class="gift-emoji">💎</span><span class="gift-name">鑽石</span><span class="gift-price">2,000</span></div>
+</div>
+
+<script>
+    let points = 888000, totalBetMap = new Map(), pendingMap = new Map(), curChip = 100, isSettling = false, countdown = 15, timer = null, diceResults = [1,2,3], totalSum = 6, historyList = [];
+    let allBets = ['small','big','odd','even'];
+    for(let i=1;i<=6;i++) { allBets.push(`single${i}`); allBets.push(`double${i}`); }
+    const doubleCombos = [[1,2],[1,3],[1,4],[1,5],[1,6],[2,3],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6],[4,5],[4,6],[5,6]];
+    doubleCombos.forEach(combo => allBets.push(`combo_${combo[0]}_${combo[1]}`));
+    for(let i=1;i<=6;i++) allBets.push(`triple_${i}`);
+    allBets.push('anyTriple');
+    for(let s=4;s<=17;s++) allBets.push(`sum_${s}`);
+    allBets.forEach(k => { totalBetMap.set(k,0); pendingMap.set(k,0); });
+    const sumOdds = { 4:50, 5:18, 6:14, 7:12, 8:8, 9:6, 10:6, 11:6, 12:6, 13:8, 14:12, 15:14, 16:18, 17:50 };
+    
+    function updatePointsUI() { document.getElementById('pointsDisplay').innerText = points.toLocaleString(); }
+    
+    function addChatMessage(name, msg, color="#ffbb88") {
+        let container = document.getElementById('chatMessages');
+        let t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        let d = document.createElement('div');
+        d.className = 'chat-msg';
+        d.innerHTML = `<span class="msg-name" style="color:${color};">${name}</span><span class="msg-time">${t}</span><span> : ${msg}</span>`;
+        container.appendChild(d);
+        container.scrollTop = container.scrollHeight;
+        if(container.children.length > 50) container.removeChild(container.children[0]);
+    }
+    
+    function addGiftAnimation(giftName, giftPrice) {
+        const animDiv = document.createElement('div');
+        animDiv.className = 'gift-animation';
+        animDiv.innerHTML = `🎁 ${giftName} +${giftPrice}`;
+        document.body.appendChild(animDiv);
+        setTimeout(() => animDiv.remove(), 1500);
+    }
+    
+    function updateTotalSpan() { let sum=0; for(let v of totalBetMap.values()) sum+=v; document.getElementById('totalBetAmount').innerText = sum; }
+    
+    function refreshAllChips() { for(let [key,val] of totalBetMap.entries()) { let area=document.getElementById(`chipsArea-${key}`); if(area){ area.innerHTML=''; if(val>0){ let cnt=Math.min(3,Math.ceil(val/200)); for(let i=0;i<cnt;i++){ let cd=document.createElement('div'); cd.className='w-2.5 h-2.5 rounded-full bg-amber-400 text-[3px] font-black flex items-center justify-center shadow-md'; cd.innerText=curChip>=1000?(curChip/1000)+'K':curChip; area.appendChild(cd); } } } } }
+    
+    function getDice3x3Positions(v) { const m={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]}; return m[v]||[4]; }
+    function isRedDot(v) { return v===1||v===4||v===6; }
+    function getClearDiceDots(value) { let indexes = getDice3x3Positions(value); let dotClass = isRedDot(value) ? 'dot-large-red' : 'dot-large'; let html = '<div class="dice-dot-grid-large">'; for(let i=0;i<9;i++) { let has = indexes.includes(i); html += `<div class="dot-cell-large">${has ? `<div class="${dotClass}"></div>` : ''}</div>`; } html += '</div>'; return html; }
+    function updateDiceDisplay(arr) { document.getElementById('dice1').innerHTML = getClearDiceDots(arr[0]); document.getElementById('dice2').innerHTML = getClearDiceDots(arr[1]); document.getElementById('dice3').innerHTML = getClearDiceDots(arr[2]); document.getElementById('totalResult').innerHTML = `總和: ${arr[0]+arr[1]+arr[2]}`; }
+    function hideCountdown() { document.getElementById('countdownRing').classList.add('hidden-countdown'); }
+    function showCountdown() { document.getElementById('countdownRing').classList.remove('hidden-countdown'); }
+    function startShaking() { document.querySelectorAll('.dice-cup').forEach(cup => cup.classList.add('shaking')); document.getElementById('dealerMsg').innerHTML = '🎲 骰盅搖晃中 ... 🎲'; }
+    function stopShaking() { document.querySelectorAll('.dice-cup').forEach(cup => cup.classList.remove('shaking')); }
+    
+    async function rollDiceAnim() { 
+        startShaking(); 
+        hideCountdown(); 
+        await new Promise(r => setTimeout(r, 800)); 
+        let d1 = Math.floor(Math.random() * 6) + 1, d2 = Math.floor(Math.random() * 6) + 1, d3 = Math.floor(Math.random() * 6) + 1; 
+        diceResults = [d1, d2, d3]; 
+        totalSum = d1 + d2 + d3; 
+        stopShaking(); 
+        document.getElementById('dealerMsg').innerHTML = '🔓 揭開骰盅 ... 🔓'; 
+        const diceDivs = [document.getElementById('dice1'), document.getElementById('dice2'), document.getElementById('dice3')]; 
+        diceDivs.forEach(d => d.classList.add('reveal')); 
+        updateDiceDisplay(diceResults); 
+        await new Promise(r => setTimeout(r, 300)); 
+        diceDivs.forEach(d => d.classList.remove('reveal')); 
+        document.getElementById('dealerMsg').innerHTML = '🔍 開牌確認中 (6秒) ... 🔍'; 
+        await new Promise(r => setTimeout(r, 6000)); 
+        document.getElementById('dealerMsg').innerHTML = '✨ 開放下注 ✨'; 
+        return { dice: diceResults, sum: totalSum }; 
+    }
+    
+    function generateSingleDice(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'dot-red-single':'dot-black-single'; let h='<div class="dice-grid-single">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    function generateDoubleDice(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'dot-red-double':'dot-black-double'; let h='<div class="dice-grid-double">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    function getComboDiceHTML(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'dot-red-combo':'dot-black-combo'; let h='<div class="dice-combo-grid">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    function getTripleDiceHTML(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'triple-dot-red':'triple-dot-black'; let h='<div class="triple-dice-grid">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    function getCenterDiceHTML(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'center-dot-red':'center-dot-black'; let h='<div class="center-dice-grid">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    
+    function buildSingleDice() { let c=document.getElementById('singleDiceGrid'); c.innerHTML=''; for(let i=1;i<=6;i++){ let dice=generateSingleDice(i); let cd=document.createElement('div'); cd.className='bet-card p-1 text-center relative transition-all'; cd.setAttribute('data-bet',`single${i}`); cd.innerHTML=`${dice}<div class="text-white font-bold text-[9px] mt-0.5">${i}</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-single${i}"></div>`; c.appendChild(cd); } }
+    function buildDoubleDice() { let c=document.getElementById('doubleDiceGrid'); c.innerHTML=''; for(let i=1;i<=6;i++){ let left=generateDoubleDice(i); let right=generateDoubleDice(i); let cd=document.createElement('div'); cd.className='bet-card p-0.5 text-center relative transition-all'; cd.setAttribute('data-bet',`double${i}`); cd.innerHTML=`<div class="double-dice-group"><div>${left}</div><div>${right}</div></div><div class="text-white font-bold text-[7px] mt-0.5">雙${i}</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-double${i}"></div>`; c.appendChild(cd); } }
+    function buildComboButtons() { let c=document.getElementById('comboGrid'); let combos=[{id:'small',label:'小',sub:'4~10',color:'from-blue-600 to-indigo-800'},{id:'odd',label:'單',sub:'奇數',color:'from-purple-600 to-pink-800'},{id:'big',label:'大',sub:'11~17',color:'from-red-600 to-rose-800'},{id:'even',label:'雙',sub:'偶數',color:'from-emerald-600 to-teal-800'}]; c.innerHTML=''; combos.forEach(com=>{ let cd=document.createElement('div'); cd.className=`combo-card text-center relative transition-all bg-gradient-to-br ${com.color} bg-opacity-60 backdrop-blur-sm`; cd.setAttribute('data-bet',com.id); cd.innerHTML=`<div class="combo-label text-white drop-shadow-lg">${com.label}</div><div class="combo-sub text-cyan-100 font-medium">${com.sub}</div><div class="combo-odds font-bold text-yellow-300">1:1</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-${com.id}"></div>`; c.appendChild(cd); }); }
+    function buildDoubleComboGrid() { let c=document.getElementById('doubleComboGrid'); c.innerHTML=''; doubleCombos.forEach(com=>{ let d1=com[0],d2=com[1]; let betKey=`combo_${d1}_${d2}`; let cd=document.createElement('div'); cd.className='combo-bet-card'; cd.setAttribute('data-bet',betKey); cd.innerHTML=`<div class="two-dice-row">${getComboDiceHTML(d1)}${getComboDiceHTML(d2)}</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-${betKey}"></div>`; c.appendChild(cd); }); }
+    function buildTripleSection() { let container=document.getElementById('tripleBettingContainer'); container.innerHTML=''; let leftVals=[1,2,3], rightVals=[4,5,6]; let leftDiv=document.createElement('div'); leftDiv.className='triple-side'; let leftGrid=document.createElement('div'); leftGrid.className='triple-side-grid'; leftVals.forEach(v=>{ let cd=document.createElement('div'); cd.className='triple-card'; cd.setAttribute('data-bet',`triple_${v}`); cd.innerHTML=`<div class="three-dice-row">${getTripleDiceHTML(v)}${getTripleDiceHTML(v)}${getTripleDiceHTML(v)}</div><div class="triple-odds">1:180</div><div class="absolute right-1 bottom-1 flex gap-0.5 pointer-events-none" id="chipsArea-triple_${v}"></div>`; leftGrid.appendChild(cd); }); leftDiv.appendChild(leftGrid); let rightDiv=document.createElement('div'); rightDiv.className='triple-side'; let rightGrid=document.createElement('div'); rightGrid.className='triple-side-grid'; rightVals.forEach(v=>{ let cd=document.createElement('div'); cd.className='triple-card'; cd.setAttribute('data-bet',`triple_${v}`); cd.innerHTML=`<div class="three-dice-row">${getTripleDiceHTML(v)}${getTripleDiceHTML(v)}${getTripleDiceHTML(v)}</div><div class="triple-odds">1:180</div><div class="absolute right-1 bottom-1 flex gap-0.5 pointer-events-none" id="chipsArea-triple_${v}"></div>`; rightGrid.appendChild(cd); }); rightDiv.appendChild(rightGrid); let centerDiv=document.createElement('div'); centerDiv.className='triple-center'; centerDiv.setAttribute('data-bet','anyTriple'); let gridHtml='<div class="center-triple-grid">'; for(let i=0;i<3;i++){ let leftVal=[1,2,3][i]; let rightVal=[4,5,6][i]; gridHtml+=`<div class="center-triple-item"><div class="center-triple-dice-row">${getCenterDiceHTML(leftVal)}${getCenterDiceHTML(leftVal)}${getCenterDiceHTML(leftVal)}</div></div><div class="center-triple-item"><div class="center-triple-dice-row">${getCenterDiceHTML(rightVal)}${getCenterDiceHTML(rightVal)}${getCenterDiceHTML(rightVal)}</div></div>`; } gridHtml+='</div>'; centerDiv.innerHTML=`<div class="center-title">全圍</div>${gridHtml}<div class="center-odds">1:30</div><div class="absolute right-1 bottom-1 flex gap-0.5 pointer-events-none" id="chipsArea-anyTriple"></div>`; container.appendChild(leftDiv); container.appendChild(centerDiv); container.appendChild(rightDiv); }
+    function buildTotalSection() { const wrapper = document.getElementById('totalBetWrapper'); wrapper.innerHTML = ''; const row1Sums = [4,5,6,7,8,9,10]; const row2Sums = [11,12,13,14,15,16,17]; const row1Div = document.createElement('div'); row1Div.className = 'total-row'; const row2Div = document.createElement('div'); row2Div.className = 'total-row'; row1Sums.forEach(sum => { const card = document.createElement('div'); card.className = 'total-card'; card.setAttribute('data-bet', `sum_${sum}`); const odds = sumOdds[sum]; card.innerHTML = `<div class="total-number">${sum}</div><div class="total-odds">1:${odds}</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-sum_${sum}"></div>`; row1Div.appendChild(card); }); row2Sums.forEach(sum => { const card = document.createElement('div'); card.className = 'total-card'; card.setAttribute('data-bet', `sum_${sum}`); const odds = sumOdds[sum]; card.innerHTML = `<div class="total-number">${sum}</div><div class="total-odds">1:${odds}</div><div class="absolute right-0.5 bottom-0.5 flex gap-0.5 pointer-events-none" id="chipsArea-sum_${sum}"></div>`; row2Div.appendChild(card); }); wrapper.appendChild(row1Div); wrapper.appendChild(row2Div); attachBetEvents(); }
+    function buildChips() { let chips=[{val:100,color:'from-emerald-400 to-emerald-700',label:'100'},{val:500,color:'from-blue-400 to-blue-700',label:'500'},{val:1000,color:'from-amber-400 to-amber-700',label:'1K'},{val:5000,color:'from-rose-400 to-rose-700',label:'5K'},{val:10000,color:'from-purple-400 to-purple-800',label:'10K'},{val:50000,color:'from-cyan-400 to-cyan-800',label:'50K'}]; let con=document.getElementById('chipsContainer'); con.innerHTML=''; chips.forEach(ch=>{ let btn=document.createElement('div'); btn.className=`chip-btn w-7 h-7 rounded-full bg-gradient-to-br ${ch.color} flex items-center justify-center font-black text-white shadow-xl cursor-pointer text-[8px]`; btn.setAttribute('data-value',ch.val); btn.innerText=ch.label; con.appendChild(btn); }); document.querySelectorAll('.chip-btn')[0].classList.add('active-chip'); }
+    function attachBetEvents() { document.querySelectorAll('.bet-card, .combo-card, .combo-bet-card, .triple-card, .triple-center, .total-card').forEach(card=>{ card.removeEventListener('click', betHandler); card.addEventListener('click', betHandler); }); }
+    function betHandler(e) { if(isSettling){ addChatMessage("⚠️ 系統", "遊戲進行中", "#ff8888"); return; } let betKey=this.getAttribute('data-bet'); if(!betKey) return; let newAmt=(pendingMap.get(betKey)||0)+curChip; pendingMap.set(betKey,newAmt); let area=document.getElementById(`chipsArea-${betKey}`); if(area){ let chipFly=document.createElement('div'); chipFly.className='w-2.5 h-2.5 rounded-full bg-amber-400 text-[3px] font-black flex items-center justify-center shadow-md absolute'; chipFly.innerText=curChip>=1000?(curChip/1000)+'K':curChip; chipFly.style.left='2px'; chipFly.style.bottom='2px'; area.appendChild(chipFly); setTimeout(()=>chipFly.remove(),400); } addChatMessage("📌 暫存", `${betKey} +${curChip}`, "#ddcc99"); this.classList.add('selected'); setTimeout(()=>this.classList.remove('selected'),150); }
+    function confirmBets() { if(isSettling){ addChatMessage("⚠️ 系統", "等待開骰", "#ff8888"); return; } let added=false; for(let [k,v] of pendingMap.entries()){ if(v>0){ totalBetMap.set(k,(totalBetMap.get(k)||0)+v); added=true; pendingMap.set(k,0); } } if(added){ updateTotalSpan(); refreshAllChips(); addChatMessage("✅ 系統", "下注確認! 祝好運", "#88ffaa"); updateChatPermission(); } else addChatMessage("⚠️ 系統", "尚未暫存注碼", "#ff8888"); }
+    function cancelPending() { for(let k of pendingMap.keys()) pendingMap.set(k,0); refreshAllChips(); addChatMessage("❌ 系統", "暫存已清除", "#ffaa66"); }
+    
+    async function settleGame() { 
+        if(isSettling) return; 
+        isSettling=true; 
+        document.getElementById('dealerMsg').innerHTML = '🎲 開始搖骰 ... 🎲'; 
+        let result = await rollDiceAnim(); 
+        let winOdds = determineWins(result.sum, result.dice); 
+        let totalWin=0; 
+        for(let [betKey,amount] of totalBetMap.entries()){ 
+            if(amount>0 && winOdds.has(betKey) && winOdds.get(betKey)>0){ 
+                let odds=winOdds.get(betKey); 
+                let winAmt=amount*odds; 
+                totalWin+=winAmt; 
+                addChatMessage("💎 中獎", `${betKey} 贏得 ${winAmt}`, "#aaffaa"); 
+            } 
+        } 
+        if(totalWin>0){ 
+            points+=totalWin; 
+            updatePointsUI(); 
+            addChatMessage("🏆 狂賀", `贏得 ${totalWin} 點數`, "#ffcc66"); 
+        } else addChatMessage("🍀 結果", "再接再厲", "#ffaa88"); 
+        let bigSmallFlag=result.sum>=11?"大":"小", oddEvenFlag=result.sum%2===1?"單":"雙"; 
+        historyList.unshift({sum:result.sum,dice:result.dice,bigSmall:bigSmallFlag,oddEven:oddEvenFlag}); 
+        if(historyList.length>20) historyList.pop(); 
+        renderRoadmapUI(); 
+        for(let k of totalBetMap.keys()) totalBetMap.set(k,0); 
+        updateTotalSpan(); 
+        refreshAllChips(); 
+        document.getElementById('dealerMsg').innerHTML = '✨ 下注時間 ✨'; 
+        isSettling=false; 
+        showCountdown(); 
+        startCountdown(); 
+    }
+    
+    function determineWins(sum, diceArr) { 
+        let wins=new Map(); 
+        let isBig=(sum>=11&&sum<=17), isSmall=(sum>=4&&sum<=10), isOdd=(sum%2===1), isEven=(sum%2===0); 
+        if(isBig) wins.set('big',1); if(isSmall) wins.set('small',1); if(isOdd) wins.set('odd',1); if(isEven) wins.set('even',1); 
+        for(let n=1;n<=6;n++){ let cnt=diceArr.filter(v=>v===n).length; if(cnt>0) wins.set(`single${n}`,cnt); } 
+        let doubleSet=new Set(); for(let i=0;i<3;i++) for(let j=i+1;j<3;j++) if(diceArr[i]===diceArr[j]) doubleSet.add(diceArr[i]); 
+        for(let d of doubleSet) wins.set(`double${d}`,10); 
+        let twoDiceCombos=new Set(); for(let i=0;i<3;i++) for(let j=i+1;j<3;j++){ let a=diceArr[i],b=diceArr[j]; let key=a<b?`${a}_${b}`:`${b}_${a}`; twoDiceCombos.add(key); } 
+        for(let ck of twoDiceCombos) wins.set(`combo_${ck}`,5); 
+        if(diceArr[0]===diceArr[1]&&diceArr[1]===diceArr[2]){ let tv=diceArr[0]; wins.set(`triple_${tv}`,180); wins.set('anyTriple',30); } 
+        if(sum>=4 && sum<=17) wins.set(`sum_${sum}`, sumOdds[sum]); 
+        return wins; 
+    }
+    
+    function startCountdown() { 
+        if(timer) clearInterval(timer); 
+        countdown=15; 
+        let cdSpan=document.getElementById('countdownNum'); 
+        cdSpan.innerText=countdown; 
+        timer=setInterval(()=>{ 
+            if(isSettling) return; 
+            if(countdown<=1){ 
+                clearInterval(timer); 
+                settleGame(); 
+            } else{ 
+                countdown--; 
+                cdSpan.innerText=countdown; 
+            } 
+        },1000); 
+    }
+    
+    function getRoadDiceHTML(v) { let idx=getDice3x3Positions(v); let cls=isRedDot(v)?'road-dot-red':'road-dot-black'; let h='<div class="road-dice-grid">'; for(let i=0;i<9;i++){ h+=`<div class="flex justify-center items-center">${idx.includes(i)?`<div class="${cls}"></div>`:''}</div>`; } h+='</div>'; return h; }
+    
+    function renderRoadmapUI() { 
+        let track=document.getElementById('historyRoadmapTrack'); 
+        if(!track) return; 
+        track.innerHTML=''; 
+        for(let h of historyList.slice(0,20)){ 
+            let diceHtml=`<div class="vertical-dice-item">${getRoadDiceHTML(h.dice[0])}</div><div class="vertical-dice-item">${getRoadDiceHTML(h.dice[1])}</div><div class="vertical-dice-item">${getRoadDiceHTML(h.dice[2])}</div>`; 
+            let col=document.createElement('div'); 
+            col.className='road-column'; 
+            col.innerHTML=`<div class="dice-area-vertical">${diceHtml}</div><div class="total-cell-mini">${h.sum}</div><div class="result-cell-mini ${h.bigSmall==='大'?'big-bg':'small-bg'}">${h.bigSmall}</div><div class="result-cell-mini ${h.oddEven==='單'?'odd-bg':'even-bg'}">${h.oddEven}</div>`; 
+            track.appendChild(col); 
+        } 
+        if(historyList.length===0) track.innerHTML='<div class="text-cyan-400 text-[10px] p-2">等待開獎</div>'; 
+    }
+    
+    function initGiftBox() {
+        const giftBtn = document.getElementById('giftIconBtn');
+        const giftModal = document.getElementById('giftModal');
+        giftBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let spent = 0;
+            for(let v of totalBetMap.values()) spent += v;
+            if(spent < 200) {
+                addChatMessage("🔒 系統", `下注滿200點才能贈送禮物 (目前${spent})`, "#ff8888");
+                return;
+            }
+            giftModal.classList.toggle('hide');
+        });
+        document.querySelectorAll('.gift-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                let price = parseInt(opt.getAttribute('data-price'));
+                let name = opt.getAttribute('data-gift');
+                let emoji = opt.querySelector('.gift-emoji').innerText;
+                if(points >= price) {
+                    points -= price;
+                    updatePointsUI();
+                    addChatMessage("🎁 炫風俠客", `贈送 ${emoji} ${name} (價值 ${price.toLocaleString()} 點)`, "#ff88aa");
+                    addGiftAnimation(name, price);
+                } else {
+                    addChatMessage("⚠️ 系統", `點數不足，贈送 ${name} 需要 ${price.toLocaleString()} 點`, "#ff8888");
+                }
+                giftModal.classList.add('hide');
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if(!giftBtn.contains(e.target) && !giftModal.contains(e.target)) {
+                giftModal.classList.add('hide');
+            }
+        });
+    }
+    
+    function initChat() {
+        const chatRoom = document.getElementById('chatRoom');
+        const collapseIcon = document.querySelector('.collapse-icon');
+        const chatHeader = document.getElementById('chatToggleBtn');
+        
+        collapseIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chatRoom.classList.toggle('collapsed');
+        });
+        
+        chatHeader.addEventListener('click', (e) => {
+            if(e.target.classList.contains('gift-icon')) return;
+            chatRoom.classList.toggle('collapsed');
+        });
+        
+        document.getElementById('sendChatBtn').addEventListener('click', () => {
+            let spent = 0;
+            for(let v of totalBetMap.values()) spent += v;
+            const inp = document.getElementById('chatInput');
+            const txt = inp.value.trim();
+            if(txt && spent >= 200) {
+                addChatMessage("💎 VIP", txt, "#ffcc66");
+                inp.value = "";
+            } else if(spent < 200) {
+                addChatMessage("🔒 系統", `下注滿200才可發言 (目前${spent})`, "#ff8888");
+            }
+        });
+    }
+    
+    function updateChatPermission() { 
+        let spent=0; 
+        for(let v of totalBetMap.values()) spent+=v; 
+        let can = spent >= 200; 
+        document.getElementById('chatInput').disabled = !can; 
+        document.getElementById('sendChatBtn').disabled = !can; 
+        document.getElementById('chatInput').placeholder = can ? "輸入訊息..." : `累積下注滿200聊天 (${spent})`; 
+    }
+    
+    function initChipSelection() { 
+        document.querySelectorAll('.chip-btn').forEach(ch=>{ 
+            ch.addEventListener('click',()=>{ 
+                document.querySelectorAll('.chip-btn').forEach(c=>c.classList.remove('active-chip')); 
+                ch.classList.add('active-chip'); 
+                let val=parseInt(ch.getAttribute('data-value')); 
+                curChip=val; 
+                document.getElementById('selectedChipVal').innerText=curChip>=1000?(curChip/1000)+'K':curChip; 
+            }); 
+        }); 
+    }
+    
+    function initCarousel() { 
+        let wrap=document.getElementById('carouselWrapper'), dots=document.getElementById('carouselDots'), pages=document.querySelectorAll('.bet-page'); 
+        for(let i=0;i<pages.length;i++){ 
+            let d=document.createElement('div'); 
+            d.classList.add('dot-page'); 
+            if(i===0) d.classList.add('active'); 
+            d.addEventListener('click',()=>{ wrap.scrollTo({left:i*wrap.clientWidth,behavior:'smooth'}); }); 
+            dots.appendChild(d); 
+        } 
+        function updateDots(){ 
+            let idx=Math.round(wrap.scrollLeft/wrap.clientWidth); 
+            if(isNaN(idx)) idx=0; 
+            let dts=document.querySelectorAll('.dot-page'); 
+            dts.forEach((d,i)=>{ if(i===idx) d.classList.add('active'); else d.classList.remove('active'); }); 
+        } 
+        wrap.addEventListener('scroll',()=>{ clearTimeout(wrap.scrollTimer); wrap.scrollTimer=setTimeout(updateDots,50); }); 
+        window.addEventListener('resize',updateDots); 
+        setTimeout(updateDots,100); 
+    }
+    
+    function initDiceDisplay() { updateDiceDisplay([1,2,3]); }
+    
+    // 抽屜功能
+    function initDrawer() {
+        const drawerPanel = document.getElementById('roomDrawerPanel');
+        const videoHandle = document.getElementById('videoDrawerHandle');
+        const drawerClose = document.getElementById('drawerCloseBtn');
+        
+        videoHandle.addEventListener('click', () => {
+            drawerPanel.classList.toggle('open');
+        });
+        
+        drawerClose.addEventListener('click', () => {
+            drawerPanel.classList.remove('open');
+        });
+        
+        document.querySelectorAll('.room-item').forEach(item => {
+            item.addEventListener('click', () => {
+                let roomName = item.getAttribute('data-room');
+                let roomTitle = item.querySelector('.room-name')?.innerText || roomName;
+                addChatMessage("🏠 系統", `您已切換至 ${roomTitle}`, "#88ffdd");
+                document.getElementById('dealerMsg').innerHTML = `✨ 歡迎來到 ${roomTitle} ✨`;
+                setTimeout(() => {
+                    if(!isSettling) document.getElementById('dealerMsg').innerHTML = "✨ 開放下注 ✨";
+                }, 2000);
+                drawerPanel.classList.remove('open');
+            });
+        });
+    }
+    
+    function init() { 
+        initDiceDisplay(); 
+        buildSingleDice(); 
+        buildDoubleDice(); 
+        buildComboButtons(); 
+        buildDoubleComboGrid(); 
+        buildTripleSection(); 
+        buildTotalSection(); 
+        buildChips(); 
+        attachBetEvents(); 
+        initChipSelection(); 
+        document.getElementById('confirmBtn').addEventListener('click', confirmBets); 
+        document.getElementById('cancelBtn').addEventListener('click', cancelPending); 
+        updatePointsUI(); 
+        updateTotalSpan(); 
+        refreshAllChips(); 
+        for(let i=0;i<5;i++){ 
+            let d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,d3=Math.floor(Math.random()*6)+1,s=d1+d2+d3; 
+            historyList.push({sum:s,dice:[d1,d2,d3],bigSmall:s>=11?"大":"小",oddEven:s%2===1?"單":"雙"}); 
+        } 
+        renderRoadmapUI(); 
+        startCountdown(); 
+        initChat(); 
+        initCarousel(); 
+        initGiftBox(); 
+        initDrawer();
+        addChatMessage("🎲 荷官", "百家樂風格導航｜遊戲房抽屜（與大廳相同房號）｜浮動聊天室", "#0ff"); 
+    }
+    
+    init();
+</script>
+</body>
+</html>

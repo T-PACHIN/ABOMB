@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>國際龍虎 | 真人娛樂城 | 視訊發牌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0a1a, #02010a);
+            min-height: 100vh;
+            padding: 12px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+                                linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: transparent;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            z-index: 2;
+            padding-bottom: 0;
+        }
+
+        /* 頂部導航 */
+        .top-nav {
+            background: linear-gradient(145deg, #1e243b, #0b0f1a);
+            border-radius: 28px 28px 0 0;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-bottom: none;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            backdrop-filter: blur(4px);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        .logo-icon {
+            background: linear-gradient(145deg, #ffdd55, #e6a800);
+            width: 34px; height: 34px; border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px; color: #1a1f2f;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+        .logo-text { font-weight: bold; font-size: 16px; color: #ffcc00; text-shadow: 0 2px 3px rgba(0,0,0,0.5); }
+        .player-info-compact {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(8px);
+            padding: 5px 16px 5px 10px; border-radius: 60px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .compact-avatar {
+            width: 38px; height: 38px;
+            background: linear-gradient(145deg, #ffcc44, #ff9933);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #1a1f2f; box-shadow: 0 0 8px #ffcc44;
+        }
+        .compact-name { font-size: 12px; font-weight: 800; color: #fff0cc; }
+        .compact-detail { display: flex; gap: 12px; font-size: 9px; font-weight: bold; color: #bbddff; }
+        .player-points { color: #ffdd88; font-weight: bold; }
+
+        /* 直播視頻區 */
+        .video-section {
+            position: relative;
+            background: rgba(10, 20, 30, 0.45);
+            backdrop-filter: blur(4px);
+            border-left: 1px solid rgba(0, 255, 255, 0.35);
+            border-right: 1px solid rgba(0, 255, 255, 0.35);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.35);
+            border-top: none;
+            overflow: hidden;
+            min-height: 280px;
+        }
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(145deg, #1a2a3a, #0a0a1a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .dragon-card-area, .tiger-card-area {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+        .card-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .card-label.dragon { color: #ff6666; }
+        .card-label.tiger { color: #66aaff; }
+        .display-card {
+            width: 85px;
+            height: 115px;
+            background: white;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .display-card .rank { font-size: 42px; font-weight: 900; }
+        .display-card .suit { font-size: 28px; margin-top: 5px; }
+        .suit-red { color: #d44; }
+        .suit-black { color: #222; }
+        .vs-divider {
+            font-size: 18px;
+            font-weight: 800;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 12px;
+            border-radius: 50px;
+            color: #ffcc88;
+            border: 1px solid gold;
+        }
+        .dealer-status {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #ffdd99;
+            text-align: center;
+        }
+        .video-drawer-handle {
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 42px;
+            background: rgba(0, 150, 150, 0.3);
+            border-radius: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 45;
+            backdrop-filter: blur(4px);
+            border-left: 1px solid rgba(0, 255, 255, 0.5);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            border-right: none;
+        }
+        .video-drawer-handle i {
+            font-size: 10px;
+            color: rgba(200, 230, 255, 0.5);
+            text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+        .video-drawer-handle:hover {
+            background: linear-gradient(145deg, #0ff, #00aacc);
+            width: 24px;
+            box-shadow: -2px 0 10px rgba(0, 255, 255, 0.6);
+            border-left: 1px solid rgba(255,255,200,0.9);
+            border-top: 1px solid rgba(255,255,200,0.7);
+            border-bottom: 1px solid rgba(255,255,200,0.7);
+        }
+        .video-drawer-handle:hover i {
+            color: #1a1f2f;
+            text-shadow: 0 0 3px white;
+            transform: scale(1.05);
+        }
+        .video-countdown {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 2px solid #ffcc44;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: all 0.2s ease;
+        }
+        .video-countdown.urgent {
+            border-color: #ff4444;
+            animation: pulse 0.5s infinite;
+        }
+        .video-countdown .countdown-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffdd99;
+            text-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 右側抽屜面板 */
+        .global-drawer-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 180px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(24px);
+            border-left: 2px solid rgba(0, 255, 255, 0.8);
+            border-radius: 20px 0 0 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.8);
+            z-index: 20000;
+        }
+        .global-drawer-panel.open { transform: translateX(0); }
+        .global-drawer-panel .drawer-header {
+            padding: 16px 14px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .global-drawer-panel .drawer-header span {
+            font-size: 13px;
+            font-weight: bold;
+            color: #ffdd99;
+        }
+        .global-drawer-panel .drawer-close {
+            cursor: pointer;
+            font-size: 22px;
+            color: #ffaa88;
+            width: 30px;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .global-drawer-panel .drawer-close:hover { color: #ff6666; transform: scale(1.1); }
+        .global-drawer-panel .room-list {
+            flex: 1;
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+        .global-drawer-panel .room-item {
+            background: rgba(20, 30, 50, 0.85);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 10px 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .global-drawer-panel .room-item:hover {
+            background: rgba(0, 255, 255, 0.25);
+            border-color: #ffcc88;
+            transform: translateX(-4px);
+        }
+        .global-drawer-panel .room-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #eef5ff;
+        }
+        .global-drawer-panel .room-players {
+            font-size: 9px;
+            color: #88ffdd;
+            margin-top: 2px;
+        }
+        .global-drawer-panel .room-status {
+            font-size: 9px;
+            font-weight: bold;
+            margin-top: 2px;
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+        .status-hot { background: #ff4444; color: white; }
+        .status-trend { background: #ffaa33; color: #1a1f2f; }
+        .status-jump { background: #33ccff; color: #1a1f2f; }
+        .status-tie { background: #33ff66; color: #1a1f2f; }
+        .status-normal { background: #666666; color: #ddd; }
+
+        /* 龍虎比分欄 */
+        .score-panel {
+            display: flex;
+            background: #1a1a1a;
+            border-left: 1px solid rgba(0, 255, 255, 0.35);
+            border-right: 1px solid rgba(0, 255, 255, 0.35);
+        }
+        .score-dragon {
+            flex: 1;
+            background: #e02020;
+            text-align: center;
+            padding: 12px 0;
+            clip-path: polygon(0 0, 92% 0, 100% 100%, 0% 100%);
+        }
+        .score-tiger {
+            flex: 1;
+            background: #2060e0;
+            text-align: center;
+            padding: 12px 0;
+            clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .score-label { font-size: 14px; font-weight: bold; letter-spacing: 2px; color: white; }
+        .score-number { font-size: 28px; font-weight: 800; margin-top: 4px; color: white; }
+
+        /* 下注區 */
+        .betting-area {
+            background: rgba(6, 10, 20, 0.88);
+            backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(0, 255, 255, 0.6);
+            border-right: 1px solid rgba(0, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.6);
+            padding: 12px 10px;
+        }
+        .swipe-container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            cursor: grab;
+            scrollbar-width: none;
+            user-select: none;
+        }
+        .swipe-container:active { cursor: grabbing; }
+        .swipe-container::-webkit-scrollbar { display: none; }
+        .bet-page {
+            flex: 0 0 100%;
+            min-width: 100%;
+            scroll-snap-align: start;
+            padding: 0 4px;
+            pointer-events: auto;
+        }
+        .page-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+        .page-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.2s;
+        }
+        .page-dot.active { background: #ffcc88; width: 20px; border-radius: 4px; }
+
+        .bet-main-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .bet-row { display: flex; gap: 10px; justify-content: center; }
+        .bet-card-main, .bet-card-sub {
+            position: relative;
+            background: linear-gradient(145deg, #1a1f2c, #0e121f);
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid rgba(255,215,0,0.5);
+            transition: all 0.1s ease;
+            border-radius: 28px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .bet-card-main { flex: 1.2; padding: 14px 6px; }
+        .bet-card-sub { flex: 0.85; padding: 8px 4px; border-radius: 22px; }
+        .bet-card-main .bet-name { font-size: 28px; font-weight: 900; margin-bottom: 8px; letter-spacing: 2px; }
+        .bet-card-main .bet-odds { font-size: 15px; font-weight: 800; padding: 4px 14px; background: rgba(0,0,0,0.8); display: inline-block; border-radius: 30px; color: #ffdd99; }
+        .bet-card-sub .bet-name { font-size: 19px; font-weight: 800; margin-bottom: 5px; letter-spacing: 1px; }
+        .bet-card-sub .bet-odds { font-size: 12px; font-weight: bold; padding: 2px 10px; background: rgba(0,0,0,0.8); display: inline-block; border-radius: 30px; color: #ffdd99; }
+
+        .bet-card-main[data-bet="dragon"] .bet-name,
+        .bet-card-main[data-bet="dragon2"] .bet-name,
+        .bet-card-sub[data-bet="dragonDouble"] .bet-name,
+        .bet-card-sub[data-bet="dragonSingle"] .bet-name,
+        .bet-card-sub[data-bet="dragonRed"] .bet-name,
+        .bet-card-sub[data-bet="dragonBlack"] .bet-name { color: #ff6666; }
+        .bet-card-main[data-bet="tiger"] .bet-name,
+        .bet-card-main[data-bet="tiger2"] .bet-name,
+        .bet-card-sub[data-bet="tigerDouble"] .bet-name,
+        .bet-card-sub[data-bet="tigerSingle"] .bet-name,
+        .bet-card-sub[data-bet="tigerRed"] .bet-name,
+        .bet-card-sub[data-bet="tigerBlack"] .bet-name { color: #66aaff; }
+        .bet-card-main[data-bet="tie"] .bet-name,
+        .bet-card-main[data-bet="tie2"] .bet-name { color: #44ff66; }
+
+        .chips-stack-area {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            width: 65px;
+            height: 65px;
+            pointer-events: none;
+            display: flex;
+            flex-wrap: wrap-reverse;
+            justify-content: flex-end;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .thrown-chip {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            font-weight: bold;
+            color: #1e2a2a;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .chips-control-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .chips-area { flex: 3; }
+        .chips-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .chips-label { font-size: 9px; color: #bbddff; font-weight: bold; }
+        .chips-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px;
+        }
+        .chip {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.4);
+            border: 1.5px solid #ffcc44;
+            color: #1e2a2a;
+            transition: all 0.1s ease;
+        }
+        .chip[data-value="100"] { background: radial-gradient(circle at 35% 35%, #ffdd99, #e6a44c); }
+        .chip[data-value="500"] { background: radial-gradient(circle at 35% 35%, #aaffcc, #4cae7c); }
+        .chip[data-value="1K"] { background: radial-gradient(circle at 35% 35%, #88aaff, #4466cc); }
+        .chip[data-value="5K"] { background: radial-gradient(circle at 35% 35%, #ffaa88, #cc6644); }
+        .chip[data-value="10K"] { background: radial-gradient(circle at 35% 35%, #ff88cc, #cc4488); }
+        .chip[data-value="50K"] { background: radial-gradient(circle at 35% 35%, #88ffdd, #44ccaa); }
+        .chip.active-chip {
+            box-shadow: 0 0 0 2px cyan, 0 0 0 3px rgba(0,255,255,0.4);
+            transform: scale(1.02);
+            border-color: white;
+        }
+        .action-buttons {
+            flex: 1;
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .action-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.05s linear;
+        }
+        .action-btn:active { transform: scale(0.95); }
+        .action-btn.confirm { color: #ff4444; border-color: #ff4444; }
+        .action-btn.cancel { color: #ffaa44; border-color: #ffaa44; }
+        .action-label { font-size: 9px; color: #aaa; margin-top: 2px; }
+
+        .total-bet-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.7);
+            border-radius: 30px;
+            padding: 5px 10px;
+            margin-top: 10px;
+            font-size: 10px;
+            color: #88ddff;
+            border: 0.5px solid cyan;
+        }
+
+        /* 牌路區 */
+        .roadmap-panel {
+            background: rgba(12, 18, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 0;
+            padding: 10px;
+            border-left: 1px solid rgba(0, 255, 255, 0.4);
+            border-right: 1px solid rgba(0, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+        }
+        .road-dual-container { display: flex; gap: 6px; margin-bottom: 12px; }
+        .beadplate-wrapper { flex: 0.9; background: rgba(0,0,0,0.3); border-radius: 14px; padding: 4px; overflow-x: auto; }
+        .beadplate-title { font-size: 9px; color: #ffcc88; text-align: center; margin-bottom: 4px; }
+        .beadplate-grid { display: flex; flex-direction: column; gap: 2px; }
+        .beadplate-row { display: flex; gap: 2px; justify-content: center; }
+        .bead-cell { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: bold; background: #1e2a3a; }
+        .cell-red { background: #e34d4c; }
+        .cell-blue { background: #3b82f6; }
+        .cell-tie { background: #22c55e; position: relative; }
+        .cell-tie::after { content: "╱"; position: absolute; color: white; font-size: 10px; }
+        .bigroad-wrapper {
+            flex: 2.5;
+            background: rgba(0,0,0,0.3);
+            border-radius: 14px;
+            padding: 4px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            cursor: grab;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        .bigroad-wrapper:active { cursor: grabbing; }
+        .bigroad-wrapper::-webkit-scrollbar { height: 6px; background: #1e2a3a; border-radius: 4px; }
+        .bigroad-wrapper::-webkit-scrollbar-thumb { background: #0ff; border-radius: 4px; }
+        .bigroad-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: max-content;
+        }
+        .bigroad-row { display: flex; gap: 2px; }
+        .bigroad-cell {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+            background: #1e2a3a;
+            position: relative;
+        }
+        .circle-red { background: #e34d4c; }
+        .circle-blue { background: #3b82f6; }
+        .tie-mark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #66ff33; text-shadow: 0 0 2px #00aa33; pointer-events: none; }
+        .subroads-container { display: flex; gap: 12px; margin-top: 8px; }
+        .subroad-item { flex: 1; background: rgba(0,0,0,0.25); border-radius: 16px; padding: 8px 4px; text-align: center; }
+        .subroad-title { font-size: 9px; color: #ffcc88; margin-bottom: 8px; }
+        .subroad-table { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+        .subroad-row { display: flex; gap: 3px; flex-wrap: wrap; }
+        .bigeye-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .bigeye-dot-red { border: 1.5px solid #ff4444; background: transparent; }
+        .bigeye-dot-blue { border: 1.5px solid #4488ff; background: transparent; }
+        .small-dot-red { background: #ff4444; width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .small-dot-blue { background: #4488ff; width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .slash-cell { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; }
+        .slash-icon { width: 8px; height: 8px; background-size: contain; background-repeat: no-repeat; }
+        .slash-red { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='1' y1='9' x2='9' y2='1' stroke='%23ff4444' stroke-width='1.8'/%3E%3C/svg%3E"); }
+        .slash-blue { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='1' y1='9' x2='9' y2='1' stroke='%234488ff' stroke-width='1.8'/%3E%3C/svg%3E"); }
+
+        /* ===== 聊天室 - 浮動蓋過牌路，但不超過押注區 ===== */
+        .chat-room {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(12px);
+            border-radius: 28px 28px 0 0;
+            border-top: 1px solid rgba(0, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+            max-height: 280px;
+            min-height: 54px;
+            transition: all 0.2s ease;
+        }
+        .chat-room.collapsed {
+            min-height: 54px;
+            max-height: 54px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .chat-room.collapsed .chat-messages,
+        .chat-room.collapsed .chat-input-area {
+            display: none;
+        }
+        .chat-header {
+            background: rgba(0, 5, 10, 0.25);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .chat-header .gift-icon {
+            font-size: 18px;
+            color: #ffaa88;
+            cursor: pointer;
+        }
+        .chat-header span {
+            flex: 1;
+            font-size: 12px;
+            color: #eef5ff;
+        }
+        .collapse-icon {
+            transition: transform 0.2s;
+            font-size: 14px;
+            color: #ffcc88;
+            cursor: pointer;
+        }
+        .chat-room.collapsed .collapse-icon {
+            transform: rotate(180deg);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            max-height: 200px;
+            background: rgba(0, 0, 0, 0.03);
+            scrollbar-width: thin;
+            scrollbar-color: #0ff #1e2a3a;
+        }
+        /* 美化滾動條 */
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #1e2a3a;
+            border-radius: 10px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #0ff;
+            border-radius: 10px;
+        }
+        .chat-msg {
+            font-size: 12px;
+            padding: 8px 12px;
+            background: rgba(5, 15, 25, 0.4);
+            border-radius: 20px;
+            border-left: 3px solid #0ff;
+            color: #fff;
+            margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+        .msg-name {
+            font-weight: 800;
+            margin-right: 10px;
+            font-size: 11px;
+        }
+        .msg-time {
+            font-size: 9px;
+            color: #cceeff;
+            float: right;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .chat-input-area input {
+            flex: 1;
+            background: rgba(20, 28, 44, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 10px;
+            font-size: 12px;
+            color: white;
+            outline: none;
+        }
+        .chat-input-area input:focus {
+            border-color: #0ff;
+            box-shadow: 0 0 5px rgba(0,255,255,0.3);
+        }
+        .chat-input-area button {
+            background: linear-gradient(145deg, #0ff, #00aacc);
+            border: none;
+            border-radius: 40px;
+            padding: 0 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1a1f2f;
+        }
+        .chat-input-area button:active {
+            transform: scale(0.96);
+        }
+        .chat-input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .gift-modal {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 200, 80, 0.9);
+            z-index: 200;
+            width: calc(100% - 32px);
+            max-width: 400px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .gift-modal.hide { display: none; }
+        .gift-option {
+            background: linear-gradient(145deg, #1e2a3a, #0a101c);
+            border-radius: 48px;
+            padding: 6px 14px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 200, 100, 0.6);
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 68px;
+        }
+        .gift-option:hover { transform: scale(1.05); background: #2a3a4a; border-color: gold; }
+        .gift-emoji { font-size: 26px; display: block; }
+        .gift-name { font-size: 9px; color: #ffdd99; font-weight: bold; }
+        .gift-price { font-size: 8px; color: #88ffaa; }
+
+        .gift-animation {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            font-size: 24px;
+            z-index: 100;
+            animation: floatGift 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes floatGift {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+            80% { transform: translateY(-40px) scale(1); opacity: 1; }
+            100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+        }
+        
+        .selected-highlight {
+            background: rgba(0, 229, 255, 0.25) !important;
+            border-color: #00e5ff !important;
+            box-shadow: 0 0 8px #00e5ff;
+        }
+        .bet-locked { pointer-events: none; opacity: 0.7; }
+        .result-toast {
+            position: fixed;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: fadeOut 2s ease forwards;
+            pointer-events: none;
+            white-space: nowrap;
+            border: 1px solid #ffcc44;
+        }
+        .result-toast.dragon { background: #e02020; color: white; }
+        .result-toast.tiger { background: #2060e0; color: white; }
+        .result-toast.tie { background: #20a040; color: white; }
+        .result-toast.win { background: linear-gradient(145deg, #ffcc44, #e6a800); color: #1a1f2f; }
+        @keyframes fadeOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            70% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* 讓 .app 有相對定位，聊天室才能絕對定位在底部 */
+        .app {
+            position: relative;
+            padding-bottom: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="app">
+    <div class="top-nav">
+        <div class="logo-area"><div class="logo-icon"><i class="fas fa-dragon"></i></div><div class="logo-text">龍虎</div></div>
+        <div class="player-info-compact">
+            <div class="compact-avatar"><i class="fas fa-user-astronaut"></i></div>
+            <div class="compact-stats">
+                <div class="compact-name">炫風俠客 ✦ 鑽石VIP</div>
+                <div class="compact-detail"><span><i class="fas fa-coins"></i> <span id="balanceDisplay" class="player-points">888,000</span></span><span><i class="fas fa-chart-line"></i> 68%</span><span><i class="fas fa-users"></i> 1,284</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 直播視頻區 -->
+    <div class="video-section">
+        <div class="video-drawer-handle" id="videoDrawerHandle"><i class="fas fa-chevron-left"></i></div>
+        <div class="video-placeholder" id="videoPlaceholder">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 30px; width: 100%; padding: 20px;">
+                <div class="dragon-card-area">
+                    <div class="card-label dragon">🐉 龍</div>
+                    <div class="display-card" id="dragonDisplayCard">
+                        <div class="rank" id="dragonRank">?</div>
+                        <div class="suit" id="dragonSuit"></div>
+                    </div>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="tiger-card-area">
+                    <div class="card-label tiger">🐯 虎</div>
+                    <div class="display-card" id="tigerDisplayCard">
+                        <div class="rank" id="tigerRank">?</div>
+                        <div class="suit" id="tigerSuit"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="dealer-status" id="dealerStatusText">✨ 等待下注 ✨</div>
+        </div>
+        <div class="video-countdown" id="videoCountdown"><div class="countdown-number" id="countdownNum">15</div></div>
+    </div>
+
+    <!-- 比分板 -->
+    <div class="score-panel">
+        <div class="score-dragon"><div class="score-label">龍 DRAGON</div><div class="score-number" id="dragonScore">0</div></div>
+        <div class="score-tiger"><div class="score-label">TIGER 虎</div><div class="score-number" id="tigerScore">0</div></div>
+    </div>
+
+    <!-- 下注區 -->
+    <div class="betting-area" id="bettingArea">
+        <div class="swipe-container" id="swipeContainer">
+            <div class="bet-page">
+                <div class="bet-main-grid">
+                    <div class="bet-row">
+                        <div class="bet-card-sub" data-bet="dragonDouble"><div class="bet-name">龍雙</div><div class="bet-odds">1:1.05</div><div class="chips-stack-area" id="chipsArea-dragonDouble"></div></div>
+                        <div class="bet-card-sub" data-bet="dragonSingle"><div class="bet-name">龍單</div><div class="bet-odds">1:0.75</div><div class="chips-stack-area" id="chipsArea-dragonSingle"></div></div>
+                        <div class="bet-card-sub" data-bet="tigerSingle"><div class="bet-name">虎單</div><div class="bet-odds">1:0.75</div><div class="chips-stack-area" id="chipsArea-tigerSingle"></div></div>
+                        <div class="bet-card-sub" data-bet="tigerDouble"><div class="bet-name">虎雙</div><div class="bet-odds">1:1.05</div><div class="chips-stack-area" id="chipsArea-tigerDouble"></div></div>
+                    </div>
+                    <div class="bet-row">
+                        <div class="bet-card-main" data-bet="dragon"><div class="bet-name">龍</div><div class="bet-odds">1:1</div><div class="chips-stack-area" id="chipsArea-dragon"></div></div>
+                        <div class="bet-card-main" data-bet="tie"><div class="bet-name">和</div><div class="bet-odds">1:8</div><div class="chips-stack-area" id="chipsArea-tie"></div></div>
+                        <div class="bet-card-main" data-bet="tiger"><div class="bet-name">虎</div><div class="bet-odds">1:1</div><div class="chips-stack-area" id="chipsArea-tiger"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bet-page">
+                <div class="bet-main-grid">
+                    <div class="bet-row">
+                        <div class="bet-card-sub" data-bet="dragonBlack"><div class="bet-name">龍黑</div><div class="bet-odds">1:0.9</div><div class="chips-stack-area" id="chipsArea-dragonBlack"></div></div>
+                        <div class="bet-card-sub" data-bet="dragonRed"><div class="bet-name">龍紅</div><div class="bet-odds">1:0.9</div><div class="chips-stack-area" id="chipsArea-dragonRed"></div></div>
+                        <div class="bet-card-sub" data-bet="tigerRed"><div class="bet-name">虎紅</div><div class="bet-odds">1:0.9</div><div class="chips-stack-area" id="chipsArea-tigerRed"></div></div>
+                        <div class="bet-card-sub" data-bet="tigerBlack"><div class="bet-name">虎黑</div><div class="bet-odds">1:0.9</div><div class="chips-stack-area" id="chipsArea-tigerBlack"></div></div>
+                    </div>
+                    <div class="bet-row">
+                        <div class="bet-card-main" data-bet="dragon2"><div class="bet-name">龍</div><div class="bet-odds">1:1</div><div class="chips-stack-area" id="chipsArea-dragon2"></div></div>
+                        <div class="bet-card-main" data-bet="tie2"><div class="bet-name">和</div><div class="bet-odds">1:8</div><div class="chips-stack-area" id="chipsArea-tie2"></div></div>
+                        <div class="bet-card-main" data-bet="tiger2"><div class="bet-name">虎</div><div class="bet-odds">1:1</div><div class="chips-stack-area" id="chipsArea-tiger2"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-indicator" id="pageIndicator">
+            <div class="page-dot active" data-page="0"></div>
+            <div class="page-dot" data-page="1"></div>
+        </div>
+
+        <div class="chips-control-area">
+            <div class="chips-area">
+                <div class="chips-header"><div class="chips-label">選擇籌碼</div></div>
+                <div class="chips-grid" id="chipsGrid"></div>
+            </div>
+            <div class="action-buttons">
+                <div class="action-item"><div class="action-btn confirm" id="confirmBtn"><i class="fas fa-check"></i></div><div class="action-label">確認</div></div>
+                <div class="action-item"><div class="action-btn cancel" id="cancelBtn"><i class="fas fa-times"></i></div><div class="action-label">取消</div></div>
+            </div>
+        </div>
+        <div class="total-bet-info">
+            <span>💰 選中籌碼: <strong id="selectedChipVal">100</strong></span>
+            <span>📌 總下注: <strong id="totalBetAmount">0</strong></span>
+        </div>
+    </div>
+
+    <!-- 牌路區 -->
+    <div class="roadmap-panel">
+        <div class="road-dual-container">
+            <div class="beadplate-wrapper">
+                <div class="beadplate-title">珠盤路</div>
+                <div id="beadplateContainer" class="beadplate-grid"></div>
+            </div>
+            <div class="bigroad-wrapper" id="bigroadScrollWrapper">
+                <div class="bigroad-title" style="font-size:10px; color:#ffcc88;">大路</div>
+                <div id="bigRoadContainer" class="bigroad-container"></div>
+            </div>
+        </div>
+        <div class="subroads-container">
+            <div class="subroad-item"><div class="subroad-title">大眼仔</div><div id="bigeyeContainer" class="subroad-table"></div></div>
+            <div class="subroad-item"><div class="subroad-title">小路</div><div id="smallRoadContainer" class="subroad-table"></div></div>
+            <div class="subroad-item"><div class="subroad-title">曱甴路</div><div id="cockroachContainer" class="subroad-table"></div></div>
+        </div>
+    </div>
+
+    <!-- 聊天室 - 浮動蓋過牌路 -->
+    <div class="chat-room" id="chatRoom">
+        <div class="chat-header" id="chatToggleBtn">
+            <i class="fas fa-gift gift-icon" id="giftIconBtn"></i>
+            <span>💬 下注滿200點，開始聊天</span>
+            <i class="fas fa-chevron-up collapse-icon"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg"><span class="msg-name">🎲 荷官</span><span class="msg-time">--:--</span><span> : 視訊發牌｜龍虎對決｜點擊禮物盒🎁</span></div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="下注滿200點後可聊天..." disabled>
+            <button id="sendChatBtn" disabled>發送</button>
+        </div>
+    </div>
+</div>
+
+<!-- 右側抽屜面板 -->
+<div class="global-drawer-panel" id="roomDrawerPanel">
+    <div class="drawer-header"><span>🐉 龍虎遊戲房</span><div class="drawer-close" id="drawerCloseBtn">&times;</div></div>
+    <div class="room-list" id="roomList"></div>
+</div>
+
+<!-- 禮物面板 -->
+<div id="giftModal" class="gift-modal hide">
+    <div class="gift-option" data-gift="🌸 鮮花" data-price="500"><span class="gift-emoji">🌸</span><span class="gift-name">鮮花</span><span class="gift-price">500</span></div>
+    <div class="gift-option" data-gift="🎈 氣球" data-price="1000"><span class="gift-emoji">🎈</span><span class="gift-name">氣球</span><span class="gift-price">1,000</span></div>
+    <div class="gift-option" data-gift="💎 鑽石" data-price="2000"><span class="gift-emoji">💎</span><span class="gift-name">鑽石</span><span class="gift-price">2,000</span></div>
+    <div class="gift-option" data-gift="🎲 幸運骰" data-price="666"><span class="gift-emoji">🎲</span><span class="gift-name">幸運骰</span><span class="gift-price">666</span></div>
+</div>
+
+<script>
+    (function(){
+        let curChip = 100;
+        let totalBetMap = new Map();
+        let pendingMap = new Map();
+        let isLocked = false;
+        let countdown = 15;
+        let countdownTimer = null;
+        let gameHistory = [];
+        let balance = 888000;
+        let totalCumulativeBet = 0;
+        
+        const odds = {
+            dragon: 1, tiger: 1, tie: 8,
+            dragonDouble: 1.05, dragonSingle: 0.75, tigerSingle: 0.75, tigerDouble: 1.05,
+            dragonBlack: 0.9, dragonRed: 0.9, tigerRed: 0.9, tigerBlack: 0.9,
+            dragon2: 1, tie2: 8, tiger2: 1
+        };
+        const betTypes = ['dragon','tiger','tie','dragonDouble','dragonSingle','tigerSingle','tigerDouble',
+                          'dragonBlack','dragonRed','tigerRed','tigerBlack','dragon2','tie2','tiger2'];
+        betTypes.forEach(t => { totalBetMap.set(t,0); pendingMap.set(t,0); });
+        
+        const videoCountdown = document.getElementById('videoCountdown');
+        const countdownNum = document.getElementById('countdownNum');
+        const statusMsg = document.getElementById('dealerStatusText');
+        const bettingArea = document.getElementById('bettingArea');
+        const totalBetSpan = document.getElementById('totalBetAmount');
+        const selectedChipSpan = document.getElementById('selectedChipVal');
+        const balanceSpan = document.getElementById('balanceDisplay');
+        const dragonRankSpan = document.getElementById('dragonRank');
+        const dragonSuitSpan = document.getElementById('dragonSuit');
+        const tigerRankSpan = document.getElementById('tigerRank');
+        const tigerSuitSpan = document.getElementById('tigerSuit');
+        
+        function getRandomCard() {
+            const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+            const rankVal = Math.floor(Math.random() * 13);
+            const rank = ranks[rankVal];
+            const point = (rankVal + 1) > 10 ? 0 : (rankVal + 1);
+            const suits = ['♥','♦','♠','♣'];
+            const suit = suits[Math.floor(Math.random()*4)];
+            const isRed = (suit === '♥' || suit === '♦');
+            return { rank, point, suit, isRed };
+        }
+        
+        async function animateDealing() {
+            return new Promise(async (resolve) => {
+                dragonRankSpan.innerText = '?';
+                dragonSuitSpan.innerHTML = '';
+                tigerRankSpan.innerText = '?';
+                tigerSuitSpan.innerHTML = '';
+                dragonSuitSpan.className = 'suit';
+                tigerSuitSpan.className = 'suit';
+                statusMsg.innerText = '🎲 荷官發牌中...';
+                await new Promise(r => setTimeout(r, 500));
+                const dragonCard = getRandomCard();
+                dragonRankSpan.innerText = dragonCard.rank;
+                dragonSuitSpan.innerHTML = dragonCard.suit;
+                dragonSuitSpan.className = `suit ${dragonCard.isRed ? 'suit-red' : 'suit-black'}`;
+                statusMsg.innerText = '🐉 龍牌已開！';
+                await new Promise(r => setTimeout(r, 500));
+                const tigerCard = getRandomCard();
+                tigerRankSpan.innerText = tigerCard.rank;
+                tigerSuitSpan.innerHTML = tigerCard.suit;
+                tigerSuitSpan.className = `suit ${tigerCard.isRed ? 'suit-red' : 'suit-black'}`;
+                statusMsg.innerText = '🐯 虎牌已開！';
+                resolve({ dragonCard, tigerCard });
+            });
+        }
+        
+        // 牌路渲染函數
+        function buildLShapeGrid(history){
+            let grid=[], row=0, col=0, last=null, cnt=0;
+            for(let i=0;i<history.length;i++){
+                const res = history[i];
+                if(res === "和"){
+                    if(grid[row]&&grid[row][col]) grid[row][col].hasTie=true;
+                    continue;
+                }
+                if(last===null){
+                    grid[row]=[];
+                    grid[row][col]={result:res, points:0, hasTie:false};
+                    last=res; cnt=1;
+                } else if(res===last && cnt<6){
+                    row++;
+                    if(!grid[row]) grid[row]=[];
+                    grid[row][col]={result:res, points:0, hasTie:false};
+                    cnt++;
+                } else if(res!==last){
+                    row=0; col++;
+                    if(!grid[row]) grid[row]=[];
+                    grid[row][col]={result:res, points:0, hasTie:false};
+                    last=res; cnt=1;
+                } else {
+                    row=5; col++;
+                    if(!grid[row]) grid[row]=[];
+                    grid[row][col]={result:res, points:0, hasTie:false};
+                    last=res; cnt=1;
+                }
+            }
+            return grid;
+        }
+        
+        function getBigRoadRows(grid){
+            let rows=[];
+            for(let r=0;r<6;r++){
+                let rowCells=[];
+                if(grid[r]){
+                    let maxCol=Math.max(...Object.keys(grid[r]).map(Number),-1);
+                    for(let c=Math.max(0,maxCol-19);c<=maxCol;c++) rowCells.push(grid[r][c]||null);
+                }
+                rows.push(rowCells);
+            }
+            return rows;
+        }
+        
+        function getLastNColumns(rows,n){
+            if(!rows.length) return [];
+            let maxCols=rows[0].length, cols=[];
+            for(let c=0;c<maxCols;c++){
+                let colData=[];
+                for(let r=0;r<rows.length;r++) if(rows[r][c]!==null) colData.push(rows[r][c]);
+                if(colData.length) cols.push(colData);
+            }
+            return cols.slice(-n);
+        }
+        
+        function renderBeadplate(){
+            let container=document.getElementById('beadplateContainer');
+            let matrix=[[],[],[],[],[],[]];
+            for(let i=0;i<Math.min(36,gameHistory.length);i++){
+                let col=Math.floor(i/6), row=i%6;
+                matrix[col][row]=gameHistory[i];
+            }
+            let html='';
+            for(let row=0;row<6;row++){
+                html+='<div class="beadplate-row">';
+                for(let col=0;col<6;col++){
+                    let cell=matrix[col]?.[row];
+                    if(cell){
+                        let cls=cell==="虎"?"cell-red":(cell==="龍"?"cell-blue":"cell-tie");
+                        let txt=cell==="虎"?"虎":(cell==="龍"?"龍":"");
+                        html+=`<div class="bead-cell ${cls}">${txt}</div>`;
+                    } else html+=`<div class="bead-cell" style="background:#111827;"></div>`;
+                }
+                html+='</div>';
+            }
+            container.innerHTML=html;
+        }
+        
+        function renderBigRoad(){
+            let grid=buildLShapeGrid(gameHistory), rows=getBigRoadRows(grid), html='';
+            for(let r=0;r<rows.length;r++){
+                html+='<div class="bigroad-row">';
+                for(let c=0;c<rows[r].length;c++){
+                    let cell=rows[r][c];
+                    if(cell){
+                        let bgClass=cell.result==="虎"?"circle-red":"circle-blue";
+                        let tieMark=cell.hasTie?'<span class="tie-mark">╱</span>':'';
+                        html+=`<div class="bigroad-cell ${bgClass}" style="position:relative;">${tieMark}</div>`;
+                    }else html+=`<div class="bigroad-cell"></div>`;
+                }
+                html+='</div>';
+            }
+            document.getElementById('bigRoadContainer').innerHTML=html;
+        }
+        
+        function renderBigEyeRoad(){
+            let grid=buildLShapeGrid(gameHistory), rows=getBigRoadRows(grid), last10=getLastNColumns(rows,10), maxRows=Math.max(...last10.map(c=>c.length),0), html='';
+            for(let r=0;r<maxRows;r++){
+                html+='<div class="subroad-row">';
+                for(let c=0;c<last10.length;c++){
+                    let cell=last10[c][r];
+                    if(cell){
+                        let color=cell.result==="虎"?"紅":"藍";
+                        html+=`<div class="bigeye-dot ${color==='紅'?'bigeye-dot-red':'bigeye-dot-blue'}"></div>`;
+                    }else html+=`<div class="bigeye-dot" style="opacity:0;"></div>`;
+                }
+                html+='</div>';
+            }
+            document.getElementById('bigeyeContainer').innerHTML=html;
+        }
+        
+        function renderSmallRoad(){
+            let grid=buildLShapeGrid(gameHistory), rows=getBigRoadRows(grid), last10=getLastNColumns(rows,10), maxRows=Math.max(...last10.map(c=>c.length),0), html='';
+            for(let r=0;r<maxRows;r++){
+                html+='<div class="subroad-row">';
+                for(let c=0;c<last10.length;c++){
+                    let cell=last10[c][r];
+                    if(cell){
+                        let color=cell.result==="虎"?"紅":"藍";
+                        html+=`<div class="small-dot ${color==='紅'?'small-dot-red':'small-dot-blue'}"></div>`;
+                    }else html+=`<div class="small-dot" style="opacity:0;"></div>`;
+                }
+                html+='</div>';
+            }
+            document.getElementById('smallRoadContainer').innerHTML=html;
+        }
+        
+        function renderCockroachRoad(){
+            let grid=buildLShapeGrid(gameHistory), rows=getBigRoadRows(grid), last8=getLastNColumns(rows,8), maxRows=Math.max(...last8.map(c=>c.length),0), html='';
+            for(let r=0;r<maxRows;r++){
+                html+='<div class="subroad-row">';
+                for(let c=0;c<last8.length;c++){
+                    let cell=last8[c][r];
+                    if(cell){
+                        let color=cell.result==="虎"?"紅":"藍", slashClass=(color==='紅')?'slash-red':'slash-blue';
+                        html+=`<div class="slash-cell"><div class="slash-icon ${slashClass}"></div></div>`;
+                    }else html+=`<div class="slash-cell"></div>`;
+                }
+                html+='</div>';
+            }
+            document.getElementById('cockroachContainer').innerHTML=html;
+        }
+        
+        function addChatMessage(name, msg, color="#ffbb88") {
+            let container = document.getElementById('chatMessages');
+            let t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            let d = document.createElement('div');
+            d.className = 'chat-msg';
+            d.innerHTML = `<span class="msg-name" style="color:${color};">${name}</span><span class="msg-time">${t}</span><span> : ${msg}</span>`;
+            container.appendChild(d);
+            container.scrollTop = container.scrollHeight;
+            if(container.children.length > 50) container.removeChild(container.children[0]);
+        }
+        
+        function updateChatPermission() {
+            let can = totalCumulativeBet >= 200;
+            document.getElementById('chatInput').disabled = !can;
+            document.getElementById('sendChatBtn').disabled = !can;
+            if(can) document.getElementById('chatInput').placeholder = "輸入訊息...";
+            else document.getElementById('chatInput').placeholder = `需累積下注 ${200 - totalCumulativeBet} 點解鎖聊天`;
+        }
+        
+        function addGiftAnimation(giftName, giftPrice) {
+            const animDiv = document.createElement('div');
+            animDiv.className = 'gift-animation';
+            animDiv.innerHTML = `🎁 ${giftName} +${giftPrice}`;
+            document.body.appendChild(animDiv);
+            setTimeout(() => animDiv.remove(), 1500);
+        }
+        
+        const roomsData = [
+            { id: "A1001", name: "百家樂 A1001", type: "baccarat", dealer: "小寶", players: 607, trend: { streak: "莊", streakCount: 5 } },
+            { id: "A1002", name: "百家樂 A1002", type: "baccarat", dealer: "安娜", players: 342, trend: { streak: "跳", streakCount: 3 } },
+            { id: "B2001", name: "百家樂 B2001", type: "baccarat", dealer: "艾莉絲", players: 891, trend: { streak: "閒", streakCount: 4 } },
+            { id: "S3001", name: "骰寶 S3001", type: "sicbo", dealer: "小珍", players: 234, trend: { trend: "大", streakCount: 3 } },
+            { id: "D4001", name: "龍虎 D4001", type: "dragon", dealer: "大衛", players: 512, trend: { streak: "龍", streakCount: 4 } }
+        ];
+        
+        function getDynamicStatus(room) {
+            const trend = room.trend;
+            if (room.type === "baccarat") {
+                if (trend.streak === "莊" && trend.streakCount >= 4) return { text: "🔥 莊長龍 " + trend.streakCount + "連", class: "status-hot" };
+                if (trend.streak === "閒" && trend.streakCount >= 4) return { text: "🔥 閒長龍 " + trend.streakCount + "連", class: "status-hot" };
+                if (trend.streak === "跳" && trend.streakCount >= 3) return { text: "⚡ 單跳路 好路", class: "status-jump" };
+            } else if (room.type === "dragon") {
+                if (trend.streak === "龍" && trend.streakCount >= 4) return { text: "🐉 龍長龍 " + trend.streakCount + "連", class: "status-hot" };
+                if (trend.streak === "虎" && trend.streakCount >= 4) return { text: "🐯 虎長龍 " + trend.streakCount + "連", class: "status-hot" };
+            }
+            return { text: room.type === "baccarat" ? "🎰 百家樂" : "🐉 龍虎", class: "status-normal" };
+        }
+        
+        function renderRoomList() {
+            const container = document.getElementById('roomList');
+            if (!container) return;
+            container.innerHTML = '';
+            roomsData.forEach(room => {
+                const dynamicStatus = getDynamicStatus(room);
+                const typeIcon = room.type === 'baccarat' ? '🎰' : '🐉';
+                const roomItem = document.createElement('div');
+                roomItem.className = 'room-item';
+                roomItem.innerHTML = `<div class="room-name">${typeIcon} ${room.name}</div><div class="room-players">👥 ${room.dealer}荷官 | ${room.players}人</div><div class="room-status ${dynamicStatus.class}">${dynamicStatus.text}</div>`;
+                roomItem.addEventListener('click', () => {
+                    addChatMessage("🏠 系統", `您已切換至 ${room.name}（${dynamicStatus.text}）`, "#88ffdd");
+                    statusMsg.innerText = `✨ 歡迎來到 ${room.name} ✨`;
+                    setTimeout(() => { if(!isLocked) statusMsg.innerText = "✨ 開放下注 ✨"; }, 2000);
+                    document.getElementById('roomDrawerPanel').classList.remove('open');
+                });
+                container.appendChild(roomItem);
+            });
+        }
+        
+        function initDrawer() {
+            const drawerPanel = document.getElementById('roomDrawerPanel');
+            const videoHandle = document.getElementById('videoDrawerHandle');
+            const drawerClose = document.getElementById('drawerCloseBtn');
+            if(videoHandle) videoHandle.addEventListener('click', () => { drawerPanel.classList.toggle('open'); renderRoomList(); });
+            if(drawerClose) drawerClose.addEventListener('click', () => drawerPanel.classList.remove('open'));
+        }
+        
+        function showToast(message, type = 'normal'){
+            let existing = document.querySelector('.result-toast');
+            if(existing) existing.remove();
+            let toast = document.createElement('div');
+            toast.className = 'result-toast';
+            if(type === 'dragon') toast.classList.add('dragon');
+            else if(type === 'tiger') toast.classList.add('tiger');
+            else if(type === 'tie') toast.classList.add('tie');
+            else if(type === 'win') toast.classList.add('win');
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2200);
+        }
+        
+        function updateBalanceUI() { balanceSpan.innerText = balance.toLocaleString(); }
+        function updateTotalUI(){
+            let sum = 0;
+            for(let v of totalBetMap.values()) sum += v;
+            totalBetSpan.innerText = sum;
+        }
+        
+        function refreshChipsDisplay(){
+            for(let type of betTypes){
+                let area = document.getElementById(`chipsArea-${type}`);
+                if(area){
+                    area.innerHTML = '';
+                    let amount = totalBetMap.get(type) || 0;
+                    if(amount > 0){
+                        let cnt = Math.min(5, Math.ceil(amount / 200));
+                        for(let i=0;i<cnt;i++){
+                            let chip = document.createElement('div');
+                            chip.className = 'thrown-chip';
+                            let disp = curChip>=1000? (curChip/1000)+'K' : curChip;
+                            chip.innerText = disp;
+                            if(curChip === 100) chip.style.background = 'radial-gradient(circle at 35% 35%, #ffdd99, #e6a44c)';
+                            else if(curChip === 500) chip.style.background = 'radial-gradient(circle at 35% 35%, #aaffcc, #4cae7c)';
+                            else if(curChip === 1000) chip.style.background = 'radial-gradient(circle at 35% 35%, #88aaff, #4466cc)';
+                            else if(curChip === 5000) chip.style.background = 'radial-gradient(circle at 35% 35%, #ffaa88, #cc6644)';
+                            else if(curChip === 10000) chip.style.background = 'radial-gradient(circle at 35% 35%, #ff88cc, #cc4488)';
+                            else if(curChip === 50000) chip.style.background = 'radial-gradient(circle at 35% 35%, #88ffdd, #44ccaa)';
+                            chip.style.transform = `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+                            area.appendChild(chip);
+                        }
+                    }
+                }
+            }
+        }
+        
+        function setLocked(locked){
+            isLocked = locked;
+            if(locked) bettingArea.classList.add('bet-locked');
+            else bettingArea.classList.remove('bet-locked');
+        }
+        
+        function addPending(betKey){
+            if(isLocked){ showToast('⏳ 開牌中，請等待下局', 'normal'); return false; }
+            let newAmt = (pendingMap.get(betKey)||0) + curChip;
+            pendingMap.set(betKey, newAmt);
+            let target = document.querySelector(`[data-bet="${betKey}"]`);
+            if(target){
+                target.classList.add('selected-highlight');
+                setTimeout(()=>target.classList.remove('selected-highlight'), 200);
+            }
+            showToast(`📌 ${betKey} +${curChip}`, 'normal');
+            return true;
+        }
+        
+        function confirmBets(){
+            if(isLocked){ showToast('🔒 開牌中，無法下注', 'normal'); return; }
+            let has = false, totalAdded = 0;
+            for(let [k,v] of pendingMap.entries()){
+                if(v>0){
+                    totalBetMap.set(k, (totalBetMap.get(k)||0) + v);
+                    totalAdded += v;
+                    has = true;
+                    pendingMap.set(k,0);
+                }
+            }
+            if(has){
+                totalCumulativeBet += totalAdded;
+                updateChatPermission();
+                updateTotalUI();
+                refreshChipsDisplay();
+                showToast(`✅ 確認下注 ${totalAdded} 點`, 'win');
+                addChatMessage("✅ 系統", `確認下注，總金額 ${totalAdded} 點`, "#88ffaa");
+            } else {
+                showToast('⚠️ 沒有暫存下注', 'normal');
+            }
+        }
+        
+        function clearPending(){
+            for(let k of pendingMap.keys()) pendingMap.set(k,0);
+            showToast('❌ 暫存已清除', 'normal');
+            addChatMessage("❌ 系統", "已清空暫存", "#ffaa66");
+        }
+        
+        async function settleGame(){
+            if(isLocked) return;
+            if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+            setLocked(true);
+            statusMsg.innerText = '🔒 封盤開牌中...';
+            addChatMessage("🎲 系統", "下注結束，開始發牌", "#ffaa66");
+            
+            const { dragonCard, tigerCard } = await animateDealing();
+            
+            let result = '';
+            if(dragonCard.point > tigerCard.point) result = '龍';
+            else if(tigerCard.point > dragonCard.point) result = '虎';
+            else result = '和';
+            
+            let winAmount = 0;
+            if(result === '龍'){
+                if(totalBetMap.get('dragon')>0) winAmount += totalBetMap.get('dragon') * odds.dragon;
+                if(totalBetMap.get('dragon2')>0) winAmount += totalBetMap.get('dragon2') * odds.dragon2;
+                if(totalBetMap.get('dragonSingle')>0) winAmount += totalBetMap.get('dragonSingle') * odds.dragonSingle;
+                if(totalBetMap.get('dragonDouble')>0) winAmount += totalBetMap.get('dragonDouble') * odds.dragonDouble;
+                if(totalBetMap.get('dragonRed')>0) winAmount += totalBetMap.get('dragonRed') * odds.dragonRed;
+                if(totalBetMap.get('dragonBlack')>0) winAmount += totalBetMap.get('dragonBlack') * odds.dragonBlack;
+            } else if(result === '虎'){
+                if(totalBetMap.get('tiger')>0) winAmount += totalBetMap.get('tiger') * odds.tiger;
+                if(totalBetMap.get('tiger2')>0) winAmount += totalBetMap.get('tiger2') * odds.tiger2;
+                if(totalBetMap.get('tigerSingle')>0) winAmount += totalBetMap.get('tigerSingle') * odds.tigerSingle;
+                if(totalBetMap.get('tigerDouble')>0) winAmount += totalBetMap.get('tigerDouble') * odds.tigerDouble;
+                if(totalBetMap.get('tigerRed')>0) winAmount += totalBetMap.get('tigerRed') * odds.tigerRed;
+                if(totalBetMap.get('tigerBlack')>0) winAmount += totalBetMap.get('tigerBlack') * odds.tigerBlack;
+            } else {
+                if(totalBetMap.get('tie')>0) winAmount += totalBetMap.get('tie') * odds.tie;
+                if(totalBetMap.get('tie2')>0) winAmount += totalBetMap.get('tie2') * odds.tie2;
+            }
+            
+            statusMsg.innerText = result === '龍' ? '🐉 龍獲勝！' : (result === '虎' ? '🐯 虎獲勝！' : '⚖️ 和局！');
+            if(result === '龍') showToast(`🐉 龍獲勝！`, 'dragon');
+            else if(result === '虎') showToast(`🐯 虎獲勝！`, 'tiger');
+            else showToast(`⚖️ 和局！`, 'tie');
+            addChatMessage("🎰 結果", `${result}家獲勝！`, "#ffcc88");
+            
+            if(winAmount > 0){
+                balance += winAmount;
+                updateBalanceUI();
+                showToast(`🎉 恭喜贏得 ${winAmount} 點！`, 'win');
+                addChatMessage("💰 彩金", `恭喜贏得 ${winAmount} 點！`, "#ffaa66");
+            }
+            
+            gameHistory.unshift(result);
+            if(gameHistory.length > 40) gameHistory.pop();
+            
+            renderBeadplate();
+            renderBigRoad();
+            renderBigEyeRoad();
+            renderSmallRoad();
+            renderCockroachRoad();
+            
+            const dragonScoreSpan = document.getElementById('dragonScore');
+            const tigerScoreSpan = document.getElementById('tigerScore');
+            if(result === '龍'){ dragonScoreSpan.innerText = '1'; tigerScoreSpan.innerText = '0'; setTimeout(()=>{ dragonScoreSpan.innerText = '0'; tigerScoreSpan.innerText = '0'; }, 1800); }
+            else if(result === '虎'){ dragonScoreSpan.innerText = '0'; tigerScoreSpan.innerText = '1'; setTimeout(()=>{ dragonScoreSpan.innerText = '0'; tigerScoreSpan.innerText = '0'; }, 1800); }
+            
+            for(let k of totalBetMap.keys()) totalBetMap.set(k,0);
+            updateTotalUI(); refreshChipsDisplay();
+            setLocked(false);
+            startCountdown();
+        }
+        
+        function startCountdown(){
+            if(countdownTimer) clearInterval(countdownTimer);
+            countdown = 15;
+            countdownNum.innerText = countdown;
+            videoCountdown.classList.remove('urgent');
+            statusMsg.innerText = '✨ 開放下注 ✨';
+            countdownTimer = setInterval(() => {
+                if(isLocked) return;
+                if(countdown <= 0){
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                    settleGame();
+                } else {
+                    countdown--;
+                    countdownNum.innerText = countdown;
+                    if(countdown <= 5 && countdown > 0) videoCountdown.classList.add('urgent');
+                    else videoCountdown.classList.remove('urgent');
+                }
+            }, 1000);
+        }
+        
+        function initChips(){
+            const chipsValues = [100,500,1000,5000,10000,50000];
+            const container = document.getElementById('chipsGrid');
+            container.innerHTML = '';
+            const colors = {
+                100: 'radial-gradient(circle at 35% 35%, #ffdd99, #e6a44c)',
+                500: 'radial-gradient(circle at 35% 35%, #aaffcc, #4cae7c)',
+                1000: 'radial-gradient(circle at 35% 35%, #88aaff, #4466cc)',
+                5000: 'radial-gradient(circle at 35% 35%, #ffaa88, #cc6644)',
+                10000: 'radial-gradient(circle at 35% 35%, #ff88cc, #cc4488)',
+                50000: 'radial-gradient(circle at 35% 35%, #88ffdd, #44ccaa)'
+            };
+            chipsValues.forEach(val => {
+                let chipDiv = document.createElement('div');
+                chipDiv.className = 'chip';
+                let display = val >= 1000 ? (val/1000)+'K' : val;
+                chipDiv.setAttribute('data-value', val);
+                chipDiv.innerText = display;
+                chipDiv.style.background = colors[val];
+                chipDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+                    chipDiv.classList.add('active-chip');
+                    curChip = val;
+                    selectedChipSpan.innerText = curChip >= 1000 ? (curChip/1000)+'K' : curChip;
+                });
+                container.appendChild(chipDiv);
+            });
+            document.querySelector('.chip').classList.add('active-chip');
+        }
+        
+        function bindBetButtons(){
+            document.querySelectorAll('.bet-card-main, .bet-card-sub').forEach(el => {
+                let betKey = el.getAttribute('data-bet');
+                if(!betKey) return;
+                el.addEventListener('click', (e) => { e.stopPropagation(); addPending(betKey); });
+            });
+        }
+        
+        function bindActionButtons(){
+            document.getElementById('confirmBtn').addEventListener('click', confirmBets);
+            document.getElementById('cancelBtn').addEventListener('click', clearPending);
+        }
+        
+        function initCarousel(){
+            const swipeContainer = document.getElementById('swipeContainer');
+            const dots = document.querySelectorAll('.page-dot');
+            function updatePageIndicator(){
+                if(!swipeContainer) return;
+                let scrollLeft = swipeContainer.scrollLeft;
+                let pageWidth = swipeContainer.clientWidth;
+                if(pageWidth === 0) return;
+                let activeIndex = Math.round(scrollLeft / pageWidth);
+                dots.forEach((dot, idx) => {
+                    if(idx === activeIndex) dot.classList.add('active');
+                    else dot.classList.remove('active');
+                });
+            }
+            swipeContainer.addEventListener('scroll', updatePageIndicator);
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    let idx = parseInt(dot.getAttribute('data-page'));
+                    if(swipeContainer && !isNaN(idx)){
+                        swipeContainer.scrollTo({ left: idx * swipeContainer.clientWidth, behavior: 'smooth' });
+                    }
+                });
+            });
+            setTimeout(updatePageIndicator, 100);
+            window.addEventListener('resize', () => setTimeout(updatePageIndicator, 100));
+        }
+        
+        function initChat() {
+            const chatRoom = document.getElementById('chatRoom');
+            const collapseIcon = document.querySelector('.collapse-icon');
+            const chatHeader = document.getElementById('chatToggleBtn');
+            
+            collapseIcon.addEventListener('click', (e) => { e.stopPropagation(); chatRoom.classList.toggle('collapsed'); });
+            chatHeader.addEventListener('click', (e) => { if(e.target.classList.contains('gift-icon')) return; chatRoom.classList.toggle('collapsed'); });
+            
+            document.getElementById('sendChatBtn').addEventListener('click', () => {
+                if(totalCumulativeBet < 200){
+                    addChatMessage("⚠️ 系統", `累積下注未滿200點，無法發言！(目前${totalCumulativeBet}點)`, "#ff8888");
+                    return;
+                }
+                const inp = document.getElementById('chatInput');
+                const txt = inp.value.trim();
+                if(txt){
+                    addChatMessage("👑 炫風俠客", txt, "#ffcc66");
+                    inp.value = "";
+                }
+            });
+        }
+        
+        function initGiftBox() {
+            const giftBtn = document.getElementById('giftIconBtn');
+            const giftModal = document.getElementById('giftModal');
+            giftBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if(totalCumulativeBet < 200) {
+                    addChatMessage("🔒 系統", `下注滿200點才能贈送禮物 (目前${totalCumulativeBet}點)`, "#ff8888");
+                    return;
+                }
+                giftModal.classList.toggle('hide');
+            });
+            document.querySelectorAll('.gift-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    let price = parseInt(opt.getAttribute('data-price'));
+                    let name = opt.getAttribute('data-gift');
+                    let emoji = opt.querySelector('.gift-emoji').innerText;
+                    if(balance >= price) {
+                        balance -= price;
+                        updateBalanceUI();
+                        addChatMessage("🎁 炫風俠客", `贈送 ${emoji} ${name} (價值 ${price.toLocaleString()} 點)`, "#ff88aa");
+                        addGiftAnimation(name, price);
+                        statusMsg.innerText = `❤️ 收到 ${emoji} ${name}！ 謝謝 ❤️`;
+                        setTimeout(() => { if(!isLocked) statusMsg.innerText = "✨ 開放下注 ✨"; }, 2500);
+                    } else {
+                        addChatMessage("⚠️ 系統", `點數不足，贈送 ${name} 需要 ${price.toLocaleString()} 點`, "#ff8888");
+                    }
+                    giftModal.classList.add('hide');
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if(!giftBtn.contains(e.target) && !giftModal.contains(e.target)) giftModal.classList.add('hide');
+            });
+        }
+        
+        function initDemoHistory(){
+            let seed = ["虎","虎","龍","龍","虎","虎","龍","和","虎","龍","虎","龍","虎","虎","龍"];
+            for(let i=0;i<seed.length;i++) gameHistory.push(seed[i]);
+            renderBeadplate();
+            renderBigRoad();
+            renderBigEyeRoad();
+            renderSmallRoad();
+            renderCockroachRoad();
+        }
+        
+        initChips();
+        bindBetButtons();
+        bindActionButtons();
+        initDrawer();
+        initCarousel();
+        initChat();
+        initGiftBox();
+        initDemoHistory();
+        updateBalanceUI();
+        updateTotalUI();
+        refreshChipsDisplay();
+        updateChatPermission();
+        startCountdown();
+        addChatMessage("🎲 荷官", "視訊發牌｜完整牌路｜浮動聊天室蓋過牌路", "#0ff");
+        addChatMessage("💎 系統", "✨ 珠盤路｜大路｜大眼仔｜小路｜曱甴路 ✨", "#ffcc88");
+    })();
+</script>
+</body>
+</html>
