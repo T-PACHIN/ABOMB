@@ -1,0 +1,3621 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>AB Lobby v38 Member Center Game Report</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:#080910;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;color:#fff}
+body{display:flex;justify-content:center;overflow-x:hidden}
+.app{width:100%;max-width:430px;min-height:100vh;background:radial-gradient(circle at 22% 4%,rgba(130,78,255,.18) 0%,transparent 34%),radial-gradient(circle at 88% 13%,rgba(0,220,255,.12) 0%,transparent 32%),linear-gradient(180deg,#202129 0%,#17181f 22%,#111219 100%);border:1px solid rgba(255,255,255,.06);border-radius:26px;overflow:hidden;position:relative;padding-bottom:110px}
+.ambient{position:absolute;pointer-events:none;z-index:0;filter:blur(18px);opacity:.68}
+.ambient-a{width:160px;height:90px;left:-42px;top:22px;background:radial-gradient(circle,rgba(126,66,255,.42),transparent 68%)}
+.ambient-b{width:130px;height:120px;right:-48px;top:84px;background:radial-gradient(circle,rgba(0,211,255,.28),transparent 65%)}
+.header,.notice,.tabs-area,.game-grid{position:relative;z-index:1}
+.header{height:96px;position:relative;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0) 55%),radial-gradient(circle at 18% 62%,rgba(255,199,77,.12),transparent 36%)}
+.header:after{content:"";position:absolute;left:13px;right:13px;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent)}
+.logo{position:absolute;left:22px;top:26px;width:70px;height:52px}
+.logo img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 5px 7px rgba(0,0,0,.88)) drop-shadow(0 0 8px rgba(255,189,66,.18))}
+.wallet{position:absolute;top:48px;right:82px;display:flex;align-items:center;gap:7px;color:#e8e8e8;font-family:Georgia,"Times New Roman",serif;font-size:15px;letter-spacing:.8px;white-space:nowrap;padding:3px 8px 3px 4px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(0,0,0,.08));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.coin{width:27px;height:27px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:20px;line-height:1;box-shadow:inset 0 0 8px rgba(255,255,255,.05)}
+.menu{position:absolute;top:47px;right:18px;width:33px;display:flex;flex-direction:column;gap:9px}
+.menu span{height:4px;background:linear-gradient(90deg,#f0f0f0,#b9bbc4);border-radius:8px;display:block;box-shadow:0 1px 3px rgba(0,0,0,.45)}
+.notice{height:24px;background:linear-gradient(180deg,#393c45 0%,#20232b 100%);border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(0,0,0,.85);display:flex;align-items:center;overflow:hidden;color:#cfd2db;font-size:12px;line-height:24px;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.85),0 5px 12px rgba(0,0,0,.28)}
+.speaker{width:24px;height:24px;flex:0 0 24px;display:grid;place-items:center;color:#fff;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(0,0,0,.12));text-shadow:0 0 8px rgba(255,255,255,.3)}
+.notice-window{flex:1;overflow:hidden}
+.notice-track{display:inline-block;padding-left:8px;animation:noticeMove 46s linear infinite;text-shadow:0 1px 2px rgba(0,0,0,.65)}
+.notice-track span{padding-right:36px}
+@keyframes noticeMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tabs-area{height:83px;padding-top:31px}
+.tabs-real{position:relative;width:100%;height:44px;display:flex;align-items:flex-start;gap:4px;padding-left:6px;padding-right:6px;overflow:hidden}
+.main-tab{width:62px;min-width:62px;height:27px;border:0;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,0) 42%),linear-gradient(180deg,#393744 0%,#292833 100%);color:#fff;font-size:14px;font-weight:800;letter-spacing:1px;box-shadow:0 5px 9px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.55);text-shadow:0 1px 2px rgba(0,0,0,.75);position:relative;z-index:2;font-family:inherit;line-height:27px;padding:0;white-space:nowrap}
+.main-tab.active{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 44%),linear-gradient(180deg,#34323f 0%,#24232d 100%)}
+.aurora-thin{position:absolute;left:6px;top:0;width:62px;height:27px;border-radius:3px;z-index:3;pointer-events:none;transition:transform .35s cubic-bezier(.4,0,.2,1),width .35s cubic-bezier(.4,0,.2,1)}
+.aurora-thin:before{content:"";position:absolute;inset:0;border-radius:3px;padding:1.2px;background:linear-gradient(110deg,#8fdcff 0%,#6d73ff 24%,#bb50ff 49%,#ffb24d 72%,#6fffe0 100%);background-size:260% 260%;animation:auroraFlow 3.4s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;box-shadow:0 0 5px rgba(120,105,255,.72),0 0 9px rgba(255,125,220,.32),0 0 13px rgba(0,220,255,.24)}
+.aurora-thin:after{content:"";position:absolute;inset:-2px;border-radius:4px;border:1px solid rgba(118,112,255,.35);opacity:.65}
+@keyframes auroraFlow{0%{background-position:0% 50%}100%{background-position:260% 50%}}
+.sub-tabs{margin-left:auto;height:27px;width:69px;min-width:69px;flex:0 0 69px;border-radius:15px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 40%),linear-gradient(180deg,#3a3844,#2b2a34);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 9px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.55);overflow:hidden;position:relative;z-index:2}
+.sub-tab{height:27px;border:0;padding:0;color:#fff;background:transparent;font-size:12px;font-weight:800;font-family:inherit;line-height:27px;white-space:nowrap}
+.sub-tab:first-child{width:37px}
+.sub-tab:last-child{width:32px}
+.sub-tab.active{background:linear-gradient(180deg,#ad38ff 0%,#801aff 52%,#6910cf 100%);border-radius:15px;box-shadow:0 0 8px rgba(140,35,255,.45),inset 0 1px 0 rgba(255,255,255,.15)}
+.game-grid{padding:0 10px 22px;display:grid;grid-template-columns:1fr 1fr;gap:9px 8px}
+.game-card{width:100%;background:#050505;line-height:0;overflow:hidden;border-radius:3px;position:relative;box-shadow:0 9px 18px rgba(0,0,0,.48),0 1px 0 rgba(255,255,255,.05),inset 0 0 0 1px rgba(255,255,255,.055)}
+.game-card:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(135deg,rgba(255,255,255,.035),transparent 24%),linear-gradient(180deg,rgba(255,255,255,.012),transparent 44%);mix-blend-mode:screen}
+.game-card img{width:100%;height:auto;display:block;object-fit:contain;image-rendering:auto;user-select:none;-webkit-user-drag:none}
+@media (min-width:431px){body{background:#05060b}.app{box-shadow:0 30px 90px rgba(0,0,0,.75)}}
+@media (max-width:380px){.main-tab{width:58px;min-width:58px;font-size:13px}.sub-tabs{width:66px;min-width:66px;flex-basis:66px}}
+
+/* 橫式 Banner 區：背景就是 1370x400 比例，新手指引完整放入右側 */
+.banner-slot{
+  position:relative;
+  z-index:1;
+  width:100%;
+  padding:10px 10px 0;
+}
+
+.banner-stage{
+  position:relative;
+  width:100%;
+  aspect-ratio:2048 / 598;
+  border-radius:0;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.real-banner{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(0,0,0,.42);
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:1px;
+  background:#fff;
+}
+
+.guide-banner{
+  position:absolute;
+  inset:0;
+  display:none;
+  z-index:5;
+  background:#fff;
+}
+
+.guide-banner.active{
+  display:block;
+}
+
+.guide-step{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  object-position:center center;
+  display:none;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.guide-step.active{
+  display:block;
+}
+
+.guide-hit{
+  position:absolute;
+  z-index:10;
+  border:0;
+  background:rgba(255,0,0,0);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* 按鈕點擊區依照橫式指引圖的位置 */
+.guide-close-hit{
+  left:71.8%;
+  top:4.5%;
+  width:4.8%;
+  height:9.5%;
+}
+
+.guide-prev-hit{
+  left:54.2%;
+  top:26.5%;
+  width:6.4%;
+  height:10.5%;
+}
+
+.guide-next-hit{
+  left:61.2%;
+  top:26.5%;
+  width:6.4%;
+  height:10.5%;
+}
+
+.tabs-area{
+  margin-top:0;
+}
+
+@media (min-width:768px){
+  .banner-slot{
+    padding:14px 14px 0;
+  }
+}
+
+
+/* v11 自動響應式：手機 / 電腦自動切換 */
+.app{
+  width:100%;
+  max-width:430px;
+}
+
+/* 手機：維持大廳手機版比例 */
+.banner-stage{
+  height:180px;
+  aspect-ratio:auto;
+}
+
+.guide-step{
+  object-fit:cover;
+  object-position:68% center;
+}
+
+/* 平板以上：自動變寬、Banner 變大 */
+@media (min-width:768px){
+  body{
+    padding:20px;
+  }
+
+  .app{
+    width:min(100vw - 40px,954px);
+    max-width:954px;
+  }
+
+  .banner-stage{
+    height:280px;
+    aspect-ratio:auto;
+  }
+
+  .guide-step{
+    object-fit:cover;
+    object-position:center center;
+  }
+
+  .game-grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+
+  .tabs-real{
+    max-width:430px;
+  }
+}
+
+/* 電腦大視窗：四欄卡片，Banner 更接近桌機瀏覽 */
+@media (min-width:1200px){
+  .app{
+    width:min(100vw - 60px,1370px);
+    max-width:1370px;
+  }
+
+  .banner-stage{
+    height:400px;
+  }
+
+  .game-grid{
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+}
+
+
+/* v12 透明新手指引：Banner 底圖不被白底蓋掉 */
+.banner-stage{
+  background:
+    radial-gradient(circle at 18% 45%, rgba(255,255,255,.08), transparent 35%),
+    linear-gradient(135deg, rgba(58,58,68,.95), rgba(18,19,26,.95));
+}
+
+.real-banner{
+  display:flex;
+  background:
+    radial-gradient(circle at 18% 40%,rgba(145,83,255,.28),transparent 38%),
+    radial-gradient(circle at 82% 45%,rgba(0,218,255,.20),transparent 42%),
+    linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),
+    linear-gradient(180deg,#262833,#151720);
+  z-index:1;
+}
+
+.guide-banner{
+  background:transparent !important;
+  pointer-events:none;
+}
+
+.guide-banner.active{
+  display:block;
+}
+
+.guide-step{
+  object-fit:contain !important;
+  object-position:right center !important;
+  background:transparent !important;
+  pointer-events:none;
+}
+
+.guide-hit{
+  pointer-events:auto;
+}
+
+/* 手機讓透明指引稍微放大，避免過小 */
+@media (max-width:767px){
+  .banner-stage{
+    height:210px;
+    aspect-ratio:auto;
+  }
+
+  .guide-step{
+    width:135% !important;
+    height:135% !important;
+    left:-32%;
+    top:-18%;
+    right:auto;
+    bottom:auto;
+    object-fit:contain !important;
+    object-position:right center !important;
+  }
+
+  /* 手機版透明點擊區：對齊放大後的新手指引圖 */
+  .guide-close-hit{
+    left:70%;
+    top:3%;
+    width:13%;
+    height:16%;
+  }
+
+  .guide-prev-hit{
+    left:38%;
+    top:25%;
+    width:18%;
+    height:18%;
+  }
+
+  .guide-next-hit{
+    left:54%;
+    top:25%;
+    width:19%;
+    height:18%;
+  }
+}
+
+/* 平板與桌機維持橫式 Banner 右側指引 */
+@media (min-width:768px){
+  .banner-stage{
+    height:280px;
+    aspect-ratio:auto;
+  }
+
+  .guide-step{
+    width:100% !important;
+    height:100% !important;
+    left:0;
+    top:0;
+  }
+}
+
+@media (min-width:1200px){
+  .banner-stage{
+    height:400px;
+  }
+}
+
+
+.guide-hit{
+  z-index:99 !important;
+  pointer-events:auto !important;
+}
+.guide-banner{
+  pointer-events:auto !important;
+}
+.guide-step{
+  pointer-events:none !important;
+}
+
+
+/* v16：使用無秒數卡片，HTML 倒數框固定在人數右側 */
+.game-card{
+  position:relative;
+}
+
+.countdown-badge{
+  position:absolute;
+  /* 依卡片原稿比例：在人像 + 人數右側 */
+  top:5.9%;
+  right:2.15%;
+  width:7.35%;
+  height:12.35%;
+  min-width:15px;
+  min-height:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border-radius:2px;
+  color:#00d470;
+  background:#050505;
+  border:1px solid #00984e;
+  font-size:clamp(9px,2.45vw,13px);
+  font-weight:900;
+  line-height:1;
+  z-index:80;
+  pointer-events:none;
+  box-shadow:
+    0 1px 4px rgba(0,0,0,.75),
+    inset 0 0 4px rgba(0,0,0,.95);
+}
+
+.countdown-badge.danger{
+  color:#ff123b;
+  border-color:#c70a28;
+  text-shadow:0 0 5px rgba(255,18,59,.45);
+}
+
+/* 百家5 洗牌中：固定顯示 0，不倒數 */
+
+/* 桌機放大後，倒數文字不要太大 */
+@media (min-width:768px){
+  .countdown-badge{
+    font-size:clamp(10px,1.1vw,14px);
+  }
+}
+
+
+/* v18 Logo 修正：換回金色 AB Logo */
+.logo{
+  position:absolute !important;
+  left:22px !important;
+  top:26px !important;
+  width:70px !important;
+  height:52px !important;
+  z-index:5 !important;
+}
+.logo img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  display:block !important;
+}
+
+
+/* v19 下方導覽列 */
+.app{
+  padding-bottom:96px !important;
+}
+
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:430px;
+  height:76px;
+  padding:8px 10px 12px;
+  z-index:120;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:
+    linear-gradient(180deg,rgba(38,39,48,.92) 0%,rgba(12,13,18,.98) 100%);
+  border-top:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 -10px 25px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+}
+
+.bottom-nav:before{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(170,130,255,.65),rgba(0,220,255,.42),transparent);
+}
+
+.nav-item{
+  width:20%;
+  height:56px;
+  border:0;
+  background:transparent;
+  color:#aeb2c2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-family:inherit;
+  position:relative;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.nav-icon{
+  width:30px;
+  height:30px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-size:19px;
+  font-weight:900;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.01));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 2px 7px rgba(0,0,0,.36);
+}
+
+.nav-text{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.5px;
+  line-height:1;
+}
+
+.nav-item.active{
+  color:#fff;
+}
+
+.nav-item.active .nav-icon{
+  color:#fff;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.32),transparent 35%),
+    linear-gradient(180deg,#a83aff 0%,#7116ee 58%,#4610a9 100%);
+  box-shadow:
+    0 0 10px rgba(142,54,255,.62),
+    0 0 18px rgba(0,220,255,.18),
+    inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.nav-item.active:after{
+  content:"";
+  position:absolute;
+  bottom:-2px;
+  width:26px;
+  height:3px;
+  border-radius:10px;
+  background:linear-gradient(90deg,#8fdcff,#bb50ff,#ffb24d);
+  box-shadow:0 0 8px rgba(180,90,255,.75);
+}
+
+@media (min-width:768px){
+  .bottom-nav{
+    max-width:954px;
+    height:82px;
+    padding-left:80px;
+    padding-right:80px;
+  }
+}
+
+@media (min-width:1200px){
+  .bottom-nav{
+    max-width:1370px;
+    padding-left:180px;
+    padding-right:180px;
+  }
+}
+
+
+/* =========================
+   v20 Header 精品化 + 一般/好路微調
+   ========================= */
+
+/* Header 整體改成跟下方導覽一致的玻璃精品感 */
+.header{
+  height:102px !important;
+  background:
+    radial-gradient(circle at 18% 45%,rgba(255,199,77,.16),transparent 34%),
+    radial-gradient(circle at 88% 60%,rgba(0,220,255,.10),transparent 30%),
+    linear-gradient(180deg,rgba(52,53,64,.96) 0%,rgba(24,25,33,.96) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 8px 18px rgba(0,0,0,.24);
+}
+
+.header:before{
+  content:"";
+  position:absolute;
+  left:14px;
+  right:14px;
+  top:10px;
+  height:46px;
+  border-radius:22px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+  border:1px solid rgba(255,255,255,.055);
+  pointer-events:none;
+}
+
+.header:after{
+  content:"";
+  position:absolute;
+  left:18px !important;
+  right:18px !important;
+  bottom:0 !important;
+  height:1px !important;
+  background:
+    linear-gradient(90deg,transparent,rgba(143,220,255,.32),rgba(187,80,255,.48),rgba(255,178,77,.24),transparent) !important;
+  box-shadow:0 0 10px rgba(150,85,255,.35);
+}
+
+/* Logo 微調：像是浮在玻璃導覽上 */
+.logo{
+  left:20px !important;
+  top:23px !important;
+  width:76px !important;
+  height:58px !important;
+  z-index:6 !important;
+}
+
+.logo:before{
+  content:"";
+  position:absolute;
+  inset:5px 1px 3px;
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,206,78,.16),transparent 65%);
+  filter:blur(3px);
+  z-index:-1;
+}
+
+.logo img{
+  filter:
+    drop-shadow(0 6px 8px rgba(0,0,0,.86))
+    drop-shadow(0 0 10px rgba(255,190,70,.28)) !important;
+}
+
+/* 餘額膠囊：改成與底部 active 紫光一致 */
+.wallet{
+  top:46px !important;
+  right:78px !important;
+  height:32px;
+  padding:3px 10px 3px 5px !important;
+  border-radius:18px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.015)),
+    linear-gradient(180deg,rgba(57,55,68,.95),rgba(26,27,36,.95)) !important;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,0,0,.55) !important;
+  z-index:5;
+}
+
+.wallet span{
+  color:#f5f5fb;
+  text-shadow:0 1px 2px rgba(0,0,0,.75);
+}
+
+.coin{
+  width:25px !important;
+  height:25px !important;
+  border:0 !important;
+  color:#fff;
+  background:
+    radial-gradient(circle at 35% 20%,rgba(255,255,255,.42),transparent 36%),
+    linear-gradient(180deg,#ad38ff 0%,#801aff 52%,#4d12b8 100%);
+  box-shadow:
+    0 0 10px rgba(142,54,255,.46),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
+  font-size:18px !important;
+}
+
+/* 漢堡選單改成玻璃方形按鈕 */
+.menu{
+  top:45px !important;
+  right:18px !important;
+  width:38px !important;
+  height:34px;
+  gap:0 !important;
+  padding:8px 7px;
+  border-radius:12px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,#393744,#1f2029);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.10);
+  justify-content:space-between;
+  z-index:5;
+}
+
+.menu span{
+  height:3px !important;
+  width:100%;
+  background:linear-gradient(90deg,#8fdcff,#bb50ff,#ffb24d) !important;
+  box-shadow:
+    0 0 6px rgba(187,80,255,.52),
+    0 1px 2px rgba(0,0,0,.55) !important;
+}
+
+/* 為了 Header 高度增加，公告列更貼合 */
+.notice{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.85),
+    0 6px 14px rgba(0,0,0,.30) !important;
+}
+
+/* 一般 / 好路：保留紫色填滿，但做得更像下方導覽的精品膠囊 */
+.sub-tabs{
+  width:74px !important;
+  min-width:74px !important;
+  flex:0 0 74px !important;
+  height:28px !important;
+  border-radius:16px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.01)),
+    linear-gradient(180deg,#353442,#242530) !important;
+  border:1px solid rgba(255,255,255,.065);
+  box-shadow:
+    0 5px 9px rgba(0,0,0,.50),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.55) !important;
+}
+
+.sub-tab{
+  height:28px !important;
+  line-height:28px !important;
+  font-size:12px !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.65);
+}
+
+.sub-tab:first-child{
+  width:39px !important;
+}
+
+.sub-tab:last-child{
+  width:35px !important;
+}
+
+.sub-tab.active{
+  background:
+    radial-gradient(circle at 30% 18%,rgba(255,255,255,.24),transparent 34%),
+    linear-gradient(180deg,#b947ff 0%,#811fff 56%,#5a13c7 100%) !important;
+  box-shadow:
+    0 0 9px rgba(142,54,255,.62),
+    0 0 14px rgba(0,220,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+/* Header 加高後，桌機仍維持一致 */
+@media (max-width:380px){
+  .wallet{
+    right:70px !important;
+    font-size:13px !important;
+  }
+
+  .logo{
+    width:70px !important;
+  }
+
+  .sub-tabs{
+    width:70px !important;
+    min-width:70px !important;
+    flex-basis:70px !important;
+  }
+}
+
+
+/* =========================
+   v21 Header 修正版：參考截圖的單層玻璃導覽
+   ========================= */
+
+.header{
+  height:88px !important;
+  position:relative !important;
+  background:
+    radial-gradient(circle at 14% 45%,rgba(255,192,78,.16),transparent 26%),
+    radial-gradient(circle at 92% 38%,rgba(0,210,255,.10),transparent 28%),
+    linear-gradient(135deg,#25242b 0%,#242632 42%,#17242c 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 7px 16px rgba(0,0,0,.26) !important;
+}
+
+.header:before{
+  display:none !important;
+  content:none !important;
+}
+
+.header:after{
+  content:"" !important;
+  position:absolute !important;
+  left:12px !important;
+  right:12px !important;
+  bottom:0 !important;
+  height:1px !important;
+  background:
+    linear-gradient(90deg,transparent,rgba(255,196,88,.24),rgba(138,93,255,.34),rgba(0,220,255,.25),transparent) !important;
+  box-shadow:0 0 7px rgba(133,86,255,.24) !important;
+}
+
+.logo{
+  left:24px !important;
+  top:19px !important;
+  width:66px !important;
+  height:50px !important;
+  z-index:8 !important;
+}
+
+.logo:before{
+  content:"";
+  position:absolute;
+  inset:6px -5px 2px;
+  border-radius:18px;
+  background:radial-gradient(circle at 45% 55%,rgba(255,204,88,.18),transparent 66%);
+  filter:blur(4px);
+  z-index:-1;
+}
+
+.logo img{
+  filter:
+    drop-shadow(0 6px 7px rgba(0,0,0,.82))
+    drop-shadow(0 0 8px rgba(255,188,62,.30)) !important;
+}
+
+.wallet{
+  top:42px !important;
+  right:78px !important;
+  height:29px !important;
+  padding:3px 10px 3px 5px !important;
+  border-radius:16px !important;
+  gap:6px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+    linear-gradient(180deg,#2f303c 0%,#151721 100%) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.55) !important;
+  font-size:14px !important;
+  z-index:8 !important;
+}
+
+.wallet span{
+  color:#ffffff !important;
+  letter-spacing:.7px !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.72);
+}
+
+.coin{
+  width:23px !important;
+  height:23px !important;
+  border:0 !important;
+  font-size:15px !important;
+  color:#fff !important;
+  background:
+    radial-gradient(circle at 35% 22%,rgba(255,255,255,.38),transparent 36%),
+    linear-gradient(180deg,#b946ff 0%,#8221ff 52%,#5713bd 100%) !important;
+  box-shadow:
+    0 0 9px rgba(137,48,255,.62),
+    inset 0 1px 0 rgba(255,255,255,.24) !important;
+}
+
+.menu{
+  top:41px !important;
+  right:21px !important;
+  width:34px !important;
+  height:31px !important;
+  padding:7px 7px !important;
+  border-radius:10px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025)),
+    linear-gradient(180deg,#343542 0%,#1a1c26 100%) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+  gap:0 !important;
+  z-index:8 !important;
+}
+
+.menu span{
+  height:3px !important;
+  width:100% !important;
+  border-radius:8px !important;
+  background:linear-gradient(90deg,#8fdcff 0%,#bb50ff 54%,#ffb24d 100%) !important;
+  box-shadow:0 0 5px rgba(187,80,255,.5) !important;
+}
+
+.notice{
+  margin-top:0 !important;
+}
+
+.sub-tabs{
+  width:70px !important;
+  min-width:70px !important;
+  flex:0 0 70px !important;
+  height:27px !important;
+  border-radius:15px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.01)),
+    linear-gradient(180deg,#34323f,#272832) !important;
+  border:1px solid rgba(255,255,255,.055) !important;
+}
+
+.sub-tab{
+  height:27px !important;
+  line-height:27px !important;
+  font-size:12px !important;
+}
+
+.sub-tab:first-child{
+  width:37px !important;
+}
+
+.sub-tab:last-child{
+  width:33px !important;
+}
+
+.sub-tab.active{
+  background:
+    linear-gradient(180deg,#a637ff 0%,#801aff 55%,#6511ce 100%) !important;
+  box-shadow:
+    0 0 8px rgba(142,54,255,.48),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+@media (max-width:380px){
+  .logo{
+    left:20px !important;
+    width:61px !important;
+  }
+
+  .wallet{
+    right:68px !important;
+    font-size:13px !important;
+    padding-right:8px !important;
+  }
+
+  .menu{
+    right:17px !important;
+  }
+}
+
+
+/* =========================
+   v22 Header 對齊修正
+   Logo / TWD3000 / 漢堡選單同一水平中心線
+   ========================= */
+
+.header{
+  height:88px !important;
+}
+
+/* 統一中心線：大約 y=54px */
+.logo{
+  left:24px !important;
+  top:26px !important;
+  width:62px !important;
+  height:48px !important;
+  z-index:8 !important;
+}
+
+.wallet{
+  top:39px !important;
+  right:78px !important;
+  height:30px !important;
+  display:flex !important;
+  align-items:center !important;
+}
+
+.menu{
+  top:38px !important;
+  right:21px !important;
+  width:34px !important;
+  height:32px !important;
+}
+
+/* 讓三者視覺底線更平衡 */
+.logo img{
+  object-position:center center !important;
+}
+
+.wallet .coin,
+.coin{
+  flex:0 0 23px !important;
+}
+
+.wallet span{
+  line-height:1 !important;
+}
+
+/* 小螢幕同步對齊 */
+@media (max-width:380px){
+  .logo{
+    left:20px !important;
+    top:27px !important;
+    width:58px !important;
+    height:45px !important;
+  }
+
+  .wallet{
+    top:39px !important;
+    right:68px !important;
+  }
+
+  .menu{
+    top:38px !important;
+    right:17px !important;
+  }
+}
+
+
+/* =========================
+   v23 新手引導點擊優化
+   - 透明 PNG 不攔截點擊
+   - 上一步 / 下一步 / X 點擊區放大
+   - 手機 Safari 更好點
+   ========================= */
+
+.guide-banner{
+  pointer-events:auto !important;
+}
+
+.guide-step{
+  pointer-events:none !important;
+  user-select:none !important;
+  -webkit-user-drag:none !important;
+}
+
+.guide-hit{
+  z-index:9999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+  cursor:pointer !important;
+  background:rgba(255,0,0,0) !important;
+  border:0 !important;
+}
+
+/* 桌機 / 平板點擊區 */
+.guide-close-hit{
+  left:69.5% !important;
+  top:2.2% !important;
+  width:8.5% !important;
+  height:14% !important;
+}
+
+.guide-prev-hit{
+  left:51.5% !important;
+  top:23.5% !important;
+  width:11.5% !important;
+  height:17% !important;
+}
+
+.guide-next-hit{
+  left:60.5% !important;
+  top:23.5% !important;
+  width:12.5% !important;
+  height:17% !important;
+}
+
+/* 手機版再加大，讓手指更好按 */
+@media (max-width:767px){
+  .guide-close-hit{
+    left:67% !important;
+    top:1% !important;
+    width:18% !important;
+    height:20% !important;
+  }
+
+  .guide-prev-hit{
+    left:35% !important;
+    top:22% !important;
+    width:24% !important;
+    height:23% !important;
+  }
+
+  .guide-next-hit{
+    left:52% !important;
+    top:22% !important;
+    width:27% !important;
+    height:23% !important;
+  }
+}
+
+/* 開發檢查用：要看點擊區時，把下面註解打開 */
+/*
+.guide-hit{
+  background:rgba(255,0,0,.22) !important;
+}
+*/
+
+
+/* v24 下方導覽：文字與精緻 SVG 圖標 */
+.nav-item{
+  gap:5px !important;
+}
+
+.nav-icon{
+  width:32px !important;
+  height:32px !important;
+  border-radius:13px !important;
+  color:#aeb2c2;
+}
+
+.nav-icon svg{
+  width:20px;
+  height:20px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.55));
+}
+
+.nav-text{
+  font-size:10.5px !important;
+  font-weight:850 !important;
+  letter-spacing:.2px !important;
+  white-space:nowrap;
+}
+
+.nav-item.active .nav-icon{
+  color:#fff;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.34),transparent 35%),
+    linear-gradient(180deg,#b947ff 0%,#811fff 56%,#5a13c7 100%) !important;
+}
+
+.nav-item.active .nav-icon svg{
+  stroke:#fff;
+  filter:
+    drop-shadow(0 0 4px rgba(255,255,255,.35))
+    drop-shadow(0 1px 1px rgba(0,0,0,.6));
+}
+
+@media (max-width:380px){
+  .nav-text{
+    font-size:9.5px !important;
+  }
+
+  .nav-icon{
+    width:30px !important;
+    height:30px !important;
+  }
+
+  .nav-icon svg{
+    width:18px;
+    height:18px;
+  }
+}
+
+
+/* v25：底部導覽移除「我的」，改 4 欄 */
+.bottom-nav.four-items{
+  justify-content:space-around !important;
+}
+
+.bottom-nav.four-items .nav-item{
+  width:25% !important;
+}
+
+
+/* =========================
+   v26 Safe Area
+   ========================= */
+
+.app{
+  padding-bottom:calc(120px + env(safe-area-inset-bottom,0px)) !important;
+}
+
+.bottom-nav{
+  bottom:env(safe-area-inset-bottom,0px) !important;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px)) !important;
+}
+
+@supports (padding: max(0px)) {
+  .bottom-nav{
+    padding-bottom:max(12px, calc(12px + env(safe-area-inset-bottom,0px))) !important;
+  }
+}
+
+
+/* =========================
+   v27 新手指引手機版人物貼齊 Banner 底部修正
+   ========================= */
+
+/* 手機版：讓透明新手指引以底部為基準，不裁掉人物下半身 */
+@media (max-width:767px){
+  .banner-stage{
+    height:220px !important;
+    overflow:hidden !important;
+  }
+
+  .guide-banner{
+    overflow:hidden !important;
+  }
+
+  .guide-step{
+    width:132% !important;
+    height:132% !important;
+    left:-30% !important;
+    top:auto !important;
+    bottom:0 !important;
+    right:auto !important;
+    object-fit:contain !important;
+    object-position:right bottom !important;
+    transform:none !important;
+  }
+
+  /* 透明點擊區跟著底部對齊後重新校準 */
+  .guide-close-hit{
+    left:68% !important;
+    top:2% !important;
+    width:17% !important;
+    height:18% !important;
+  }
+
+  .guide-prev-hit{
+    left:36% !important;
+    top:28% !important;
+    width:24% !important;
+    height:22% !important;
+  }
+
+  .guide-next-hit{
+    left:53% !important;
+    top:28% !important;
+    width:27% !important;
+    height:22% !important;
+  }
+}
+
+/* 更窄手機再微縮，避免人物太靠右被切 */
+@media (max-width:380px){
+  .banner-stage{
+    height:215px !important;
+  }
+
+  .guide-step{
+    width:126% !important;
+    height:126% !important;
+    left:-24% !important;
+    bottom:0 !important;
+    object-position:right bottom !important;
+  }
+}
+
+
+
+/* =========================
+   v35 手機版遊戲報表 / 明細 / 回放
+   ========================= */
+.report-page{display:none;position:relative;z-index:2;padding:12px 10px 26px;color:#fff;min-height:calc(100vh - 190px)}
+.app.record-mode .report-page{display:block}
+.app.record-mode .banner-slot,.app.record-mode .tabs-area,.app.record-mode .game-grid{display:none!important}
+.report-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.report-title{font-size:19px;font-weight:950;letter-spacing:1px;text-shadow:0 2px 6px rgba(0,0,0,.75)}
+.report-sub{font-size:11px;color:#aeb4c6;font-weight:800}.report-back{display:none;border:0;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02)),linear-gradient(180deg,#373846,#1b1d27);border:1px solid rgba(255,255,255,.1);height:32px;padding:0 12px;border-radius:16px;font-weight:900;font-family:inherit;box-shadow:0 5px 12px rgba(0,0,0,.35)}
+.report-page[data-view="detail"] .report-back,.report-page[data-view="replay"] .report-back{display:block}.report-datebar{height:40px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.015)),linear-gradient(180deg,#2c2d38,#181a23);border:1px solid rgba(255,255,255,.075);display:flex;align-items:center;justify-content:space-between;padding:0 12px;margin-bottom:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.30)}
+.report-datebar b{font-size:14px;letter-spacing:.3px}.report-datebar span{font-size:12px;color:#cfd2de}.report-tabs{display:flex;gap:8px;margin:8px 0 12px}.report-tab{flex:1;height:32px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,#353642,#232530);color:#cfd3df;font-family:inherit;font-weight:900;box-shadow:0 5px 10px rgba(0,0,0,.28)}.report-tab.active{color:#fff;background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+.summary-cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.summary-card{border-radius:14px;padding:12px 10px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),linear-gradient(135deg,#2b2d39,#171922);border:1px solid rgba(255,255,255,.075);box-shadow:0 8px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08)}.summary-card.wide{grid-column:span 2;background:radial-gradient(circle at 22% 20%,rgba(185,71,255,.26),transparent 45%),linear-gradient(135deg,#2c2d3a,#151721)}.summary-label{font-size:11px;color:#aeb4c5;font-weight:850}.summary-value{margin-top:5px;font-size:20px;font-weight:950;letter-spacing:.5px}.summary-card.wide .summary-value{font-size:28px}.plus{color:#36e68c!important}.minus{color:#ff4769!important}.muted{color:#aeb4c6!important}
+.dg-table{overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012)),#151720;box-shadow:0 10px 22px rgba(0,0,0,.42)}.dg-head,.dg-row{display:grid;align-items:center;column-gap:6px;padding:0 10px}.dg-head{height:34px;background:linear-gradient(180deg,#323440,#232631);color:#d7d9e4;font-size:12px;font-weight:950}.dg-row{min-height:50px;border-top:1px solid rgba(255,255,255,.055);font-size:13px}.dg-row:active{background:rgba(155,88,255,.12)}.dg-row .small{display:block;color:#9da4b7;font-size:10px;margin-top:2px;font-weight:750}.report-table .dg-head,.report-table .dg-row{grid-template-columns:1.18fr 1fr .9fr}.detail-table .dg-head,.detail-table .dg-row{grid-template-columns:.48fr 1.2fr .85fr .75fr}.linkish{color:#91dcff;text-decoration:underline;text-underline-offset:3px;font-weight:950}.win-cell{font-weight:950;text-align:right}.report-note{margin:10px 2px 0;color:#858ca0;font-size:11px;line-height:1.55}.view-panel{display:none}.report-page[data-view="list"] .view-list,.report-page[data-view="detail"] .view-detail,.report-page[data-view="replay"] .view-replay{display:block}.empty-tip{text-align:center;color:#8e96aa;font-size:12px;padding:34px 10px}
+.replay-video{height:205px;border-radius:16px;overflow:hidden;position:relative;background:radial-gradient(circle at 48% 15%,rgba(255,255,255,.12),transparent 22%),linear-gradient(180deg,#12141c,#05070c);border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 24px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin-bottom:12px}.replay-video:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.08) 42%,transparent 58%);transform:translateX(-60%);animation:replayScan 3.2s linear infinite}.replay-video:after{content:"LIVE REPLAY";position:absolute;left:12px;top:10px;font-size:11px;font-weight:950;color:#fff;background:rgba(0,0,0,.45);padding:5px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.1)}@keyframes replayScan{to{transform:translateX(70%)}}.play-btn{width:66px;height:66px;border-radius:50%;border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.32),transparent 36%),linear-gradient(180deg,#b947ff,#5a13c7);box-shadow:0 0 22px rgba(142,54,255,.62),0 8px 18px rgba(0,0,0,.5);font-size:28px;padding-left:4px;z-index:2}.replay-meta{position:absolute;right:12px;bottom:10px;color:#cfd5e6;font-size:11px;font-weight:800;background:rgba(0,0,0,.34);padding:5px 8px;border-radius:10px}.result-board{border-radius:16px;padding:13px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(135deg,#2b2d39,#171922);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 22px rgba(0,0,0,.35)}.result-title{font-size:14px;font-weight:950;margin-bottom:10px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.result-box{border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06);padding:10px}.result-box b{font-size:18px}.cards-line,.dice-line{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}.card-mini,.dice-mini{width:34px;height:42px;border-radius:7px;background:#f7f7fb;color:#13131a;display:grid;place-items:center;font-weight:950;box-shadow:0 4px 8px rgba(0,0,0,.35)}.dice-mini{height:34px;border-radius:9px;font-size:20px}.bet-info{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.info-row{border-radius:12px;background:rgba(0,0,0,.22);padding:9px 10px;border:1px solid rgba(255,255,255,.055)}.info-row span{display:block;color:#9fa7ba;font-size:10px;font-weight:850}.info-row b{display:block;margin-top:3px;font-size:14px}.status-pill{display:inline-flex;align-items:center;gap:5px;border-radius:14px;padding:5px 8px;background:rgba(54,230,140,.12);border:1px solid rgba(54,230,140,.28);font-size:11px;font-weight:900;color:#8fffc0}
+@media (min-width:768px){.report-page{max-width:760px;margin:0 auto;padding-top:18px}.replay-video{height:330px}.summary-cards{grid-template-columns:1.2fr 1fr 1fr}.summary-card.wide{grid-column:span 1}.report-table .dg-head,.report-table .dg-row{grid-template-columns:1.2fr 1fr 1fr}.detail-table .dg-head,.detail-table .dg-row{grid-template-columns:.45fr 1.4fr .9fr .75fr}}
+@media (max-width:380px){.detail-table .dg-head,.detail-table .dg-row{grid-template-columns:.42fr 1.1fr .8fr .68fr;font-size:12px}.dg-head{font-size:11px}.summary-value{font-size:18px}.summary-card.wide .summary-value{font-size:25px}.replay-video{height:185px}}
+
+</style>
+
+<style id="v36-member-center-modal-css">
+/* =========================
+   v36 方案B：會員中心抽屜 + 遊戲記錄彈窗
+   ========================= */
+.menu{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.report-page{
+  display:none !important;
+  position:fixed !important;
+  left:50% !important;
+  right:auto !important;
+  top:calc(10px + env(safe-area-inset-top,0px)) !important;
+  bottom:auto !important;
+  transform:translateX(-50%) translateY(-14px) !important;
+  width:min(100% - 20px,430px) !important;
+  max-height:calc(100vh - 22px - env(safe-area-inset-top,0px)) !important;
+  min-height:auto !important;
+  overflow:auto !important;
+  z-index:260 !important;
+  padding:14px 10px 18px !important;
+  border-radius:22px !important;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(185,71,255,.24),transparent 38%),
+    radial-gradient(circle at 88% 8%,rgba(0,220,255,.14),transparent 34%),
+    linear-gradient(180deg,rgba(42,43,54,.98),rgba(14,15,22,.98)) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:0 14px 40px rgba(0,0,0,.72),0 0 24px rgba(125,72,255,.18),inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+body.report-modal-open .report-page{display:block !important;animation:reportSheetIn .22s ease forwards}
+@keyframes reportSheetIn{to{transform:translateX(-50%) translateY(0)}}
+.report-overlay,.member-overlay{
+  position:fixed;inset:0;display:none;z-index:240;
+  background:rgba(0,0,0,.66);backdrop-filter:blur(7px);
+}
+body.report-modal-open .report-overlay,body.drawer-open .member-overlay{display:block}
+body.report-modal-open .bottom-nav{filter:brightness(.72)}
+.report-actions{display:flex;align-items:center;gap:8px}
+.report-close,.drawer-close{
+  border:0;color:#fff;font-family:inherit;font-weight:950;cursor:pointer;
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),linear-gradient(180deg,#3a3b48,#171923);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 5px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.app.record-mode .banner-slot,.app.record-mode .tabs-area,.app.record-mode .game-grid{display:block!important}
+.app.record-mode .report-page{display:none!important}
+body.report-modal-open .app.record-mode .report-page{display:block!important}
+.member-drawer{
+  position:fixed;z-index:250;top:0;right:0;width:min(86vw,360px);height:100vh;
+  transform:translateX(105%);transition:transform .25s cubic-bezier(.4,0,.2,1);
+  padding:calc(18px + env(safe-area-inset-top,0px)) 14px 22px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(185,71,255,.26),transparent 34%),
+    radial-gradient(circle at 92% 14%,rgba(0,220,255,.16),transparent 34%),
+    linear-gradient(180deg,rgba(41,42,53,.98),rgba(12,13,19,.99));
+  border-left:1px solid rgba(255,255,255,.12);
+  box-shadow:-18px 0 45px rgba(0,0,0,.72),inset 1px 0 0 rgba(255,255,255,.06);
+  color:#fff;
+}
+body.drawer-open .member-drawer{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.member-card{border-radius:18px;padding:13px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),linear-gradient(135deg,#303140,#171923);border:1px solid rgba(255,255,255,.08);box-shadow:0 9px 18px rgba(0,0,0,.35);margin-bottom:12px}
+.member-name{font-size:17px;font-weight:950;letter-spacing:.5px}.member-vip{margin-top:4px;font-size:12px;color:#d7bcff;font-weight:850}.member-balance{margin-top:8px;font-size:13px;color:#cfd4e4}.drawer-title{font-size:20px;font-weight:950;letter-spacing:1px;text-shadow:0 2px 6px rgba(0,0,0,.65)}
+.drawer-menu{display:flex;flex-direction:column;gap:8px}.drawer-item{height:48px;border:0;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),linear-gradient(180deg,#2d2f3b,#181a23);border:1px solid rgba(255,255,255,.075);color:#fff;font-family:inherit;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:space-between;padding:0 13px;box-shadow:0 6px 12px rgba(0,0,0,.30);cursor:pointer}.drawer-item span:first-child{display:flex;align-items:center;gap:9px}.drawer-item:active{transform:translateY(1px);background:rgba(155,88,255,.18)}.drawer-item.danger{color:#ff8fa2}.drawer-tag{font-size:10px;color:#8fdcff;background:rgba(143,220,255,.10);border:1px solid rgba(143,220,255,.18);padding:3px 6px;border-radius:10px}
+.member-name-row{display:flex;align-items:center;gap:7px}.nickname-edit{width:25px;height:25px;border-radius:9px;border:1px solid rgba(255,255,255,.10);color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),linear-gradient(180deg,#3a3b48,#181a23);font-weight:950;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.28)}
+.nick-modal{position:fixed;left:50%;top:calc(78px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);width:min(100% - 36px,360px);z-index:280;display:none;border-radius:20px;padding:16px;background:radial-gradient(circle at 18% 0%,rgba(185,71,255,.26),transparent 40%),linear-gradient(180deg,rgba(42,43,54,.98),rgba(15,16,23,.98));border:1px solid rgba(255,255,255,.13);box-shadow:0 18px 44px rgba(0,0,0,.75),0 0 20px rgba(139,72,255,.22)}
+body.nick-edit-open .nick-modal{display:block;animation:nickIn .18s ease forwards}@keyframes nickIn{to{transform:translateX(-50%) translateY(0)}}
+.nick-title{font-size:18px;font-weight:950;margin-bottom:4px}.nick-sub{font-size:12px;color:#aeb4c6;font-weight:800;margin-bottom:12px}.nick-input{width:100%;height:42px;border-radius:13px;border:1px solid rgba(255,255,255,.12);outline:none;background:rgba(0,0,0,.24);color:#fff;padding:0 12px;font-size:15px;font-weight:850}.nick-actions{display:flex;gap:9px;margin-top:13px}.nick-actions button{flex:1;height:38px;border-radius:14px;border:1px solid rgba(255,255,255,.10);font-family:inherit;font-weight:950;color:#fff;background:linear-gradient(180deg,#353642,#20222c);cursor:pointer}.nick-actions .confirm{background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.45)}
+
+@media (min-width:768px){.report-page{width:min(100% - 40px,760px)!important;max-height:82vh!important}.member-drawer{width:380px}.report-overlay{left:50%;transform:translateX(-50%);width:min(100vw - 40px,954px);border-radius:26px}.member-overlay{left:50%;transform:translateX(-50%);width:min(100vw - 40px,954px);border-radius:26px}}
+@media (min-width:1200px){.report-overlay,.member-overlay{width:min(100vw - 60px,1370px)}}
+</style>
+
+
+<style id="v37-report-top-fix-css">
+/* v37：遊戲報表/單局回放視窗改為靠上顯示，避免手機版太下方 */
+.report-page{
+  top:calc(10px + env(safe-area-inset-top,0px)) !important;
+  bottom:auto !important;
+  transform:translateX(-50%) translateY(-14px) !important;
+  max-height:calc(100vh - 22px - env(safe-area-inset-top,0px)) !important;
+  border-radius:22px !important;
+  overscroll-behavior:contain;
+}
+body.report-modal-open .report-page{animation:reportTopIn .22s ease forwards !important;}
+@keyframes reportTopIn{to{transform:translateX(-50%) translateY(0)}}
+@media (max-width:767px){
+  .report-page{
+    width:calc(100% - 18px) !important;
+    top:calc(8px + env(safe-area-inset-top,0px)) !important;
+    max-height:calc(100vh - 16px - env(safe-area-inset-top,0px)) !important;
+    padding-top:13px !important;
+  }
+  .replay-video{height:190px !important;}
+}
+</style>
+
+<style id="v39-mobile-replay-dg-css">
+/* v39：單局回放改成手機版 DG 風格 */
+.report-page[data-view="replay"]{
+  background:
+    radial-gradient(circle at 16% 0%,rgba(255,208,120,.16),transparent 26%),
+    radial-gradient(circle at 92% 10%,rgba(0,210,255,.16),transparent 30%),
+    linear-gradient(180deg,#28242a 0%,#121216 100%) !important;
+}
+.report-page[data-view="replay"] .report-datebar{
+  height:auto!important;
+  min-height:40px!important;
+  border-radius:12px!important;
+  justify-content:center!important;
+  text-align:center!important;
+  background:rgba(0,0,0,.28)!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  margin-bottom:8px!important;
+}
+.report-page[data-view="replay"] .report-datebar b{
+  font-size:13px!important;
+  letter-spacing:.2px!important;
+}
+.report-page[data-view="replay"] .report-datebar span{display:none!important;}
+.replay-video{
+  height:auto!important;
+  aspect-ratio:16/9!important;
+  border-radius:5px!important;
+  margin:0 0 10px!important;
+  background:#1d1d1f!important;
+  border:5px solid #060606!important;
+  box-shadow:none!important;
+}
+.replay-video:before{display:none!important;}
+.replay-video:after{display:none!important;}
+.play-btn{
+  width:58px!important;
+  height:58px!important;
+  font-size:25px!important;
+  background:linear-gradient(180deg,#b947ff,#6715d8)!important;
+}
+.replay-meta{
+  right:8px!important;
+  bottom:26px!important;
+  background:rgba(0,0,0,.58)!important;
+  font-size:10px!important;
+}
+.replay-controls{
+  position:absolute;
+  left:8px;
+  right:8px;
+  bottom:7px;
+  height:17px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  z-index:3;
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+}
+.replay-controls .ctrl-play{font-size:12px;line-height:1;}
+.replay-controls .ctrl-bar{height:3px;flex:1;background:rgba(255,255,255,.62);border-radius:6px;position:relative;overflow:hidden;}
+.replay-controls .ctrl-bar:before{content:"";position:absolute;left:0;top:0;bottom:0;width:18%;background:#fff;border-radius:6px;}
+.result-board{
+  padding:0!important;
+  border-radius:5px!important;
+  background:#090909!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:none!important;
+  overflow:hidden;
+}
+.result-title{display:none!important;}
+.mobile-replay-result{
+  padding:12px 8px 10px;
+  background:#090909;
+}
+.bac-score-row{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+}
+.bac-side{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:0;
+}
+.bac-side.right{flex-direction:row-reverse;}
+.dg-card{
+  width:36px;
+  height:50px;
+  border-radius:5px;
+  background:linear-gradient(180deg,#ffffff,#dadce4);
+  color:#111;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:3px 4px;
+  font-weight:950;
+  line-height:1;
+  box-shadow:0 2px 5px rgba(0,0,0,.65),inset 0 0 0 1px rgba(0,0,0,.16);
+  font-size:14px;
+}
+.dg-card .suit{font-size:22px;align-self:center;margin-top:5px;}
+.dg-card.red{color:#e12a2a;}
+.score-label{font-size:18px;font-weight:950;white-space:nowrap;letter-spacing:.5px;}
+.score-label.player{color:#31a8ff;}
+.score-label.banker{color:#ff2222;}
+.score-vs{color:#ff2929;font-weight:950;font-size:17px;white-space:nowrap;}
+.dg-bet-table{width:100%;border-collapse:collapse;background:#090909;font-size:12px;}
+.dg-bet-table th{background:#2d2d2f;color:#9d9da3;font-weight:800;height:34px;border:1px solid #252528;}
+.dg-bet-table td{height:36px;text-align:center;color:#aeb0b8;border:1px solid #202023;font-weight:850;}
+.dg-bet-table .total-label{color:#909098;}
+.dg-bet-table .money{font-size:17px;color:#b9bac2;font-weight:950;}
+.dg-bet-table .lose{color:#ff1111!important;}
+.dg-bet-table .win{color:#18de86!important;}
+.dg-replay-close-note{display:none;}
+@media (max-width:767px){
+  .report-page[data-view="replay"]{
+    top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+    left:8px!important;
+    right:8px!important;
+    width:auto!important;
+    transform:translateY(-12px)!important;
+    max-height:calc(100dvh - 18px - env(safe-area-inset-top,0px))!important;
+    padding:10px 9px 12px!important;
+    border-radius:15px!important;
+  }
+  body.report-modal-open .report-page[data-view="replay"]{animation:mobileReplayIn .18s ease forwards!important;}
+  @keyframes mobileReplayIn{to{transform:translateY(0)}}
+  .report-page[data-view="replay"] .report-top{margin-bottom:6px!important;}
+  .report-page[data-view="replay"] .report-title{font-size:17px!important;}
+  .report-page[data-view="replay"] .report-sub{font-size:10px!important;}
+  .report-page[data-view="replay"] .report-back{height:28px!important;padding:0 10px!important;font-size:12px!important;}
+  .report-page[data-view="replay"] .report-close{width:32px!important;height:32px!important;font-size:20px!important;}
+  .dg-card{width:33px;height:47px;font-size:13px;}
+  .dg-card .suit{font-size:20px;}
+  .score-label{font-size:16px;}
+  .score-vs{font-size:15px;}
+  .dg-bet-table{font-size:11px;}
+  .dg-bet-table th{height:32px;}
+  .dg-bet-table td{height:34px;}
+}
+@media (max-width:380px){
+  .bac-score-row{gap:4px;}
+  .bac-side{gap:4px;}
+  .dg-card{width:29px;height:43px;font-size:12px;}
+  .dg-card .suit{font-size:18px;margin-top:4px;}
+  .score-label{font-size:14px;}
+  .score-vs{font-size:14px;}
+}
+</style>
+
+<style id="v41-replay-score-align-css">
+/* v41：修正百家樂回放下方開牌結果對齊，改成左牌組 / 中央比分 / 右牌組三區等寬 */
+.bac-score-row{
+  display:grid!important;
+  grid-template-columns:minmax(96px,1fr) minmax(112px,132px) minmax(96px,1fr)!important;
+  align-items:center!important;
+  column-gap:6px!important;
+  width:100%!important;
+  margin:0 0 14px!important;
+}
+.bac-side{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  min-width:0!important;
+}
+.bac-side.left{justify-content:flex-start!important;}
+.bac-side.right{justify-content:flex-end!important;flex-direction:row!important;}
+.bac-center-score{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  align-items:center!important;
+  justify-self:center!important;
+  width:100%!important;
+  min-width:112px!important;
+  height:32px!important;
+}
+.bac-center-score .score-label{
+  display:flex!important;
+  align-items:center!important;
+  height:32px!important;
+  min-width:56px!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  letter-spacing:.4px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+.bac-center-score .score-label.player{
+  justify-content:flex-end!important;
+  padding-right:9px!important;
+  color:#31a8ff!important;
+  text-align:right!important;
+}
+.bac-center-score .score-label.banker{
+  justify-content:flex-start!important;
+  padding-left:9px!important;
+  color:#ff2222!important;
+  text-align:left!important;
+}
+.bac-center-score .score-divider{
+  position:absolute;
+  width:1px;
+  height:22px;
+  left:50%;
+  transform:translateX(-.5px);
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.16),transparent);
+}
+.bac-center-score{position:relative!important;}
+/* 龍虎與其他玩法仍使用原本 VS / tag 排版 */
+.score-vs{color:#ff2929;font-weight:950;font-size:17px;white-space:nowrap;}
+@media (max-width:767px){
+  .bac-score-row{
+    grid-template-columns:minmax(78px,1fr) minmax(96px,112px) minmax(78px,1fr)!important;
+    column-gap:5px!important;
+  }
+  .bac-center-score{min-width:96px!important;height:30px!important;}
+  .bac-center-score .score-label{font-size:15px!important;min-width:48px!important;height:30px!important;}
+  .bac-center-score .score-label.player{padding-right:7px!important;}
+  .bac-center-score .score-label.banker{padding-left:7px!important;}
+}
+@media (max-width:380px){
+  .bac-score-row{
+    grid-template-columns:minmax(68px,1fr) minmax(88px,100px) minmax(68px,1fr)!important;
+    column-gap:4px!important;
+  }
+  .bac-side{gap:4px!important;}
+  .bac-center-score{min-width:88px!important;height:28px!important;}
+  .bac-center-score .score-label{font-size:14px!important;min-width:44px!important;height:28px!important;letter-spacing:.1px!important;}
+  .bac-center-score .score-label.player{padding-right:5px!important;}
+  .bac-center-score .score-label.banker{padding-left:5px!important;}
+}
+</style>
+
+
+<!-- =========================
+     v46：遊戲紀錄搜尋列修正
+     - 搜尋框縮短
+     - 清除按鈕固定寬度，避免被擠成圓形
+     - 不動大廳連動 / Loading / 房卡
+     ========================= -->
+<style id="v46-report-clear-button-fixed-css">
+.dg40-searchline{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 58px!important;
+  gap:8px!important;
+  align-items:center!important;
+  margin-top:8px!important;
+}
+.dg40-searchline .dg40-input{
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  padding:0 11px!important;
+  font-size:12px!important;
+  letter-spacing:.1px!important;
+}
+#dg40Clear{
+  width:58px!important;
+  min-width:58px!important;
+  height:38px!important;
+  padding:0!important;
+  border-radius:14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  white-space:nowrap!important;
+  font-size:13px!important;
+  line-height:1!important;
+}
+@media(max-width:380px){
+  .dg40-searchline{
+    grid-template-columns:minmax(0,1fr) 54px!important;
+    gap:7px!important;
+  }
+  #dg40Clear{
+    width:54px!important;
+    min-width:54px!important;
+    height:36px!important;
+    border-radius:13px!important;
+    font-size:12px!important;
+  }
+  .dg40-searchline .dg40-input{
+    height:36px!important;
+    font-size:11.5px!important;
+    padding:0 9px!important;
+  }
+}
+</style>
+
+<!-- =========================
+     v47：遊戲紀錄查詢列精修
+     - 年/月/日寬度依內容調整
+     - 查詢按鈕縮小並加搜尋圖示
+     - 增加今日/本週/本月/全部快速篩選
+     ========================= -->
+<style id="v47-report-query-polish-css">
+.dg40-query{padding:10px!important;border-radius:16px!important}
+.dg40-select-row{grid-template-columns:1.18fr .78fr .78fr 66px!important;gap:7px!important}
+.dg40-select{height:37px!important;border-radius:12px!important;font-size:13px!important}
+.dg40-search{height:37px!important;border-radius:13px!important;font-size:12px!important;white-space:nowrap!important;padding:0 7px!important}
+#dg40Search{font-size:12px!important;letter-spacing:.1px!important}
+.dg40-searchline{grid-template-columns:minmax(0,1fr) 58px!important;gap:8px!important;margin-top:8px!important}
+.dg40-searchline .dg40-input{height:37px!important;border-radius:12px!important}
+#dg40Clear{height:37px!important;border-radius:13px!important}
+.dg40-period-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.dg40-period{height:30px;border:1px solid rgba(255,255,255,.085);border-radius:15px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),linear-gradient(180deg,#30323d,#1b1d27);color:#cfd4e4;font-family:inherit;font-size:12px;font-weight:950;box-shadow:0 4px 10px rgba(0,0,0,.24);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dg40-period.active{color:#fff;background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.48),inset 0 1px 0 rgba(255,255,255,.2)}
+@media(max-width:380px){.dg40-select-row{grid-template-columns:1.12fr .72fr .72fr 58px!important;gap:5px!important}.dg40-select{font-size:12px!important;padding-left:7px!important;padding-right:20px!important}.dg40-search{font-size:11.5px!important;padding:0 5px!important}.dg40-period-row{gap:5px}.dg40-period{height:28px;font-size:11.5px}.dg40-searchline{grid-template-columns:minmax(0,1fr) 54px!important;gap:7px!important}}
+</style>
+
+<style id="v51-real-bgm-css">
+/* =========================
+   v51 真實背景音樂設定
+   ========================= */
+.ab-bgm-head{border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:10px;margin-bottom:10px}
+.ab-bgm-panel{display:grid;gap:10px;padding:2px 0 2px;color:#fff}
+.ab-bgm-label{font-size:12px;color:#aeb4c6;font-weight:900;letter-spacing:.5px}
+.ab-bgm-select{width:100%;height:40px;border-radius:13px;border:1px solid rgba(255,255,255,.12);outline:none;color:#fff;font-weight:900;font-family:inherit;padding:0 36px 0 12px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),linear-gradient(180deg,#343642,#181a23);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.35);appearance:none;-webkit-appearance:none;background-image:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),linear-gradient(180deg,#343642,#181a23),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,0 0,calc(100% - 12px) center;background-size:auto,auto,16px 16px}
+.ab-bgm-select option{background:#1b1d27;color:#fff}
+.ab-bgm-volume-row{display:grid;grid-template-columns:44px 1fr 46px;align-items:center;gap:9px;min-height:36px;font-size:12px;color:#d9dcec;font-weight:900}.ab-bgm-volume-row b{text-align:right;color:#fff}.ab-bgm-volume{width:100%;accent-color:#9b35ff}.ab-bgm-check{display:flex;align-items:center;gap:8px;font-size:12px;color:#cfd4e4;font-weight:850;line-height:1.3}.ab-bgm-check input{accent-color:#9b35ff}.ab-bgm-actions{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}.ab-bgm-actions button{height:36px;border-radius:13px;border:1px solid rgba(255,255,255,.10);font-family:inherit;font-size:12px;font-weight:950;color:#fff;background:linear-gradient(180deg,#353642,#20222c);box-shadow:0 5px 12px rgba(0,0,0,.28);cursor:pointer}.ab-bgm-actions button.primary{background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.45)}.ab-bgm-now{min-height:28px;border-radius:11px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06);padding:8px 10px;color:#9fa7ba;font-size:11px;font-weight:850;line-height:1.35}
+@media (max-width:380px){.ab-bgm-actions{grid-template-columns:1fr}.ab-bgm-actions button{height:35px}.ab-bgm-volume-row{grid-template-columns:38px 1fr 42px}}
+</style>
+
+</head>
+<body>
+<main class="app">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <header class="header">
+    <div class="logo"><img src="assets/img/img_4e3f28571c21.png" alt="AB Logo"></div>
+    <div class="wallet"><div class="coin">$</div><span>TWD&nbsp;3000</span></div>
+    <div class="menu"><span></span><span></span><span></span></div>
+  </header>
+  <section class="notice">
+    <div class="speaker">◀</div>
+    <div class="notice-window"><div class="notice-track"><span>【系統公告】邁向國際，擁抱亞洲新未來的ABOMB集團自主研發真人系統，改變您真人娛樂體驗之旅。【系統公告】好路功能來囉！篩選條件自定義，讓你輕鬆快速看穿每條好路，把把下注贏不停！趕快來打造自己專屬的好路吧!【系統公告】 2026/06/13（星期一）時間：14:29～待定(GMT+8) ， 維護牌桌號為【B01~B058】其餘牌桌遊戲正常運作，敬請留意並知悉，謝謝。【系統公告】心跳加速！全新骰寶、輪盤華麗登場，透明桌台一覽無遺，氣質荷官在線互動，優雅挑戰您的視覺極限！【系統公告】極致燈光效果，震撼視覺體驗，炫麗LED奢華賭廳，給您極致的視覺震撼。</span><span>【系統公告】邁向國際，擁抱亞洲新未來的ABOMB集團自主研發真人系統，改變您真人娛樂體驗之旅。【系統公告】好路功能來囉！篩選條件自定義，讓你輕鬆快速看穿每條好路，把把下注贏不停！趕快來打造自己專屬的好路吧!【系統公告】 2026/06/13（星期一）時間：14:29～待定(GMT+8) ， 維護牌桌號為【B01~B058】其餘牌桌遊戲正常運作，敬請留意並知悉，謝謝。【系統公告】心跳加速！全新骰寶、輪盤華麗登場，透明桌台一覽無遺，氣質荷官在線互動，優雅挑戰您的視覺極限！【系統公告】極致燈光效果，震撼視覺體驗，炫麗LED奢華賭廳，給您極致的視覺震撼。</span></div></div>
+  </section>
+
+
+
+  <div class="report-overlay" id="reportOverlay"></div>
+  <section class="report-page" id="gameReportPage" data-view="list" aria-modal="true">
+    <div class="report-top">
+      <div>
+        <div class="report-title" id="reportTitle">遊戲報表</div>
+        <div class="report-sub" id="reportSub">DG 手機版三層查帳介面</div>
+      </div>
+      <div class="report-actions"><button class="report-back" type="button" id="reportBack">‹ 返回</button><button class="report-close" type="button" id="reportClose" aria-label="關閉遊戲報表">×</button></div>
+    </div>
+
+    <div class="view-panel view-list">
+      <div class="report-datebar"><b>2026.06.15</b><span>今日 ▼</span></div>
+      <div class="report-tabs">
+        <button class="report-tab active" type="button">今日</button>
+        <button class="report-tab" type="button">昨日</button>
+        <button class="report-tab" type="button">本週</button>
+        <button class="report-tab" type="button">本月</button>
+      </div>
+      <div class="summary-cards">
+        <div class="summary-card"><div class="summary-label">總投注</div><div class="summary-value">36,800</div></div>
+        <div class="summary-card wide"><div class="summary-label">總輸贏</div><div class="summary-value plus">+ 3,280</div></div>
+        <div class="summary-card"><div class="summary-label">有效投注</div><div class="summary-value">35,400</div></div>
+      </div>
+      <div class="dg-table report-table">
+        <div class="dg-head"><span>時間</span><span>總投注</span><span style="text-align:right">輸贏</span></div>
+        <div id="reportRows"></div>
+      </div>
+      <div class="report-note">點擊「輸贏」進入每日明細；明細中的遊戲編號可再進入單局影片回放。</div>
+    </div>
+
+    <div class="view-panel view-detail">
+      <div class="report-datebar"><b id="detailDate">2026.06.15</b><span>輸贏明細</span></div>
+      <div class="summary-cards">
+        <div class="summary-card"><div class="summary-label">本日投注</div><div class="summary-value" id="detailBet">0</div></div>
+        <div class="summary-card wide"><div class="summary-label">本日輸贏</div><div class="summary-value" id="detailWin">0</div></div>
+      </div>
+      <div class="dg-table detail-table">
+        <div class="dg-head"><span>序號</span><span>遊戲編號</span><span>時間</span><span style="text-align:right">輸贏</span></div>
+        <div id="detailRows"></div>
+      </div>
+    </div>
+
+    <div class="view-panel view-replay">
+      <div class="report-datebar"><b id="replayNo">AB240615001</b><span>單局回放</span></div>
+      <div class="replay-video">
+        <div class="play-btn">▶</div>
+        <div class="replay-meta" id="replayTime">09:25:18</div>
+        <div class="replay-controls"><span class="ctrl-play">▶</span><span>0:00</span><span class="ctrl-bar"></span><span>🔊</span><span>⋮</span></div>
+      </div>
+      <div class="result-board">
+        <div class="result-title">開牌結果</div>
+        <div id="resultContent"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="banner-slot">
+    <div class="banner-stage" id="bannerStage">
+      <div class="real-banner" id="realBanner">
+        <span>Banner 圖片預留區 1370 × 400</span>
+      </div>
+
+      <div class="guide-banner active" id="guideBanner">
+        <img class="guide-step active" src="assets/img/img_17c239ff417e.png" alt="新手指引 Step 1">
+        <img class="guide-step" src="assets/img/img_5960cbcfe9e8.png" alt="新手指引 Step 2">
+        <img class="guide-step" src="assets/img/img_65e6b4c14950.png" alt="新手指引 Step 3">
+
+        <button class="guide-hit guide-close-hit" id="guideClose" type="button" aria-label="關閉"></button>
+        <button class="guide-hit guide-prev-hit" id="guidePrev" type="button" aria-label="上一步"></button>
+        <button class="guide-hit guide-next-hit" id="guideNext" type="button" aria-label="下一步"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="tabs-area">
+    <nav class="tabs-real" id="tabsWrap">
+      <div class="aurora-thin" id="auroraCursor"></div>
+      <button class="main-tab active" data-filter="all">全部</button>
+      <button class="main-tab" data-filter="baccarat">百家樂</button>
+      <button class="main-tab" data-filter="sicbo">骰寶</button>
+      <button class="main-tab" data-filter="dragon">龍虎</button>
+      <button class="main-tab" data-filter="roulette">輪盤</button>
+      <div class="sub-tabs">
+        <button class="sub-tab active" data-route="normal">一般</button>
+        <button class="sub-tab" data-route="good">好路</button>
+      </div>
+    </nav>
+  </section>
+  <section class="game-grid">
+    <article class="game-card" data-kind="sicbo" data-goodroad="false"><div class="countdown-badge" data-seconds="15" data-start="15">15</div><img src="assets/img/img_4e302ecc7eb8.png" alt="骰寶 1 RURU"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="true"><div class="countdown-badge" data-seconds="15" data-start="15">15</div><img src="assets/img/img_d07f2c9dd738.png" alt="百家 1 蕾蕾 長閒"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="false"><div class="countdown-badge" data-seconds="4" data-start="4">4</div><img src="assets/img/img_d2c32aeddd7b.png" alt="百家 2 香香"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="true"><div class="countdown-badge" data-seconds="4" data-start="4">4</div><img src="assets/img/img_bb865e12b37b.png" alt="百家 3 栀栀 長莊"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="false"><div class="countdown-badge" data-seconds="10" data-start="10">10</div><img src="assets/img/img_2e1368d2907c.png" alt="百家 4 米米"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="false"><div class="countdown-badge" data-seconds="0" data-start="0">0</div><img src="assets/img/img_fd6af8247b01.png" alt="百家 5 寶寶 洗牌中"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="true"><div class="countdown-badge" data-seconds="0" data-start="0">0</div><img src="assets/img/img_d10738748432.png" alt="百家 6 小冰 長閒"></article>
+<article class="game-card" data-kind="baccarat" data-goodroad="false"><div class="countdown-badge" data-seconds="10" data-start="10">10</div><img src="assets/img/img_bca50f918dd4.png" alt="百家 7 鬼鬼"></article>
+<article class="game-card" data-kind="dragon" data-goodroad="false"><div class="countdown-badge" data-seconds="15" data-start="15">15</div><img src="assets/img/img_216f9366ba15.png" alt="龍虎 1 柔柔"></article>
+<article class="game-card" data-kind="roulette" data-goodroad="false"><div class="countdown-badge" data-seconds="35" data-start="35">35</div><img src="assets/img/img_72ad805a16a0.png" alt="輪盤 1 蕾蕾"></article>
+  </section>
+
+  <div class="member-overlay" id="memberOverlay"></div>
+  <aside class="member-drawer" id="memberDrawer" aria-label="會員中心">
+    <div class="drawer-head">
+      <div class="drawer-title">會員中心</div>
+      <button class="drawer-close" type="button" id="drawerClose" aria-label="關閉會員中心">×</button>
+    </div>
+    <div class="member-card">
+      <div class="member-name-row"><div class="member-name" id="memberNickname">旋風俠客</div><button class="nickname-edit" type="button" id="editNicknameBtn" aria-label="修改暱稱">✎</button></div>
+      <div class="member-vip">💎 鑽石 VIP</div>
+      <div class="member-balance">餘額 TWD 3000</div>
+    </div>
+    <div class="drawer-menu">
+      <button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>
+      <button class="drawer-item" type="button"><span>💳 帳戶明細</span><span>›</span></button>
+      <button class="drawer-item" type="button"><span>🎁 優惠紀錄</span><span>›</span></button>
+      <button class="drawer-item" type="button"><span>✉️ 站內信</span><span>›</span></button>
+      <button class="drawer-item" type="button"><span>⚙️ 設定中心</span><span>›</span></button>
+      <button class="drawer-item danger" type="button"><span>🚪 登出</span><span>›</span></button>
+    </div>
+  </aside>
+
+  <div class="nick-modal" id="nickModal" role="dialog" aria-label="修改暱稱">
+    <div class="nick-title">修改暱稱</div>
+    <div class="nick-sub">可輸入 2～12 個中文字、英文或數字</div>
+    <input class="nick-input" id="nickInput" maxlength="12" placeholder="請輸入新暱稱">
+    <div class="nick-actions">
+      <button type="button" id="nickCancel">取消</button>
+      <button type="button" class="confirm" id="nickConfirm">確認</button>
+    </div>
+  </div>
+
+
+  <nav class="bottom-nav four-items">
+    <button class="nav-item active" type="button" data-panel="games">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M7 4h10l2 6v7a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-7l2-6Z"/><path d="M8 11h4M10 9v4M15 11h.01M17.5 13.5h.01"/></svg>
+      </span>
+      <span class="nav-text">遊戲</span>
+    </button>
+    <button class="nav-item" type="button" data-panel="rules">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H7a3 3 0 0 0-3 3V5.5Z"/><path d="M4 21V5.5M8 7h8M8 11h6"/></svg>
+      </span>
+      <span class="nav-text">遊戲規則</span>
+    </button>
+    <button class="nav-item" type="button" data-panel="promo">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 12v8H4v-8M3 8h18v4H3V8Z"/><path d="M12 8v12M12 8H8.5A2.5 2.5 0 1 1 12 5.5V8Zm0 0h3.5A2.5 2.5 0 1 0 12 5.5V8Z"/></svg>
+      </span>
+      <span class="nav-text">優惠活動</span>
+    </button>
+    <button class="nav-item" type="button" data-panel="live">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"/><path d="m16 10 4-2.5v9L16 14v-4Z"/><path d="M8.5 9.5h3M8.5 13h3"/></svg>
+      </span>
+      <span class="nav-text">現場視訊</span>
+    </button>
+  </nav>
+
+
+
+</main>
+<script>
+const auroraCursor=document.getElementById('auroraCursor');
+const mainTabs=document.querySelectorAll('.main-tab');
+const subTabs=document.querySelectorAll('.sub-tab');
+function moveAuroraTo(btn){const x=btn.offsetLeft;auroraCursor.style.width=btn.offsetWidth+'px';auroraCursor.style.transform=`translateX(${x-6}px)`;}
+function applyFilters(){const activeMain=document.querySelector('.main-tab.active')?.dataset.filter||'all';const activeRoute=document.querySelector('.sub-tab.active')?.dataset.route||'normal';document.querySelectorAll('.game-card').forEach(card=>{const matchGame=activeMain==='all'||card.dataset.kind===activeMain;const matchRoute=activeRoute==='normal'||card.dataset.goodroad==='true';card.style.display=(matchGame&&matchRoute)?'':'none';});}
+mainTabs.forEach(btn=>{btn.addEventListener('click',()=>{mainTabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');moveAuroraTo(btn);applyFilters();});});
+subTabs.forEach(btn=>{btn.addEventListener('click',()=>{subTabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyFilters();});});
+window.addEventListener('load',()=>{moveAuroraTo(document.querySelector('.main-tab.active'));applyFilters();});
+window.addEventListener('resize',()=>{moveAuroraTo(document.querySelector('.main-tab.active'));});
+</script>
+
+<script>
+(function(){
+  const guideBanner = document.getElementById('guideBanner');
+  const steps = Array.from(document.querySelectorAll('.guide-step'));
+  const closeBtn = document.getElementById('guideClose');
+  const prevBtn = document.getElementById('guidePrev');
+  const nextBtn = document.getElementById('guideNext');
+  let guideIndex = 0;
+
+  function showGuideStep(i){
+    guideIndex = Math.max(0, Math.min(i, steps.length - 1));
+    steps.forEach((step, index) => step.classList.toggle('active', index === guideIndex));
+    prevBtn.style.display = guideIndex === 0 ? 'none' : 'block';
+  }
+
+  function finishGuide(){
+    guideBanner.classList.remove('active');
+  }
+
+  closeBtn.addEventListener('click', finishGuide);
+  prevBtn.addEventListener('click', () => showGuideStep(guideIndex - 1));
+  nextBtn.addEventListener('click', () => {
+    if(guideIndex >= steps.length - 1){
+      finishGuide();
+    }else{
+      showGuideStep(guideIndex + 1);
+    }
+  });
+
+  window.addEventListener('load', () => {
+    guideBanner.classList.add('active');
+    showGuideStep(0);
+  });
+})();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const badges = Array.from(document.querySelectorAll('.countdown-badge'));
+
+  badges.forEach((badge, index) => {
+    const isShuffleCard = index === 5; // 百家5 洗牌中
+    let start = Number(badge.dataset.start || 15);
+
+    // 洗牌中：固定紅框 0，不倒數
+    if (isShuffleCard) {
+      badge.textContent = '0';
+      badge.dataset.seconds = '0';
+      badge.classList.add('danger');
+      return;
+    }
+
+    // 原本是 0 的活桌，改用 30 秒循環，避免一直停在 0
+    if (start <= 0) start = 30;
+
+    let sec = start;
+
+    function render(){
+      badge.textContent = sec;
+      badge.dataset.seconds = sec;
+      badge.classList.toggle('danger', sec <= 5);
+    }
+
+    render();
+
+    setInterval(() => {
+      sec -= 1;
+      if (sec < 0) sec = start;
+      render();
+    }, 1000);
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+});
+</script>
+
+
+
+<style id="v33-guide-big-no-distortion">
+/* =========================
+   v33 新手指引修正
+   - 不拉扯 PNG，不變形
+   - 用原圖比例 2048:598 放大到 Banner 右側
+   - X / 上一步 / 下一步透明熱區跟著圖片一起縮放
+   ========================= */
+@media (max-width:767px){
+  .banner-stage{
+    height:230px !important;
+    overflow:hidden !important;
+  }
+
+  .guide-banner{
+    position:absolute !important;
+    left:auto !important;
+    top:auto !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:2048 / 598 !important;
+    overflow:visible !important;
+    background:transparent !important;
+    z-index:999 !important;
+    pointer-events:auto !important;
+    transform:scale(1.88) !important;
+    transform-origin:right bottom !important;
+  }
+
+  .guide-banner.active{
+    display:block !important;
+  }
+
+  .guide-step{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    left:0 !important;
+    top:0 !important;
+    right:auto !important;
+    bottom:auto !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+    background:transparent !important;
+    pointer-events:none !important;
+    user-select:none !important;
+    -webkit-user-drag:none !important;
+  }
+
+  .guide-hit{
+    position:absolute !important;
+    z-index:10000 !important;
+    pointer-events:auto !important;
+    touch-action:manipulation !important;
+    cursor:pointer !important;
+    border:0 !important;
+    background:rgba(255,0,0,0) !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+
+  .guide-close-hit{
+    left:69.5% !important;
+    top:2.2% !important;
+    width:8.5% !important;
+    height:14% !important;
+  }
+
+  .guide-prev-hit{
+    left:51.5% !important;
+    top:23.5% !important;
+    width:11.5% !important;
+    height:17% !important;
+  }
+
+  .guide-next-hit{
+    left:60.5% !important;
+    top:23.5% !important;
+    width:12.5% !important;
+    height:17% !important;
+  }
+}
+
+@media (max-width:380px){
+  .banner-stage{
+    height:225px !important;
+  }
+  .guide-banner{
+    transform:scale(1.82) !important;
+  }
+}
+
+/* =========================
+   v34 新手指引微調版
+   - Banner 手機高度 240px
+   - 人物/氣泡保持放大、不變形
+   - 整組指引往右移，避免手掌吃到氣泡文字
+   - 不新增額外按鈕，沿用原本 PNG 熱區
+   ========================= */
+@media (max-width:767px){
+  .banner-stage{
+    height:240px !important;
+    overflow:hidden !important;
+  }
+
+  .guide-banner{
+    overflow:visible !important;
+    transform:translateX(18px) scale(1.88) !important;
+    transform-origin:right bottom !important;
+    pointer-events:auto !important;
+  }
+
+  .guide-step{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    left:0 !important;
+    top:0 !important;
+    right:auto !important;
+    bottom:auto !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    transform:none !important;
+    background:transparent !important;
+    pointer-events:none !important;
+    user-select:none !important;
+    -webkit-user-drag:none !important;
+  }
+
+  .guide-hit{
+    position:absolute !important;
+    z-index:10000 !important;
+    pointer-events:auto !important;
+    touch-action:manipulation !important;
+    cursor:pointer !important;
+    border:0 !important;
+    background:rgba(255,0,0,0) !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+
+  .guide-close-hit{
+    left:69.5% !important;
+    top:2.2% !important;
+    width:8.5% !important;
+    height:14% !important;
+  }
+
+  .guide-prev-hit{
+    left:51.5% !important;
+    top:23.5% !important;
+    width:11.5% !important;
+    height:17% !important;
+  }
+
+  .guide-next-hit{
+    left:60.5% !important;
+    top:23.5% !important;
+    width:12.5% !important;
+    height:17% !important;
+  }
+}
+
+@media (max-width:380px){
+  .banner-stage{
+    height:235px !important;
+  }
+
+  .guide-banner{
+    transform:translateX(14px) scale(1.82) !important;
+    transform-origin:right bottom !important;
+  }
+}
+
+</style>
+
+<script id="v33-guide-touch-stable">
+(function(){
+  function ready(fn){
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+  ready(function(){
+    const guideBanner = document.getElementById('guideBanner');
+    const steps = Array.from(document.querySelectorAll('.guide-step'));
+    const closeBtn = document.getElementById('guideClose');
+    const prevBtn = document.getElementById('guidePrev');
+    const nextBtn = document.getElementById('guideNext');
+    if(!guideBanner || !steps.length || !closeBtn || !prevBtn || !nextBtn) return;
+
+    let guideIndex = steps.findIndex(s => s.classList.contains('active'));
+    if(guideIndex < 0) guideIndex = 0;
+    let lock = 0;
+
+    function guard(e){
+      if(e){ e.preventDefault(); e.stopPropagation(); }
+      const now = Date.now();
+      if(now - lock < 220) return false;
+      lock = now;
+      return true;
+    }
+
+    function show(i){
+      guideIndex = Math.max(0, Math.min(i, steps.length - 1));
+      steps.forEach((step, idx) => step.classList.toggle('active', idx === guideIndex));
+      prevBtn.style.display = guideIndex === 0 ? 'none' : 'block';
+    }
+
+    function closeGuide(e){ if(!guard(e)) return; guideBanner.classList.remove('active'); }
+    function prevGuide(e){ if(!guard(e)) return; show(guideIndex - 1); }
+    function nextGuide(e){
+      if(!guard(e)) return;
+      if(guideIndex >= steps.length - 1) guideBanner.classList.remove('active');
+      else show(guideIndex + 1);
+    }
+
+    ['pointerup','touchend','click'].forEach(evt => {
+      closeBtn.addEventListener(evt, closeGuide, {passive:false});
+      prevBtn.addEventListener(evt, prevGuide, {passive:false});
+      nextBtn.addEventListener(evt, nextGuide, {passive:false});
+    });
+
+    guideBanner.classList.add('active');
+    show(guideIndex);
+  });
+})();
+</script>
+
+
+
+<script id="v35-dg-game-report">
+(function(){
+  const app=document.querySelector('.app');
+  const page=document.getElementById('gameReportPage');
+  if(!app||!page)return;
+  const title=document.getElementById('reportTitle');
+  const sub=document.getElementById('reportSub');
+  const back=document.getElementById('reportBack');
+  const close=document.getElementById('reportClose');
+  const overlay=document.getElementById('reportOverlay');
+  const reportRows=document.getElementById('reportRows');
+  const detailRows=document.getElementById('detailRows');
+  const detailDate=document.getElementById('detailDate');
+  const detailBet=document.getElementById('detailBet');
+  const detailWin=document.getElementById('detailWin');
+  const replayNo=document.getElementById('replayNo');
+  const replayTime=document.getElementById('replayTime');
+  const resultContent=document.getElementById('resultContent');
+  let currentDate=null;
+  const reports=[
+    {date:'2026.06.15',bet:36800,win:3430,items:[
+      {no:1,id:'AB250615-BAC-001',game:'百家樂',time:'09:25:18',bet:1000,win:1000,betOn:'莊(免傭) 1000',kind:'baccarat',result:{banker:'莊 8',player:'閒 6',bankerCards:['K♠','8♥'],playerCards:['4♣','2♦']}},
+      {no:2,id:'AB250615-SIC-009',game:'骰寶',time:'09:18:45',bet:600,win:-600,betOn:'大 600',kind:'sicbo',result:{dice:['3','5','6'],sum:14,tags:['大','雙']}},
+      {no:3,id:'AB250615-DT-016',game:'龍虎',time:'09:12:02',bet:1200,win:1150,betOn:'龍 1200',kind:'dragon',result:{dragon:'龍 A',tiger:'虎 9',dragonCards:['A♥'],tigerCards:['9♣']}},
+      {no:4,id:'AB250615-ROU-021',game:'輪盤',time:'09:03:31',bet:800,win:1880,betOn:'17 黑 800',kind:'roulette',result:{number:'17',color:'Black',tags:['黑','單','1-18']}}
+    ]},
+    {date:'2026.06.14',bet:18200,win:-1260,items:[
+      {no:1,id:'AB250614-BAC-122',game:'百家樂',time:'23:10:07',bet:1500,win:-1500,betOn:'閒 1500',kind:'baccarat',result:{banker:'莊 7',player:'閒 4',bankerCards:['7♠','Q♦'],playerCards:['2♥','2♣']}},
+      {no:2,id:'AB250614-SIC-088',game:'骰寶',time:'22:44:19',bet:900,win:240,betOn:'小 900',kind:'sicbo',result:{dice:['1','2','4'],sum:7,tags:['小','單']}}
+    ]},
+    {date:'2026.06.13',bet:42600,win:5660,items:[
+      {no:1,id:'AB250613-BAC-077',game:'百家樂',time:'20:02:10',bet:2000,win:1950,betOn:'莊 2000',kind:'baccarat',result:{banker:'莊 9',player:'閒 3',bankerCards:['9♦','J♣'],playerCards:['A♠','2♥']}},
+      {no:2,id:'AB250613-DT-033',game:'龍虎',time:'19:45:52',bet:1000,win:950,betOn:'虎 1000',kind:'dragon',result:{dragon:'龍 6',tiger:'虎 Q',dragonCards:['6♠'],tigerCards:['Q♦']}}
+    ]}
+  ];
+  const money=n=>Number(n).toLocaleString('zh-TW');
+  const winClass=n=>n>=0?'plus':'minus';
+  const signed=n=>(n>=0?'+ ':'- ')+money(Math.abs(n));
+  function showView(view){
+    page.dataset.view=view;
+    title.textContent=view==='list'?'遊戲報表':view==='detail'?'輸贏明細':'單局回放';
+    sub.textContent=view==='list'?'遊戲報表查詢':view==='detail'?'點擊遊戲編號查看影片回放':'影片下方同步顯示開牌點數';
+
+  }
+  function renderReports(){
+    reportRows.innerHTML=reports.map((r,i)=>`<div class="dg-row" data-report="${i}"><span><b>${r.date}</b><span class="small">點擊輸贏看明細</span></span><span>${money(r.bet)}</span><span class="win-cell ${winClass(r.win)} linkish">${signed(r.win)}</span></div>`).join('');
+    reportRows.querySelectorAll('.dg-row').forEach(row=>row.addEventListener('click',()=>openDetail(+row.dataset.report)));
+  }
+  function openDetail(index){
+    currentDate=reports[index];
+    detailDate.textContent=currentDate.date;
+    detailBet.textContent=money(currentDate.bet);
+    detailWin.textContent=signed(currentDate.win);
+    detailWin.className='summary-value '+winClass(currentDate.win);
+    detailRows.innerHTML=currentDate.items.map((it,i)=>`<div class="dg-row" data-item="${i}"><span>${it.no}</span><span><b class="linkish">${it.id}</b><span class="small">${it.game}｜${it.betOn}</span></span><span>${it.time}</span><span class="win-cell ${winClass(it.win)}">${signed(it.win)}</span></div>`).join('');
+    detailRows.querySelectorAll('.dg-row').forEach(row=>row.addEventListener('click',()=>openReplay(+row.dataset.item)));
+    showView('detail');
+  }
+  function parseCard(card){
+    const rank=String(card).slice(0,-1)||card;
+    const suit=String(card).slice(-1);
+    const red=(suit==='♥'||suit==='♦')?' red':'';
+    return `<span class="dg-card${red}"><span>${rank}</span><span class="suit">${suit}</span></span>`;
+  }
+  function cardHtml(cards){return cards.map(parseCard).join('')}
+  function openReplay(idx){
+    const it=currentDate.items[idx];
+    replayNo.textContent='遊戲編號:'+it.id.replace('AB250615','202606140038R1056').replace('AB250614','202606140038R1056').replace('AB250613','202606140038R1056');
+    replayTime.textContent=it.time;
+    let html='';
+    const winText=signed(it.win).replace('+ ','+').replace('- ','-');
+    const betText=money(it.bet);
+    const wcls=it.win>=0?'win':'lose';
+    if(it.kind==='baccarat'){
+      html=`
+        <div class="mobile-replay-result">
+          <div class="bac-score-row">
+            <div class="bac-side left">${cardHtml(it.result.playerCards)}</div>
+            <div class="bac-center-score">
+              <span class="score-label player">閒 ${String(it.result.player).replace('閒 ','')}</span>
+              <span class="score-divider"></span>
+              <span class="score-label banker">${String(it.result.banker).replace('莊 ','')} 莊</span>
+            </div>
+            <div class="bac-side right">${cardHtml(it.result.bankerCards)}</div>
+          </div>
+          <table class="dg-bet-table">
+            <thead><tr><th>下注類型</th><th>賠率</th><th>下注金額</th><th>輸贏</th></tr></thead>
+            <tbody>
+              <tr><td>${it.betOn.split(' ')[0]}(免佣)</td><td>1:1</td><td>${betText}</td><td class="${wcls}">${winText}</td></tr>
+              <tr><td class="total-label" colspan="2">總計</td><td class="money">${betText}</td><td class="money ${wcls}">${winText}</td></tr>
+            </tbody>
+          </table>
+        </div>`;
+    }else if(it.kind==='sicbo'){
+      html=`
+        <div class="mobile-replay-result">
+          <div class="bac-score-row" style="grid-template-columns:1fr;">
+            <div class="bac-side">${it.result.dice.map(d=>`<span class="dice-mini">${d}</span>`).join('')}<span class="score-label player">總和 ${it.result.sum}</span><span class="score-vs">${it.result.tags.join(' ')}</span></div>
+          </div>
+          <table class="dg-bet-table"><thead><tr><th>下注類型</th><th>賠率</th><th>下注金額</th><th>輸贏</th></tr></thead><tbody><tr><td>${it.betOn.split(' ')[0]}</td><td>1:1</td><td>${betText}</td><td class="${wcls}">${winText}</td></tr><tr><td class="total-label" colspan="2">總計</td><td class="money">${betText}</td><td class="money ${wcls}">${winText}</td></tr></tbody></table>
+        </div>`;
+    }else if(it.kind==='dragon'){
+      html=`
+        <div class="mobile-replay-result">
+          <div class="bac-score-row">
+            <div class="bac-side left">${cardHtml(it.result.dragonCards)}<span class="score-label player">龍</span></div>
+            <div class="score-vs">VS</div>
+            <div class="bac-side right">${cardHtml(it.result.tigerCards)}<span class="score-label banker">虎</span></div>
+          </div>
+          <table class="dg-bet-table"><thead><tr><th>下注類型</th><th>賠率</th><th>下注金額</th><th>輸贏</th></tr></thead><tbody><tr><td>${it.betOn.split(' ')[0]}</td><td>1:1</td><td>${betText}</td><td class="${wcls}">${winText}</td></tr><tr><td class="total-label" colspan="2">總計</td><td class="money">${betText}</td><td class="money ${wcls}">${winText}</td></tr></tbody></table>
+        </div>`;
+    }else{
+      html=`
+        <div class="mobile-replay-result">
+          <div class="bac-score-row" style="grid-template-columns:1fr;"><div class="bac-side"><span class="score-label player">${it.result.number}</span><span class="score-vs">${it.result.color}</span><span>${it.result.tags.join(' / ')}</span></div></div>
+          <table class="dg-bet-table"><thead><tr><th>下注類型</th><th>賠率</th><th>下注金額</th><th>輸贏</th></tr></thead><tbody><tr><td>${it.betOn.split(' ')[0]}</td><td>1:1</td><td>${betText}</td><td class="${wcls}">${winText}</td></tr><tr><td class="total-label" colspan="2">總計</td><td class="money">${betText}</td><td class="money ${wcls}">${winText}</td></tr></tbody></table>
+        </div>`;
+    }
+    resultContent.innerHTML=html;
+    showView('replay');
+  }
+  back.addEventListener('click',()=>{ if(page.dataset.view==='replay') showView('detail'); else showView('list'); });
+  document.querySelectorAll('.report-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.report-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');}));
+  function openReport(){ document.body.classList.add('report-modal-open'); showView('list'); }
+  function closeReport(){ document.body.classList.remove('report-modal-open'); showView('list'); }
+  close&&close.addEventListener('click', closeReport);
+  overlay&&overlay.addEventListener('click', closeReport);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeReport(); document.body.classList.remove('drawer-open'); } });
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+  renderReports();
+  showView('list');
+})();
+</script>
+
+
+<script id="v36-member-center-drawer-js">
+(function(){
+  const menu=document.querySelector('.menu');
+  const drawerClose=document.getElementById('drawerClose');
+  const overlay=document.getElementById('memberOverlay');
+  const reportBtn=document.querySelector('[data-drawer-action="report"]');
+  const reportClose=document.getElementById('reportClose');
+  function openDrawer(){document.body.classList.add('drawer-open')}
+  function closeDrawer(){document.body.classList.remove('drawer-open')}
+  function openReportFromDrawer(){
+    closeDrawer();
+    document.body.classList.add('report-modal-open');
+    const page=document.getElementById('gameReportPage');
+    if(page) page.dataset.view='list';
+    const title=document.getElementById('reportTitle');
+    const sub=document.getElementById('reportSub');
+    if(title) title.textContent='遊戲報表';
+    if(sub) sub.textContent='遊戲報表查詢';
+  }
+  if(menu){menu.setAttribute('role','button');menu.setAttribute('aria-label','開啟會員中心');menu.addEventListener('click',openDrawer)}
+  drawerClose&&drawerClose.addEventListener('click',closeDrawer);
+  overlay&&overlay.addEventListener('click',closeDrawer);
+  reportBtn&&reportBtn.addEventListener('click',openReportFromDrawer);
+  const nickEl=document.getElementById('memberNickname');
+  const editNick=document.getElementById('editNicknameBtn');
+  const nickModal=document.getElementById('nickModal');
+  const nickInput=document.getElementById('nickInput');
+  const nickCancel=document.getElementById('nickCancel');
+  const nickConfirm=document.getElementById('nickConfirm');
+  const savedNick=localStorage.getItem('ab_member_nickname')||'旋風俠客';
+  if(nickEl) nickEl.textContent=savedNick;
+  function openNickModal(){
+    if(nickInput) nickInput.value=(nickEl&&nickEl.textContent)||'旋風俠客';
+    document.body.classList.add('nick-edit-open');
+    setTimeout(()=>nickInput&&nickInput.focus(),80);
+  }
+  function closeNickModal(){document.body.classList.remove('nick-edit-open')}
+  function saveNick(){
+    const val=(nickInput&&nickInput.value.trim())||'';
+    if(!/^[\u4e00-\u9fa5A-Za-z0-9_]{2,12}$/.test(val)){
+      alert('暱稱請輸入 2～12 個中文字、英文或數字');
+      return;
+    }
+    localStorage.setItem('ab_member_nickname',val);
+    if(nickEl) nickEl.textContent=val;
+    closeNickModal();
+  }
+  editNick&&editNick.addEventListener('click',openNickModal);
+  nickCancel&&nickCancel.addEventListener('click',closeNickModal);
+  nickConfirm&&nickConfirm.addEventListener('click',saveNick);
+  nickInput&&nickInput.addEventListener('keydown',e=>{if(e.key==='Enter') saveNick(); if(e.key==='Escape') closeNickModal();});
+
+})();
+</script>
+
+
+
+<style id="v42-full-nav-windows-css">
+/* =========================
+   v42 底部導覽 + 功能視窗完整化
+   ========================= */
+.ab-modal-overlay{position:fixed;inset:0;z-index:240;display:none;background:rgba(0,0,0,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.ab-modal{position:fixed;left:50%;top:calc(54px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);z-index:260;width:min(100% - 22px,408px);max-height:calc(100vh - 112px - env(safe-area-inset-bottom,0px));display:none;overflow:hidden;border-radius:22px;background:radial-gradient(circle at 14% 0%,rgba(185,71,255,.30),transparent 42%),radial-gradient(circle at 92% 12%,rgba(0,220,255,.14),transparent 38%),linear-gradient(180deg,rgba(42,43,54,.98),rgba(13,14,20,.98));border:1px solid rgba(255,255,255,.13);box-shadow:0 20px 48px rgba(0,0,0,.78),0 0 24px rgba(128,58,255,.24)}
+.ab-modal.open{display:block;animation:v42ModalIn .18s ease forwards}.ab-modal-overlay.open{display:block}@keyframes v42ModalIn{to{transform:translateX(-50%) translateY(0)}}
+.ab-modal-head{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.01))}.ab-modal-title{font-size:17px;font-weight:950;letter-spacing:.8px}.ab-modal-close{width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));color:#fff;font-size:22px;line-height:1;cursor:pointer}.ab-modal-body{padding:14px;overflow:auto;max-height:calc(100vh - 170px - env(safe-area-inset-bottom,0px))}.ab-soft-card{border-radius:17px;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#282a36,#171923);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 18px rgba(0,0,0,.30);margin-bottom:10px}.ab-mini-title{font-size:13px;font-weight:950;color:#fff;margin-bottom:8px}.ab-muted{font-size:12px;color:#aeb5c8;line-height:1.55}.ab-btn-row{display:flex;gap:9px;margin-top:12px}.ab-action-btn{height:42px;flex:1;border:0;border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:950;background:linear-gradient(180deg,#a83aff 0%,#7217ee 58%,#4610a9 100%);box-shadow:0 0 12px rgba(142,54,255,.42),inset 0 1px 0 rgba(255,255,255,.20);cursor:pointer}.ab-action-btn.ghost{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),linear-gradient(180deg,#343643,#1b1d27);border:1px solid rgba(255,255,255,.09);box-shadow:none}.ab-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:9px}.ab-tab{height:34px;padding:0 12px;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),linear-gradient(180deg,#30313d,#181a23);color:#cfd4e4;font-family:inherit;font-size:13px;font-weight:900;white-space:nowrap}.ab-tab.active{color:#fff;background:linear-gradient(180deg,#ad38ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.50)}.rule-content h4{font-size:16px;margin-bottom:8px}.rule-list{display:grid;gap:7px}.rule-line{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.045);font-size:13px}.rule-line b{color:#fff}.rule-line span:last-child{color:#8fdcff;font-weight:900}.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.table-card{position:relative;min-height:88px;border-radius:16px;padding:10px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#262936,#151722);box-shadow:0 8px 16px rgba(0,0,0,.28)}.table-card input{position:absolute;right:10px;top:10px;accent-color:#8d2eff}.table-name{font-size:14px;font-weight:950;margin-bottom:5px}.table-meta{font-size:11px;color:#aeb5c8;line-height:1.5}.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00d470;box-shadow:0 0 8px rgba(0,212,112,.65);margin-right:5px}.setting-row{display:flex;align-items:center;justify-content:space-between;height:48px;border-bottom:1px solid rgba(255,255,255,.065);font-size:14px;font-weight:900}.setting-row:last-child{border-bottom:0}.switch{width:52px;height:28px;border-radius:20px;background:#303340;border:1px solid rgba(255,255,255,.10);position:relative;cursor:pointer}.switch:before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;left:3px;top:2px;background:#fff;transition:.18s;box-shadow:0 3px 8px rgba(0,0,0,.35)}.switch.on{background:linear-gradient(90deg,#8120ff,#b947ff)}.switch.on:before{left:25px}.live-list{display:grid;gap:10px}.live-card{height:92px;border-radius:17px;overflow:hidden;position:relative;padding:11px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 20% 30%,rgba(143,220,255,.18),transparent 42%),linear-gradient(135deg,#252735,#12141c);box-shadow:0 8px 18px rgba(0,0,0,.30)}.live-card:after{content:"LIVE";position:absolute;right:12px;top:11px;font-size:10px;font-weight:950;color:#fff;background:linear-gradient(90deg,#ff2450,#ff7b4b);padding:4px 7px;border-radius:9px;box-shadow:0 0 10px rgba(255,36,80,.35)}.live-name{font-size:15px;font-weight:950;margin-bottom:8px}.live-meta{font-size:12px;color:#c9d0e2;line-height:1.55}.mail-item{padding:11px;border-radius:15px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.065);margin-bottom:8px}.mail-title{font-size:14px;font-weight:950;margin-bottom:5px}.mail-date{font-size:11px;color:#8fdcff;margin-bottom:5px}.account-kpi{display:grid;grid-template-columns:1fr 1fr;gap:9px}.account-kpi .ab-soft-card{margin-bottom:0}.money-big{font-size:22px;font-weight:950;color:#fff}.money-plus{color:#00d470}.money-minus{color:#ff4667}.drawer-item[data-drawer-action="promo"],.drawer-item[data-drawer-action="logout"],.drawer-item[data-drawer-action="settings"]{display:none!important}
+@media (min-width:768px){.ab-modal{width:min(100% - 40px,620px);top:calc(72px + env(safe-area-inset-top,0px))}.ab-modal-body{max-height:calc(100vh - 190px)}}
+</style>
+
+<div class="ab-modal-overlay" id="v42Overlay"></div>
+
+<section class="ab-modal" id="homeConfirmModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">返回首頁</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body">
+    <div class="ab-soft-card"><div class="ab-mini-title">是否返回外層總大廳？</div><div class="ab-muted">目前畫面會保留在 AB 真人館，此按鈕之後可串接到妳們外層總大廳網址。</div><div class="ab-btn-row"><button class="ab-action-btn ghost" type="button" data-close-v42>取消</button><button class="ab-action-btn" type="button" id="goMainLobbyBtn">確認返回</button></div></div>
+  </div>
+</section>
+
+<section class="ab-modal" id="rulesModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">遊戲規則</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body">
+    <div class="ab-tabs" id="ruleTabs"><button class="ab-tab active" data-rule="baccarat">百家樂</button><button class="ab-tab" data-rule="dragonTiger">龍虎</button><button class="ab-tab" data-rule="sicbo">骰寶</button><button class="ab-tab" data-rule="roulette">輪盤</button></div>
+    <div class="ab-soft-card rule-content" id="ruleContent"></div>
+  </div>
+</section>
+
+<section class="ab-modal" id="multiModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">多檯投注</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body">
+    <div class="ab-soft-card"><div class="ab-mini-title">選擇想同時開啟的桌台</div><div class="ab-muted">可先做成展示版，之後再串接真實多檯投注畫面。</div></div>
+    <div class="multi-grid">
+      <label class="table-card"><input type="checkbox" checked><div class="table-name">百家樂 A01</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 128｜好路中</div></label>
+      <label class="table-card"><input type="checkbox"><div class="table-name">百家樂 A03</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 86｜連莊</div></label>
+      <label class="table-card"><input type="checkbox"><div class="table-name">龍虎 D02</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 54｜路紙穩定</div></label>
+      <label class="table-card"><input type="checkbox"><div class="table-name">骰寶 S01</div><div class="table-meta"><span class="status-dot"></span>倒數 18 秒<br>玩家 42｜熱門桌</div></label>
+      <label class="table-card"><input type="checkbox"><div class="table-name">輪盤 R01</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 39｜歐式輪盤</div></label>
+      <label class="table-card"><input type="checkbox"><div class="table-name">百家樂 VIP</div><div class="table-meta"><span class="status-dot"></span>高限額桌<br>玩家 19｜VIP</div></label>
+    </div>
+    <div class="ab-btn-row"><button class="ab-action-btn ghost" type="button" data-close-v42>取消</button><button class="ab-action-btn" type="button" id="multiConfirmBtn">確認開啟</button></div>
+  </div>
+</section>
+
+<section class="ab-modal" id="settingsModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">系統設定</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body">
+    <div class="ab-soft-card">
+      <div class="setting-row"><span>遊戲音效</span><button class="switch on" type="button" aria-label="遊戲音效"></button></div>
+      <div class="setting-row"><span>震動提示</span><button class="switch on" type="button" aria-label="震動提示"></button></div>
+      <div class="setting-row"><span>荷官語音</span><button class="switch on" type="button" aria-label="荷官語音"></button></div>
+      <div class="setting-row ab-bgm-head"><span>背景音樂</span><button class="switch" id="abBgmSwitch" type="button" aria-label="背景音樂"></button></div>
+      <div class="ab-bgm-panel" id="abBgmPanel">
+        <label class="ab-bgm-label" for="abBgmSelect">音樂選擇</label>
+        <select class="ab-bgm-select" id="abBgmSelect">
+          <option value="none">無背景音樂</option>
+          <option value="lounge">AB Lounge｜大廳主題</option>
+          <option value="casino">AB Casino｜百家樂</option>
+          <option value="vip">AB VIP｜龍虎 / 高額桌</option>
+          <option value="roulette">AB Roulette｜輪盤</option>
+          <option value="sicbo">AB Sicbo｜骰寶</option>
+          <option value="paris">Paris Light｜會員中心</option>
+          <option value="piano">Piano Room｜遊戲紀錄</option>
+        </select>
+        <div class="ab-bgm-volume-row">
+          <span>音量</span>
+          <input id="abBgmVolume" class="ab-bgm-volume" type="range" min="0" max="100" value="65">
+          <b id="abBgmVolumeText">65%</b>
+        </div>
+        <label class="ab-bgm-check"><input type="checkbox" id="abBgmAutoGame"> 依遊戲自動切換音樂</label>
+        <div class="ab-bgm-actions">
+          <button type="button" id="abBgmPreview">▶ 試聽</button>
+          <button type="button" id="abBgmStop">停止</button>
+          <button type="button" class="primary" id="abBgmSave">儲存設定</button>
+        </div>
+        <div class="ab-bgm-now" id="abBgmNow">目前：未播放</div>
+      </div>
+    </div>
+    <div class="ab-soft-card"><div class="ab-mini-title">語言</div><div class="ab-tabs"><button class="ab-tab active">繁中</button><button class="ab-tab">簡中</button><button class="ab-tab">English</button></div></div>
+  </div>
+</section>
+
+<section class="ab-modal" id="accountModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">帳戶明細</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body">
+    <div class="account-kpi"><div class="ab-soft-card"><div class="ab-muted">主帳戶</div><div class="money-big">TWD 3,000</div></div><div class="ab-soft-card"><div class="ab-muted">今日輸贏</div><div class="money-big money-plus">+1,000</div></div></div>
+    <div class="ab-soft-card"><div class="rule-line"><b>遊戲轉入</b><span class="money-plus">+5,000</span></div><div class="rule-line"><b>遊戲轉出</b><span class="money-minus">-2,000</span></div><div class="rule-line"><b>百家樂派彩</b><span class="money-plus">+1,000</span></div></div>
+  </div>
+</section>
+
+<section class="ab-modal" id="liveModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">現場視訊</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body"><div class="live-list"><div class="live-card"><div class="live-name">百家樂 A01</div><div class="live-meta">在線 128｜開放下注<br>莊路穩定｜高清視訊</div></div><div class="live-card"><div class="live-name">龍虎 D02</div><div class="live-meta">在線 54｜開放下注<br>快速局｜即時路紙</div></div><div class="live-card"><div class="live-name">骰寶 S01</div><div class="live-meta">在線 42｜倒數 18 秒<br>三骰視訊｜熱門下注</div></div><div class="live-card"><div class="live-name">輪盤 R01</div><div class="live-meta">在線 39｜歐式輪盤<br>轉盤視角｜即時結果</div></div></div></div>
+</section>
+
+<section class="ab-modal" id="mailModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">站內信</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body"><div class="mail-item"><div class="mail-title">系統公告</div><div class="mail-date">2026-06-15</div><div class="ab-muted">AB 真人館介面更新完成，遊戲記錄與單局回放功能已開放展示。</div></div><div class="mail-item"><div class="mail-title">維護通知</div><div class="mail-date">2026-06-14</div><div class="ab-muted">每日例行維護時間為 06:00 - 06:10，期間可能短暫無法進入房間。</div></div><div class="mail-item"><div class="mail-title">帳務提醒</div><div class="mail-date">2026-06-13</div><div class="ab-muted">請以遊戲記錄與帳戶明細作為交易查詢依據。</div></div></div>
+</section>
+
+
+<audio id="abBgmAudio" preload="metadata" loop playsinline></audio>
+
+<script id="v42-full-nav-windows-js">
+(function(){
+  const overlay=document.getElementById('v42Overlay');
+  const modals=[...document.querySelectorAll('.ab-modal')];
+  function closeAllV42(){overlay&&overlay.classList.remove('open');modals.forEach(m=>m.classList.remove('open'));}
+  function openModal(id){document.body.classList.remove('drawer-open');document.body.classList.remove('report-modal-open');overlay&&overlay.classList.add('open');const el=document.getElementById(id);el&&el.classList.add('open');}
+  document.querySelectorAll('[data-close-v42]').forEach(b=>b.addEventListener('click',closeAllV42));
+  overlay&&overlay.addEventListener('click',closeAllV42);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllV42();});
+
+  const navs=[...document.querySelectorAll('.bottom-nav .nav-item')];
+  const navMap=[
+    {panel:'home',text:'首頁',icon:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M9 20v-6h6v6"/></svg>'},
+    {panel:'rules',text:'遊戲規則',icon:'<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H7a3 3 0 0 0-3 3V5.5Z"/><path d="M4 21V5.5M8 7h8M8 11h6"/></svg>'},
+    {panel:'multi',text:'多檯投注',icon:'<svg viewBox="0 0 24 24"><path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z"/><path d="M7.5 8h.01M16.5 8h.01M7.5 16h.01M16.5 16h.01"/></svg>'},
+    {panel:'settings',text:'設定',icon:'<svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.05.05a2 2 0 0 1-2.83 2.83l-.05-.05A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.05a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.05.05a2 2 0 0 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.05-.05a2 2 0 0 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.05A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.05-.05a2 2 0 0 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.05A1.7 1.7 0 0 0 19.4 15Z"/></svg>'}
+  ];
+  navs.forEach((btn,i)=>{const m=navMap[i];if(!m)return;btn.dataset.panel=m.panel;const icon=btn.querySelector('.nav-icon');const text=btn.querySelector('.nav-text');if(icon)icon.innerHTML=m.icon;if(text)text.textContent=m.text;btn.classList.toggle('active',i===0);btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();navs.forEach(n=>n.classList.remove('active'));btn.classList.add('active');if(m.panel==='home')openModal('homeConfirmModal');if(m.panel==='rules')openModal('rulesModal');if(m.panel==='multi')openModal('multiModal');if(m.panel==='settings')openModal('settingsModal');},true);});
+
+  const ruleData={
+    baccarat:{title:'百家樂',lines:[['閒','1 : 1'],['莊','1 : 0.95'],['免傭莊','一般莊勝 1 : 1，莊 6 點勝 0.5 : 1'],['和','1 : 8'],['閒對 / 莊對','1 : 11']]},
+    dragonTiger:{title:'龍虎',lines:[['龍','1 : 1'],['虎','1 : 1'],['和','1 : 8'],['同點比花色','依平台規則顯示']]},
+    sicbo:{title:'骰寶',lines:[['大 / 小','1 : 1'],['單 / 雙','1 : 1'],['指定圍骰','1 : 180'],['全圍','1 : 30'],['總和','依點數倍率']]},
+    roulette:{title:'輪盤',lines:[['單一號碼','35 : 1'],['紅 / 黑','1 : 1'],['單 / 雙','1 : 1'],['1-18 / 19-36','1 : 1'],['十二注 / 直欄','2 : 1']]}
+  };
+  const ruleContent=document.getElementById('ruleContent');
+  function renderRule(key){const d=ruleData[key]||ruleData.baccarat;ruleContent.innerHTML='<h4>'+d.title+'</h4><div class="rule-list">'+d.lines.map(x=>'<div class="rule-line"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>';}
+  renderRule('baccarat');
+  document.querySelectorAll('#ruleTabs .ab-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('#ruleTabs .ab-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');renderRule(tab.dataset.rule);}));
+  document.querySelectorAll('.switch').forEach(sw=>sw.addEventListener('click',()=>sw.classList.toggle('on')));
+  document.getElementById('multiConfirmBtn')?.addEventListener('click',()=>alert('已加入多檯投注展示清單'));
+  document.getElementById('goMainLobbyBtn')?.addEventListener('click',()=>alert('正式版可在這裡導向外層總大廳'));
+
+  // 會員中心：移除登出/優惠/設定，新增現場視訊，讓每個按鍵都有視窗
+  const drawerMenu=document.querySelector('.drawer-menu');
+  if(drawerMenu){
+    drawerMenu.innerHTML=''+
+      '<button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="account"><span>💰 帳戶明細</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="live"><span>📺 現場視訊</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="mail"><span>✉️ 站內信</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="settings"><span>⚙️ 設定中心</span><span>›</span></button>';
+    drawerMenu.querySelector('[data-drawer-action="report"]')?.addEventListener('click',()=>{document.body.classList.remove('drawer-open');document.body.classList.add('report-modal-open');const page=document.getElementById('gameReportPage');if(page)page.dataset.view='list';const title=document.getElementById('reportTitle');const sub=document.getElementById('reportSub');if(title)title.textContent='遊戲記錄';if(sub)sub.textContent='遊戲報表查詢';});
+    drawerMenu.querySelector('[data-drawer-action="account"]')?.addEventListener('click',()=>openModal('accountModal'));
+    drawerMenu.querySelector('[data-drawer-action="live"]')?.addEventListener('click',()=>openModal('liveModal'));
+    drawerMenu.querySelector('[data-drawer-action="mail"]')?.addEventListener('click',()=>openModal('mailModal'));
+    drawerMenu.querySelector('[data-drawer-action="settings"]')?.addEventListener('click',()=>openModal('settingsModal'));
+  }
+})();
+</script>
+
+
+
+<style id="v43-all-buttons-active-css">
+/* =========================
+   v43：所有按鍵互動補強
+   ========================= */
+.ab-toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(92px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%) translateY(16px);
+  z-index:5000;
+  min-width:210px;
+  max-width:min(86vw,360px);
+  padding:11px 14px;
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(45,46,58,.98),rgba(18,19,27,.98));
+  border:1px solid rgba(255,255,255,.13);
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 14px 34px rgba(0,0,0,.62),0 0 18px rgba(142,54,255,.30);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s ease;
+}
+.ab-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.table-card,.live-card,.mail-item,.rule-line,.game-card,.drawer-item,.ab-tab,.switch,.nav-item{transition:transform .14s ease,filter .14s ease,box-shadow .14s ease,border-color .14s ease}
+.table-card:active,.live-card:active,.mail-item:active,.rule-line:active,.game-card:active,.drawer-item:active,.ab-tab:active,.switch:active,.nav-item:active{transform:scale(.985)}
+.table-card.selected{border-color:rgba(143,220,255,.75);box-shadow:0 0 14px rgba(143,220,255,.20),0 8px 16px rgba(0,0,0,.30)}
+.live-card.selected,.mail-item.selected{border-color:rgba(185,71,255,.75);box-shadow:0 0 16px rgba(185,71,255,.22),0 8px 18px rgba(0,0,0,.32)}
+.mail-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);color:#d9ddec;font-size:12px;line-height:1.55}
+.mail-item.open .mail-detail{display:block}
+.ab-modal-note{margin-top:10px;padding:10px 11px;border-radius:14px;background:rgba(143,220,255,.08);border:1px solid rgba(143,220,255,.18);font-size:12px;color:#dbeeff;line-height:1.5;display:none}
+.ab-modal-note.show{display:block}
+.lang-note{font-size:12px;color:#8fdcff;font-weight:900;margin-top:8px;display:none}.lang-note.show{display:block}
+.rule-section-title{margin:12px 0 7px;font-size:13px;color:#d7bcff;font-weight:950;letter-spacing:.5px}.rule-section-title:first-child{margin-top:0}
+</style>
+
+<script id="v43-all-buttons-active-js">
+(function(){
+  const $=(s,root=document)=>root.querySelector(s);
+  const $$=(s,root=document)=>Array.from(root.querySelectorAll(s));
+  let toastTimer=null;
+  function toast(msg){
+    let box=$('#abToast');
+    if(!box){box=document.createElement('div');box.id='abToast';box.className='ab-toast';document.body.appendChild(box);}
+    box.textContent=msg;
+    box.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>box.classList.remove('show'),1600);
+  }
+  function closeV43Modals(){
+    $('#v42Overlay')?.classList.remove('open');
+    $$('.ab-modal').forEach(m=>m.classList.remove('open'));
+  }
+  function openV43Modal(id){
+    document.body.classList.remove('drawer-open');
+    document.body.classList.remove('report-modal-open');
+    closeV43Modals();
+    $('#v42Overlay')?.classList.add('open');
+    $('#'+id)?.classList.add('open');
+  }
+
+  // 大廳遊戲卡片點擊連動
+  // 目前先把所有「百家」房卡連到文件2：AB_baccarat(8).html
+  const AB_ROOM_LINKS = {
+    baccarat: 'AB_baccarat(8).html'
+  };
+
+  $$('.game-card').forEach((card,i)=>{
+    if(card.dataset.v43Ready) return; card.dataset.v43Ready='1';
+    card.style.cursor='pointer';
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+
+    const goRoom = ()=>{
+      const kind = card.dataset.kind;
+      const alt = card.querySelector('img')?.alt || ['百家樂','百家樂','龍虎','骰寶','輪盤'][i%5] || '遊戲桌';
+
+      if(kind === 'baccarat'){
+        toast('正在進入 '+alt+'...');
+        setTimeout(()=>{ window.location.href = AB_ROOM_LINKS.baccarat; }, 180);
+        return;
+      }
+
+      toast('已選擇 '+alt+'，此遊戲房連動下一步再接');
+    };
+
+    card.addEventListener('click', goRoom);
+    card.addEventListener('keydown', e=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        goRoom();
+      }
+    });
+  });
+
+  // 規則頁：補成比較完整，且 tabs 可切換
+  const ruleContent=$('#ruleContent');
+  const fullRules={
+    baccarat:{title:'百家樂規則',groups:[['基本賠率',[['閒','1 : 1'],['莊','1 : 0.95'],['免傭莊','一般莊勝 1 : 1，莊 6 點勝 0.5 : 1'],['和','1 : 8'],['閒對 / 莊對','1 : 11']]],['開牌與補牌',[['閒莊各發兩張牌','A=1，2~9照點數，10/J/Q/K=0'],['點數計算','總點數只取個位數，例如 7+8=5'],['天牌','任一方兩張牌為 8 或 9，通常不再補牌'],['第三張牌','依百家樂補牌表自動補牌']]]]},
+    dragonTiger:{title:'龍虎規則',groups:[['基本賠率',[['龍','1 : 1'],['虎','1 : 1'],['和','1 : 8'],['同點和局','依平台規則，龍/虎下注通常退回一半或全退']]],['比牌方式',[['每方一張牌','K 最大，A 最小'],['點數相同','判定為和局'],['花色','如平台採花色規則，依黑桃/紅心/梅花/方塊順序顯示']]]]},
+    sicbo:{title:'骰寶規則',groups:[['常用下注',[['大 / 小','1 : 1，圍骰通常通殺大小'],['單 / 雙','1 : 1'],['指定圍骰','1 : 180'],['全圍','1 : 30']]],['點數與組合',[['總和 4 / 17','約 1 : 60'],['總和 5 / 16','約 1 : 30'],['總和 6 / 15','約 1 : 18'],['兩骰組合','約 1 : 5'],['單骰指定','依出現顆數 1:1 / 1:2 / 1:3']]]]},
+    roulette:{title:'輪盤規則',groups:[['內圍下注',[['單一號碼','35 : 1'],['分注','17 : 1'],['街注','11 : 1'],['角注','8 : 1'],['線注','5 : 1']]],['外圍下注',[['紅 / 黑','1 : 1'],['單 / 雙','1 : 1'],['1-18 / 19-36','1 : 1'],['十二注','2 : 1'],['直欄','2 : 1']]]]},
+  };
+  function renderFullRule(key){
+    if(!ruleContent) return;
+    const d=fullRules[key]||fullRules.baccarat;
+    ruleContent.innerHTML='<h4>'+d.title+'</h4>'+d.groups.map(g=>
+      '<div class="rule-section-title">'+g[0]+'</div><div class="rule-list">'+g[1].map(x=>'<div class="rule-line"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>'
+    ).join('');
+    $$('.rule-line',ruleContent).forEach(line=>line.addEventListener('click',()=>toast('已查看：'+line.querySelector('b').textContent)));
+  }
+  renderFullRule('baccarat');
+  $$('#ruleTabs .ab-tab').forEach(tab=>{
+    tab.addEventListener('click',e=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      $$('#ruleTabs .ab-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      renderFullRule(tab.dataset.rule);
+      toast('已切換到 '+tab.textContent+' 規則');
+    },true);
+  });
+
+  // 多檯投注：卡片、勾選、確認都有回饋
+  $$('#multiModal .table-card').forEach(card=>{
+    const cb=card.querySelector('input[type="checkbox"]');
+    function sync(){card.classList.toggle('selected',!!cb?.checked)}
+    cb?.addEventListener('change',sync);
+    card.addEventListener('click',()=>setTimeout(sync,0));
+    sync();
+  });
+  $('#multiConfirmBtn')?.addEventListener('click',e=>{
+    e.preventDefault(); e.stopImmediatePropagation();
+    const selected=$$('#multiModal input[type="checkbox"]:checked').map(cb=>cb.closest('.table-card')?.querySelector('.table-name')?.textContent).filter(Boolean);
+    let note=$('#multiResultNote');
+    if(!note){note=document.createElement('div');note.id='multiResultNote';note.className='ab-modal-note';$('#multiModal .ab-modal-body')?.appendChild(note);}
+    note.textContent=selected.length?('已加入 '+selected.length+' 檯：'+selected.join('、')):'請至少選擇一個桌台';
+    note.classList.add('show');
+    toast(selected.length?'多檯投注已更新':'尚未選擇桌台');
+  },true);
+
+  // 系統設定：開關、語言都有回饋
+  $$('#settingsModal .switch').forEach(sw=>{
+    sw.addEventListener('click',e=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      sw.classList.toggle('on');
+      toast((sw.getAttribute('aria-label')||'設定')+'：'+(sw.classList.contains('on')?'開啟':'關閉'));
+    },true);
+  });
+  $$('#settingsModal .ab-tab').forEach(tab=>{
+    tab.addEventListener('click',e=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      $$('#settingsModal .ab-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      let note=$('#langNote');
+      if(!note){note=document.createElement('div');note.id='langNote';note.className='lang-note';tab.closest('.ab-soft-card')?.appendChild(note);}
+      note.textContent='目前語言：'+tab.textContent;
+      note.classList.add('show');
+      toast('語言已切換為 '+tab.textContent);
+    },true);
+  });
+
+  // 首頁確認按鈕有明確反應
+  $('#goMainLobbyBtn')?.addEventListener('click',e=>{
+    e.preventDefault(); e.stopImmediatePropagation();
+    toast('正式版可導向外層總大廳');
+  },true);
+
+  // 漢堡內每個按鍵都可開窗
+  const drawerMenu=$('.drawer-menu');
+  if(drawerMenu){
+    drawerMenu.innerHTML=''+
+      '<button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="account"><span>💰 帳戶明細</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="live"><span>📺 現場視訊</span><span>›</span></button>'+ 
+      '<button class="drawer-item" type="button" data-drawer-action="mail"><span>✉️ 站內信</span><span>›</span></button>';
+    drawerMenu.addEventListener('click',e=>{
+      const item=e.target.closest('.drawer-item'); if(!item) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      const action=item.dataset.drawerAction;
+      document.body.classList.remove('drawer-open');
+      if(action==='report'){
+        closeV43Modals();
+        document.body.classList.add('report-modal-open');
+        const page=$('#gameReportPage'); if(page) page.dataset.view='list';
+        $('#reportTitle') && ($('#reportTitle').textContent='遊戲記錄');
+        $('#reportSub') && ($('#reportSub').textContent='遊戲報表查詢');
+        toast('已開啟遊戲記錄');
+      }
+      if(action==='account'){openV43Modal('accountModal'); toast('已開啟帳戶明細');}
+      if(action==='live'){openV43Modal('liveModal'); toast('已開啟現場視訊');}
+      if(action==='mail'){openV43Modal('mailModal'); toast('已開啟站內信');}
+    },true);
+  }
+
+  // 現場視訊卡片可點擊
+  $$('#liveModal .live-card').forEach(card=>{
+    card.style.cursor='pointer';
+    card.addEventListener('click',()=>{
+      $$('#liveModal .live-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      toast('已選擇 '+(card.querySelector('.live-name')?.textContent||'視訊桌'));
+    });
+  });
+
+  // 帳戶明細列可點擊
+  $$('#accountModal .rule-line').forEach(line=>line.addEventListener('click',()=>toast('帳戶明細：'+line.textContent.trim().replace(/\s+/g,' '))));
+
+  // 站內信可展開/收合
+  $$('#mailModal .mail-item').forEach(item=>{
+    if(!$('.mail-detail',item)){
+      const detail=document.createElement('div'); detail.className='mail-detail';
+      detail.textContent='這裡可以放完整內容、閱讀狀態與客服連結。正式版可串接後台站內信資料。';
+      item.appendChild(detail);
+    }
+    item.style.cursor='pointer';
+    item.addEventListener('click',()=>{
+      item.classList.toggle('open');
+      item.classList.add('selected');
+      toast((item.classList.contains('open')?'已展開 ':'已收合 ')+(item.querySelector('.mail-title')?.textContent||'站內信'));
+    });
+  });
+
+  // 報表分頁、明細、回放既有功能補 toast，避免感覺沒反應
+  $$('.report-tab').forEach(tab=>tab.addEventListener('click',()=>toast('已切換：'+tab.textContent)));
+  $('#reportBack')?.addEventListener('click',()=>toast('已返回上一層'));
+  $('#reportClose')?.addEventListener('click',()=>toast('已關閉遊戲記錄'));
+
+  // 關閉鈕/背景點擊也給乾淨回饋，不額外 alert
+  $$('[data-close-v42]').forEach(btn=>btn.addEventListener('click',()=>toast('已關閉視窗')));
+})();
+</script>
+
+
+
+<!-- AB lobby route helper -->
+<script id="ab-lobby-routing-direct">
+(function(){
+  var routes={baccarat:'baccarat.html',dragon:'dragon.html',sicbo:'sicbo.html',roulette:'roulette.html'};
+  function go(k){ if(routes[k]) location.href=routes[k]; }
+  function bind(){
+    document.querySelectorAll('.game-card').forEach(function(card){
+      var k=(card.getAttribute('data-kind')||'').toLowerCase();
+      if(k==='baccarat'||k==='dragon'||k==='sicbo'||k==='roulette'){
+        card.style.cursor='pointer';
+        card.onclick=function(){ go(k); };
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
+})();
+</script>
+
+
+<!-- AB GitHub Pages routing patch: lobby / leave / change table / multi-table links -->
+<script id="ab-github-routing-patch">
+(function(){
+  'use strict';
+  var AB_ROUTES = {
+    lobby: 'index.html',
+    home: 'index.html',
+    baccarat: 'baccarat.html',
+    dragon: 'dragon.html',
+    tiger: 'dragon.html',
+    dragonTiger: 'dragon.html',
+    sicbo: 'sicbo.html',
+    roulette: 'roulette.html'
+  };
+  window.AB_ROUTES = AB_ROUTES;
+  window.abGotoRoom = function(kind){
+    var key = String(kind || '').toLowerCase();
+    var target = AB_ROUTES[key] || kind;
+    if(target) window.location.href = target;
+  };
+  window.abBackLobby = function(){ window.location.href = AB_ROUTES.lobby; };
+
+  function roomFromText(txt){
+    txt = String(txt || '').toLowerCase();
+    if(/百家|baccarat/.test(txt)) return 'baccarat';
+    if(/龍虎|龙虎|dragon|tiger/.test(txt)) return 'dragon';
+    if(/骰寶|骰宝|sic\s*bo|sicbo/.test(txt)) return 'sicbo';
+    if(/輪盤|轮盘|roulette/.test(txt)) return 'roulette';
+    return '';
+  }
+  function clickableRoom(el){
+    if(!el) return '';
+    return roomFromText((el.getAttribute('data-kind')||'') + ' ' + (el.getAttribute('data-game')||'') + ' ' + (el.getAttribute('data-room')||'') + ' ' + (el.getAttribute('data-type')||'') + ' ' + (el.textContent||''));
+  }
+  function isBetAction(target){
+    return !!(target && target.closest && target.closest('button,input,select,textarea,.chip,.chip-btn,.ab-chip,.quick-chip,.sicbo-action-btn,.action-btn,.action-circle,.confirm,.cancel,.bet-card,.bet-card-main,.bet-card-sub,.cell,.grid-cell,[data-bet],[data-bet-type],[data-value],.quick-table-bet,.quick-table-actions,.quick-bet-actions,.quick-bottom-row'));
+  }
+  function bindOne(el, kind, opts){
+    if(!el || el.__abRouteBound) return;
+    var target = AB_ROUTES[kind];
+    if(!target) return;
+    el.__abRouteBound = true;
+    el.setAttribute('data-ab-route', kind);
+    if(el.style) el.style.cursor = 'pointer';
+    el.addEventListener('click', function(ev){
+      if(opts && opts.skipBetActions && isBetAction(ev.target)) return;
+      if(opts && opts.noStop !== true){ ev.preventDefault(); ev.stopPropagation(); }
+      window.location.href = target;
+    }, true);
+  }
+  function bindAll(){
+    // Lobby cards: data-kind controls destination.
+    document.querySelectorAll('.game-card,[data-kind]').forEach(function(el){
+      var kind = clickableRoom(el);
+      if(kind) bindOne(el, kind, {noStop:false});
+    });
+
+    // Leave / exit buttons in rooms -> lobby.
+    document.querySelectorAll('#abVideoExitBtn,.ab-video-exit,.video-exit-btn,[aria-label="離開"],[aria-label="离开"],[data-action="exit"],[data-action="leave"],.exit-btn,.leave-btn').forEach(function(el){
+      bindOne(el, 'lobby', {noStop:false});
+    });
+    document.querySelectorAll('button,a,div').forEach(function(el){
+      var t=(el.textContent||'').trim();
+      if(t === '離開' || t === '离开' || t === '退出') bindOne(el, 'lobby', {noStop:false});
+    });
+
+    // Change-table room list items / drawer items -> corresponding room.
+    document.querySelectorAll('.room-item,.drawer-room,.change-room-item,.table-room-item,.switch-room-item,[data-room],[data-game]').forEach(function(el){
+      var kind = clickableRoom(el);
+      if(kind) bindOne(el, kind, {noStop:false});
+    });
+
+    // Multi-table cards: clicking card background enters room, but betting controls remain usable.
+    document.querySelectorAll('.quick-card,.quick-room-card,.quick-table-card,.multi-table-card,.multi-room-card,.ab-multi-card,.dg-room-card,.quick-item,[class*="multi"][class*="card"],[class*="quick"][class*="card"]').forEach(function(el){
+      var kind = clickableRoom(el);
+      if(kind) bindOne(el, kind, {skipBetActions:true, noStop:false});
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindAll);
+  else bindAll();
+  setTimeout(bindAll, 500);
+  setTimeout(bindAll, 1500);
+})();
+</script>
+
+
+<!-- =========================
+     v40 DG真人風格：遊戲紀錄完整查詢模組
+     只覆蓋會員中心內的遊戲紀錄，不改大廳/房間連動
+     ========================= -->
+<style id="v40-dg-report-complete-css">
+.report-page.dg40-report{color:#fff!important;background:radial-gradient(circle at 15% 0%,rgba(255,201,92,.14),transparent 32%),radial-gradient(circle at 92% 8%,rgba(0,220,255,.16),transparent 34%),linear-gradient(180deg,#2b2c35 0%,#11131a 100%)!important}.dg40-query{border-radius:16px;padding:11px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),linear-gradient(135deg,#2e303b,#181a23);border:1px solid rgba(255,255,255,.09);box-shadow:0 8px 18px rgba(0,0,0,.34);margin-bottom:10px}.dg40-select-row{display:grid;grid-template-columns:1fr 1fr 1fr 72px;gap:7px}.dg40-select,.dg40-search{height:34px;border-radius:11px;border:1px solid rgba(255,255,255,.11);background:linear-gradient(180deg,#343642,#1d1f29);color:#fff;font-family:inherit;font-weight:900;text-align:center;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.dg40-search{background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.44),inset 0 1px 0 rgba(255,255,255,.18);cursor:pointer}.dg40-game-tabs{display:flex;gap:6px;overflow:auto;padding:2px 0 10px;margin-bottom:2px;scrollbar-width:none}.dg40-game-tabs::-webkit-scrollbar{display:none}.dg40-game-tab{flex:0 0 auto;min-width:58px;height:31px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#343642,#20222c);color:#cfd4e4;font-family:inherit;font-weight:950;font-size:12px;box-shadow:0 5px 10px rgba(0,0,0,.26)}.dg40-game-tab.active{color:#fff;background:linear-gradient(180deg,#b947ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.52),inset 0 1px 0 rgba(255,255,255,.2)}.dg40-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.dg40-card{border-radius:14px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.016)),linear-gradient(135deg,#2c2e39,#171922);border:1px solid rgba(255,255,255,.075);box-shadow:0 8px 16px rgba(0,0,0,.3)}.dg40-card.main{grid-column:span 2;background:radial-gradient(circle at 20% 15%,rgba(185,71,255,.26),transparent 42%),linear-gradient(135deg,#30313e,#151721)}.dg40-label{font-size:11px;color:#aeb4c6;font-weight:850}.dg40-value{margin-top:4px;font-size:18px;font-weight:950;letter-spacing:.4px}.dg40-card.main .dg40-value{font-size:25px}.dg40-list{display:flex;flex-direction:column;gap:8px}.dg40-record{border:0;width:100%;text-align:left;color:#fff;border-radius:15px;padding:10px 11px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.014)),linear-gradient(135deg,#242733,#13151d);border:1px solid rgba(255,255,255,.075);box-shadow:0 8px 17px rgba(0,0,0,.35);font-family:inherit;cursor:pointer}.dg40-record:active{transform:translateY(1px);background:rgba(155,88,255,.15)}.dg40-rec-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.dg40-game{font-size:14px;font-weight:950}.dg40-room{font-size:11px;color:#98dfff;font-weight:850;margin-top:2px}.dg40-id{font-size:10px;color:#98a1b5;font-weight:800}.dg40-rec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:9px}.dg40-mini{border-radius:11px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.055);padding:7px 8px}.dg40-mini span{display:block;font-size:10px;color:#929bad;font-weight:850}.dg40-mini b{display:block;margin-top:2px;font-size:13px}.dg40-win{text-align:right;font-size:16px;font-weight:950;white-space:nowrap}.plus{color:#36e68c!important}.minus{color:#ff4769!important}.dg40-empty{padding:28px 10px;text-align:center;color:#9ba3b5;font-weight:850;font-size:13px}.dg40-detail-head{border-radius:15px;padding:11px;margin-bottom:10px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.016)),linear-gradient(135deg,#2c2e39,#171922);border:1px solid rgba(255,255,255,.075)}.dg40-detail-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.dg40-detail-title b{font-size:16px}.dg40-detail-title span{font-size:11px;color:#9da6ba;font-weight:850}.dg40-bet-table{width:100%;border-collapse:collapse;margin-top:10px;overflow:hidden;border-radius:12px;background:#090909;font-size:12px}.dg40-bet-table th{height:32px;background:#2d2d31;color:#a4a6b0;border:1px solid #25252a;font-weight:900}.dg40-bet-table td{height:35px;text-align:center;color:#d5d7df;border:1px solid #202026;font-weight:850}.dg40-result-box{border-radius:15px;background:#08090d;border:1px solid rgba(255,255,255,.08);padding:12px;margin-bottom:10px}.dg40-bac-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}.dg40-side{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}.dg40-side.right{flex-direction:row-reverse}.dg40-score{font-size:18px;font-weight:950;color:#fff;text-align:center}.dg40-blue{color:#31a8ff}.dg40-red{color:#ff3838}.dg40-vs{font-weight:950;color:#ff3838}.dg40-card-mini{width:36px;height:50px;border-radius:5px;background:linear-gradient(180deg,#fff,#dce0e8);color:#111;display:flex;flex-direction:column;align-items:flex-start;padding:3px 4px;font-weight:950;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.65),inset 0 0 0 1px rgba(0,0,0,.16);font-size:14px}.dg40-card-mini .suit{font-size:22px;align-self:center;margin-top:5px}.dg40-card-mini.red{color:#e12a2a}.dg40-dice{width:38px;height:38px;border-radius:10px;background:#f8f8fb;color:#111;display:grid;place-items:center;font-weight:950;font-size:22px;box-shadow:0 3px 7px rgba(0,0,0,.55)}.dg40-roulette-ball{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.75),transparent 28%),linear-gradient(180deg,#16171d,#050507);border:4px solid #c9a35a;color:#fff;font-size:30px;font-weight:950;box-shadow:0 0 18px rgba(255,190,80,.25),0 9px 18px rgba(0,0,0,.55)}.dg40-tags{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:8px}.dg40-tag{border-radius:12px;padding:5px 9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:900}.dg40-searchline{display:flex;gap:7px;margin-top:8px}.dg40-input{flex:1;height:34px;border-radius:11px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.22);color:#fff;font-family:inherit;font-weight:850;padding:0 10px;outline:none}@media(max-width:380px){.dg40-select-row{grid-template-columns:1fr 1fr 1fr 60px;gap:5px}.dg40-select,.dg40-search{font-size:12px}.dg40-rec-grid{gap:5px}.dg40-mini{padding:6px}.dg40-value{font-size:16px}.dg40-card.main .dg40-value{font-size:22px}.dg40-bac-row{gap:5px}.dg40-card-mini{width:31px;height:44px}.dg40-score{font-size:15px}}
+</style>
+<script id="v42-dg-report-multibet-js">
+(function(){
+  function ready(fn){document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn):fn();}
+  ready(function(){
+    const page=document.getElementById('gameReportPage');
+    if(!page) return;
+    page.classList.add('dg40-report');
+    page.innerHTML=`
+      <div class="report-top">
+        <div><div class="report-title" id="reportTitle">遊戲紀錄</div><div class="report-sub" id="reportSub">年份／月份／日期查詢・同局多投注合併顯示</div></div>
+        <div class="report-actions"><button class="report-back" type="button" id="reportBack">‹ 返回</button><button class="report-close" type="button" id="reportClose" aria-label="關閉遊戲紀錄">×</button></div>
+      </div>
+      <div class="view-panel view-list">
+        <div class="dg40-query">
+          <div class="dg40-select-row">
+            <select class="dg40-select" id="dg40Year"><option>2026</option><option>2025</option><option>2024</option></select>
+            <select class="dg40-select" id="dg40Month"></select>
+            <select class="dg40-select" id="dg40Day"></select>
+            <button class="dg40-search" type="button" id="dg40Search">🔍 查詢</button>
+          </div>
+          <div class="dg40-searchline"><input class="dg40-input" id="dg40Keyword" placeholder="輸入遊戲編號"><button class="dg40-search" type="button" id="dg40Clear">清除</button></div>
+          <div class="dg40-period-row" id="dg40PeriodRow">
+            <button class="dg40-period active" type="button" data-range="day">今日</button>
+            <button class="dg40-period" type="button" data-range="week">本週</button>
+            <button class="dg40-period" type="button" data-range="month">本月</button>
+            <button class="dg40-period" type="button" data-range="all">全部</button>
+          </div>
+        </div>
+        <div class="dg40-game-tabs" id="dg40Tabs"></div>
+        <div class="dg40-summary" id="dg40Summary"></div>
+        <div class="dg40-list" id="dg40List"></div>
+        <div class="report-note">同一局投注多個區域時，首頁仍然只顯示一筆遊戲編號；點進單局明細後，才展開莊、閒、和、莊對、閒對等下注項目。</div>
+      </div>
+      <div class="view-panel view-detail"><div id="dg40Detail"></div></div>
+      <div class="view-panel view-replay">
+        <div class="report-datebar"><b id="dg40ReplayNo">單局回放</b><span>同步顯示開牌結果</span></div>
+        <div class="replay-video"><div class="play-btn">▶</div><div class="replay-meta" id="dg40ReplayTime"></div><div class="replay-controls"><span class="ctrl-play">▶</span><span>0:00</span><span class="ctrl-bar"></span><span>🔊</span><span>⋮</span></div></div>
+        <div class="result-board"><div id="dg40Replay"></div></div>
+      </div>`;
+
+    function totals(bets){return bets.reduce((a,b)=>({bet:a.bet+b.bet,valid:a.valid+b.valid,payout:a.payout+b.payout,win:a.win+b.win}),{bet:0,valid:0,payout:0,win:0});}
+    function make(row){const t=totals(row.bets);return {...row,bet:t.bet,valid:t.valid,payout:t.payout,win:t.win,type:row.bets.map(b=>b.type).join(' / ')};}
+    const data=[
+      make({date:'2026.06.23',id:'202606230001B101',game:'百家樂',room:'百家 1 VIP',time:'14:23:15',kind:'baccarat',bets:[
+        {type:'莊',bet:1000,valid:1000,payout:1950,win:950},
+        {type:'和',bet:100,valid:100,payout:0,win:-100},
+        {type:'莊對',bet:50,valid:50,payout:0,win:-50},
+        {type:'閒對',bet:50,valid:50,payout:0,win:-50}
+      ],result:{playerPoint:6,bankerPoint:8,playerCards:['4♣','2♦'],bankerCards:['K♠','8♥'],winner:'莊'}}),
+      make({date:'2026.06.23',id:'202606230002B102',game:'百家樂',room:'百家 3 VIP',time:'14:18:42',kind:'baccarat',bets:[
+        {type:'閒',bet:1500,valid:1500,payout:0,win:-1500}
+      ],result:{playerPoint:4,bankerPoint:7,playerCards:['2♥','2♣'],bankerCards:['7♠','Q♦'],winner:'莊'}}),
+      make({date:'2026.06.23',id:'202606230003D201',game:'龍虎',room:'龍虎 1 VIP',time:'14:10:09',kind:'dragon',bets:[
+        {type:'龍',bet:1200,valid:1200,payout:2400,win:1200}
+      ],result:{dragonCards:['A♥'],tigerCards:['9♣'],winner:'龍'}}),
+      make({date:'2026.06.23',id:'202606230004S301',game:'骰寶',room:'骰寶 1 VIP',time:'13:58:33',kind:'sicbo',bets:[
+        {type:'大',bet:800,valid:800,payout:1600,win:800}
+      ],result:{dice:['4','5','6'],sum:15,tags:['大','單']}}),
+      make({date:'2026.06.23',id:'202606230005R401',game:'輪盤',room:'輪盤 1 VIP',time:'13:45:20',kind:'roulette',bets:[
+        {type:'紅',bet:500,valid:500,payout:1000,win:500},
+        {type:'單',bet:100,valid:100,payout:200,win:100}
+      ],result:{number:'17',color:'紅',tags:['紅','單','小','第二打']}}),
+      make({date:'2026.06.22',id:'202606220011B105',game:'百家樂',room:'百家 5 VIP',time:'22:10:07',kind:'baccarat',bets:[
+        {type:'莊對',bet:500,valid:500,payout:5500,win:5000}
+      ],result:{playerPoint:2,bankerPoint:8,playerCards:['A♠','A♦'],bankerCards:['8♣','Q♥'],winner:'莊'}}),
+      make({date:'2026.06.22',id:'202606220012S302',game:'骰寶',room:'骰寶 1 VIP',time:'21:44:19',kind:'sicbo',bets:[
+        {type:'小',bet:900,valid:900,payout:0,win:-900}
+      ],result:{dice:['5','5','6'],sum:16,tags:['大','雙']}}),
+      make({date:'2026.06.21',id:'202606210031D202',game:'龍虎',room:'龍虎 1 VIP',time:'20:31:51',kind:'dragon',bets:[
+        {type:'虎',bet:1000,valid:1000,payout:2000,win:1000}
+      ],result:{dragonCards:['6♠'],tigerCards:['Q♦'],winner:'虎'}}),
+      make({date:'2026.06.21',id:'202606210032R402',game:'輪盤',room:'輪盤 1 VIP',time:'20:02:18',kind:'roulette',bets:[
+        {type:'17 直注',bet:100,valid:100,payout:3600,win:3500}
+      ],result:{number:'17',color:'紅',tags:['紅','單','小','直注中獎']}})
+    ];
+
+    let state={date:'2026.06.23',range:'day',kind:'all',keyword:'',current:null};
+    const $=id=>document.getElementById(id), money=n=>Number(n).toLocaleString('zh-TW'), signed=n=>(n>=0?'+ ':'- ')+money(Math.abs(n)), wcls=n=>n>=0?'plus':'minus';
+    const tabs=[['all','全部'],['baccarat','百家樂'],['dragon','龍虎'],['sicbo','骰寶'],['roulette','輪盤']];
+    function fillSelects(){const m=$('dg40Month'),d=$('dg40Day');m.innerHTML=Array.from({length:12},(_,i)=>`<option ${i===5?'selected':''}>${String(i+1).padStart(2,'0')}</option>`).join('');d.innerHTML=Array.from({length:31},(_,i)=>`<option ${i===22?'selected':''}>${String(i+1).padStart(2,'0')}</option>`).join('');}
+    function setView(v){page.dataset.view=v; $('reportTitle').textContent=v==='list'?'遊戲紀錄':v==='detail'?'單局明細':'單局回放'; $('reportSub').textContent=v==='list'?'日期查詢・今日/本週/本月快速篩選':v==='detail'?'下注內容、派彩、輸贏完整資訊':'影片下方同步顯示開牌結果';}
+    function textOf(x){return `${x.id} ${x.game} ${x.room} ${x.type} ${x.bets.map(b=>b.type).join(' ')}`;}
+    function parseDate(s){const p=String(s).split('.').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+    function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+    function inSameWeek(d,base){const b=new Date(base);const day=(b.getDay()+6)%7;const start=new Date(b);start.setDate(b.getDate()-day);start.setHours(0,0,0,0);const end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);return d>=start&&d<=end;}
+    function dateMatch(x){const d=parseDate(x.date), base=parseDate(state.date); if(state.range==='all') return true; if(state.range==='month') return d.getFullYear()===base.getFullYear()&&d.getMonth()===base.getMonth(); if(state.range==='week') return inSameWeek(d,base); return sameDay(d,base);}
+    function filteredAllDate(){return data.filter(x=>dateMatch(x)&&(!state.keyword||textOf(x).includes(state.keyword)));}
+    function filtered(){return data.filter(x=>dateMatch(x)&&(state.kind==='all'||x.kind===state.kind)&&(!state.keyword||textOf(x).includes(state.keyword)));}
+    function renderTabs(){const list=filteredAllDate();$('dg40Tabs').innerHTML=tabs.map(([k,t])=>{const count=k==='all'?list.length:list.filter(x=>x.kind===k).length;return `<button class="dg40-game-tab ${state.kind===k?'active':''}" data-report-kind="${k}" type="button">${t} (${count})</button>`}).join('');document.querySelectorAll('.dg40-game-tab').forEach(b=>b.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();state.kind=b.getAttribute('data-report-kind');render();});}
+    function renderSummary(rows){const bet=rows.reduce((s,x)=>s+x.bet,0), valid=rows.reduce((s,x)=>s+x.valid,0), payout=rows.reduce((s,x)=>s+x.payout,0), win=rows.reduce((s,x)=>s+x.win,0);$('dg40Summary').innerHTML=`<div class="dg40-card"><div class="dg40-label">總投注</div><div class="dg40-value">${money(bet)}</div></div><div class="dg40-card"><div class="dg40-label">有效投注</div><div class="dg40-value">${money(valid)}</div></div><div class="dg40-card"><div class="dg40-label">總派彩</div><div class="dg40-value">${money(payout)}</div></div><div class="dg40-card main"><div class="dg40-label">總輸贏</div><div class="dg40-value ${wcls(win)}">${signed(win)}</div></div>`;}
+    function renderList(rows){$('dg40List').innerHTML=rows.length?rows.map(x=>`<button class="dg40-record" type="button" data-i="${data.indexOf(x)}"><div class="dg40-rec-top"><div><div class="dg40-game">${x.game}</div><div class="dg40-room">${x.room}｜${x.time}</div><div class="dg40-id">${x.id}</div></div><div class="dg40-win ${wcls(x.win)}">${signed(x.win)}</div></div><div class="dg40-rec-grid"><div class="dg40-mini"><span>下注項目</span><b>${x.bets.length>1?x.bets.length+' 項':x.type}</b></div><div class="dg40-mini"><span>投注</span><b>${money(x.bet)}</b></div><div class="dg40-mini"><span>派彩</span><b>${money(x.payout)}</b></div></div></button>`).join(''):`<div class="dg40-empty">這個日期 / 遊戲目前沒有紀錄</div>`;document.querySelectorAll('.dg40-record').forEach(b=>b.onclick=()=>openDetail(+b.dataset.i));}
+    function card(c){const rank=String(c).slice(0,-1),suit=String(c).slice(-1),red=(suit==='♥'||suit==='♦')?' red':'';return `<span class="dg40-card-mini${red}"><span>${rank}</span><span class="suit">${suit}</span></span>`;}
+    function resultHTML(x){if(x.kind==='baccarat')return `<div class="dg40-result-box"><div class="dg40-bac-row"><div class="dg40-side">${x.result.playerCards.map(card).join('')}<b class="dg40-score dg40-blue">閒 ${x.result.playerPoint}</b></div><div class="dg40-vs">VS</div><div class="dg40-side right">${x.result.bankerCards.map(card).join('')}<b class="dg40-score dg40-red">莊 ${x.result.bankerPoint}</b></div></div><div class="dg40-tags"><span class="dg40-tag">結果：${x.result.winner}</span></div></div>`;if(x.kind==='dragon')return `<div class="dg40-result-box"><div class="dg40-bac-row"><div class="dg40-side">${x.result.dragonCards.map(card).join('')}<b class="dg40-score dg40-blue">龍</b></div><div class="dg40-vs">VS</div><div class="dg40-side right">${x.result.tigerCards.map(card).join('')}<b class="dg40-score dg40-red">虎</b></div></div><div class="dg40-tags"><span class="dg40-tag">結果：${x.result.winner}</span></div></div>`;if(x.kind==='sicbo')return `<div class="dg40-result-box"><div class="dg40-side">${x.result.dice.map(d=>`<span class="dg40-dice">${d}</span>`).join('')}<b class="dg40-score">總點 ${x.result.sum}</b></div><div class="dg40-tags">${x.result.tags.map(t=>`<span class="dg40-tag">${t}</span>`).join('')}</div></div>`;return `<div class="dg40-result-box"><div class="dg40-roulette-ball">${x.result.number}</div><div class="dg40-tags">${x.result.tags.map(t=>`<span class="dg40-tag">${t}</span>`).join('')}</div></div>`;}
+    function betTable(x){return `<table class="dg40-bet-table"><thead><tr><th>下注類型</th><th>投注金額</th><th>有效投注</th><th>派彩</th><th>輸贏</th></tr></thead><tbody>${x.bets.map(b=>`<tr><td>${b.type}</td><td>${money(b.bet)}</td><td>${money(b.valid)}</td><td>${money(b.payout)}</td><td class="${wcls(b.win)}">${signed(b.win)}</td></tr>`).join('')}<tr><td><b>本局合計</b></td><td><b>${money(x.bet)}</b></td><td><b>${money(x.valid)}</b></td><td><b>${money(x.payout)}</b></td><td class="${wcls(x.win)}"><b>${signed(x.win)}</b></td></tr></tbody></table>`;}
+    function openDetail(i){const x=data[i];state.current=x;$('dg40Detail').innerHTML=`<div class="dg40-detail-head"><div class="dg40-detail-title"><div><b>${x.game}｜${x.room}</b><span>${x.date} ${x.time}</span></div><div class="dg40-win ${wcls(x.win)}">${signed(x.win)}</div></div><div class="dg40-id" style="margin-top:7px">遊戲編號：${x.id}</div>${betTable(x)}</div>${resultHTML(x)}<button class="dg40-search" type="button" id="dg40OpenReplay" style="width:100%;height:40px;border-radius:15px">查看單局回放</button>`;$('dg40OpenReplay').onclick=openReplay;setView('detail');}
+    function openReplay(){const x=state.current;if(!x)return;$('dg40ReplayNo').textContent='遊戲編號：'+x.id;$('dg40ReplayTime').textContent=x.time;$('dg40Replay').innerHTML=resultHTML(x)+betTable(x);setView('replay');}
+    function renderPeriods(){document.querySelectorAll('.dg40-period').forEach(b=>b.classList.toggle('active',b.dataset.range===state.range));}
+    function render(){state.date=`${$('dg40Year').value}.${$('dg40Month').value}.${$('dg40Day').value}`;state.keyword=$('dg40Keyword').value.trim();renderTabs();const rows=filtered();renderSummary(rows);renderList(rows);renderPeriods();setView('list');}
+    fillSelects();
+    $('dg40Search').onclick=()=>{state.range='day';render();};$('dg40Clear').onclick=()=>{$('dg40Keyword').value='';state.kind='all';state.range='day';render();};document.querySelectorAll('.dg40-period').forEach(b=>b.onclick=()=>{state.range=b.dataset.range;render();});$('dg40Keyword').addEventListener('input',()=>{state.keyword=$('dg40Keyword').value.trim();renderTabs();const rows=filtered();renderSummary(rows);renderList(rows);renderPeriods();});
+    $('reportBack').onclick=()=>{if(page.dataset.view==='replay')setView('detail');else setView('list');};
+    function close(){document.body.classList.remove('report-modal-open');setView('list');}
+    $('reportClose').onclick=close;const overlay=document.getElementById('reportOverlay');if(overlay) overlay.onclick=close;
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+    render();
+  });
+})();
+</script>
+
+
+
+<!-- =========================
+     v43：DG 遊戲紀錄 年/月/日下拉選單樣式修正
+     只修 select 視覺與日期天數，不動大廳連動/遊戲入口
+     ========================= -->
+<style id="v43-dg-report-select-style-css">
+.dg40-query{
+  position:relative!important;
+  overflow:hidden!important;
+}
+.dg40-query:before{
+  content:"";
+  position:absolute;
+  left:10px;right:10px;top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(143,220,255,.36),rgba(185,71,255,.48),rgba(255,178,77,.24),transparent);
+  pointer-events:none;
+}
+.dg40-select-row{
+  align-items:center!important;
+}
+.dg40-select{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  position:relative!important;
+  height:38px!important;
+  min-width:0!important;
+  padding:0 28px 0 10px!important;
+  border-radius:13px!important;
+  color:#ffffff!important;
+  text-align:center!important;
+  text-align-last:center!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  letter-spacing:.2px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  background-color:#1b1d27!important;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1.2 1.4 6 6.2l4.8-4.8' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.02)),
+    linear-gradient(180deg,#373946 0%,#20222d 48%,#151720 100%)!important;
+  background-repeat:no-repeat,no-repeat,no-repeat!important;
+  background-position:right 10px center,center,center!important;
+  background-size:12px 8px,100% 100%,100% 100%!important;
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 0 -1px 0 rgba(0,0,0,.62)!important;
+  outline:none!important;
+  cursor:pointer!important;
+}
+.dg40-select:focus{
+  border-color:rgba(143,220,255,.65)!important;
+  box-shadow:
+    0 0 0 2px rgba(143,220,255,.12),
+    0 0 13px rgba(185,71,255,.28),
+    inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+.dg40-select option{
+  background:#1b1d27!important;
+  color:#ffffff!important;
+  font-weight:900!important;
+}
+.dg40-select option:checked{
+  background:#6f17df!important;
+  color:#ffffff!important;
+}
+.dg40-search{
+  height:38px!important;
+  border-radius:13px!important;
+  font-size:13px!important;
+}
+.dg40-searchline .dg40-input{
+  height:38px!important;
+  border-radius:13px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.012)),rgba(0,0,0,.22)!important;
+}
+@media(max-width:380px){
+  .dg40-select{
+    height:36px!important;
+    font-size:12px!important;
+    padding-left:7px!important;
+    padding-right:22px!important;
+    background-position:right 7px center,center,center!important;
+  }
+  .dg40-search{height:36px!important;font-size:12px!important}
+}
+</style>
+<script id="v43-dg-report-date-select-js">
+(function(){
+  function $(id){return document.getElementById(id)}
+  function daysInMonth(y,m){return new Date(Number(y), Number(m), 0).getDate()}
+  function rebuildDays(){
+    var y=$('dg40Year'), m=$('dg40Month'), d=$('dg40Day');
+    if(!y||!m||!d) return;
+    var old=d.value || '23';
+    var max=daysInMonth(y.value,m.value);
+    var selected=Math.min(Number(old)||1,max);
+    d.innerHTML=Array.from({length:max},function(_,i){
+      var val=String(i+1).padStart(2,'0');
+      return '<option '+(i+1===selected?'selected':'')+'>'+val+'</option>';
+    }).join('');
+  }
+  function bind(){
+    var y=$('dg40Year'), m=$('dg40Month');
+    if(!y||!m) return;
+    y.removeEventListener('change',rebuildDays);
+    m.removeEventListener('change',rebuildDays);
+    y.addEventListener('change',rebuildDays);
+    m.addEventListener('change',rebuildDays);
+    rebuildDays();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
+  else bind();
+})();
+</script>
+
+
+
+<!-- =========================
+     v45 全遊戲共用 DG Loading 進房頁 + 精品滾動條
+     只攔截百家樂房卡進房，不改原本遊戲連動目標
+     ========================= -->
+<style id="v44-baccarat-loading-css">
+/* 遊戲紀錄 / 會員抽屜滾動條美化 */
+.report-page,.member-drawer,.ab-modal-body{
+  scrollbar-width:thin;
+  scrollbar-color:#bb50ff rgba(255,255,255,.045);
+}
+.report-page::-webkit-scrollbar,.member-drawer::-webkit-scrollbar,.ab-modal-body::-webkit-scrollbar{width:7px;height:7px}
+.report-page::-webkit-scrollbar-track,.member-drawer::-webkit-scrollbar-track,.ab-modal-body::-webkit-scrollbar-track{
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.20));
+}
+.report-page::-webkit-scrollbar-thumb,.member-drawer::-webkit-scrollbar-thumb,.ab-modal-body::-webkit-scrollbar-thumb{
+  border-radius:20px;
+  background:linear-gradient(180deg,#d8a7ff 0%,#bb50ff 42%,#7219df 100%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 0 9px rgba(187,80,255,.55),inset 0 1px 0 rgba(255,255,255,.22);
+}
+.report-page::-webkit-scrollbar-thumb:hover,.member-drawer::-webkit-scrollbar-thumb:hover,.ab-modal-body::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#ffe2a0 0%,#c7963d 44%,#7a4b12 100%);
+}
+
+.ab-bac-loading{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  display:none;
+  align-items:stretch;
+  justify-content:center;
+  overflow:hidden;
+  background:#080910;
+  opacity:0;
+  pointer-events:none;
+}
+.ab-bac-loading.show{
+  display:flex;
+  opacity:1;
+  pointer-events:auto;
+  animation:abBacLoadingFade .22s ease both;
+}
+@keyframes abBacLoadingFade{from{opacity:0}to{opacity:1}}
+.ab-bac-loading-bg{
+  position:absolute;
+  inset:0;
+  background-image:url('assets/img/img_23ed23ea71c9.png');
+  background-size:cover;
+  background-position:center center;
+  transform:scale(1.002);
+}
+.ab-bac-loading::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,0) 46%,rgba(0,0,0,.50) 100%),
+    radial-gradient(circle at 50% 100%,rgba(255,210,99,.16),transparent 34%);
+}
+.ab-bac-loading-panel{
+  position:absolute;
+  left:50%;
+  bottom:calc(34px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%);
+  width:min(520px,72vw);
+  z-index:2;
+  text-align:center;
+}
+.ab-bac-loading-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin-bottom:10px;
+  color:#fff;
+  font-size:15px;
+  font-weight:950;
+  letter-spacing:1.8px;
+  text-shadow:0 2px 8px rgba(0,0,0,.78),0 0 10px rgba(255,211,108,.34);
+}
+.ab-bac-loading-title .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#ffd978;
+  box-shadow:0 0 10px rgba(255,217,120,.85);
+  animation:abBacDot 1s ease-in-out infinite alternate;
+}
+@keyframes abBacDot{from{opacity:.38;transform:scale(.82)}to{opacity:1;transform:scale(1.18)}}
+.ab-bac-loading-bar{
+  position:relative;
+  height:10px;
+  border-radius:999px;
+  padding:2px;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.035)),rgba(0,0,0,.54);
+  border:1px solid rgba(255,225,143,.24);
+  box-shadow:0 8px 24px rgba(0,0,0,.52),0 0 18px rgba(255,199,77,.18),inset 0 1px 0 rgba(255,255,255,.16);
+}
+.ab-bac-loading-fill{
+  width:0%;
+  height:100%;
+  border-radius:999px;
+  background:
+    linear-gradient(90deg,#7d4a12 0%,#ffd36d 34%,#fff1ae 50%,#d6a23d 68%,#70420f 100%);
+  box-shadow:0 0 12px rgba(255,215,120,.58),inset 0 1px 0 rgba(255,255,255,.55);
+  transition:width .12s linear;
+}
+.ab-bac-loading-shine{
+  position:absolute;
+  top:2px;
+  bottom:2px;
+  width:38%;
+  left:-42%;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+  mix-blend-mode:screen;
+  animation:abBacShine 1.25s linear infinite;
+}
+@keyframes abBacShine{to{left:104%}}
+.ab-bac-loading-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:7px;
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.8px;
+  text-shadow:0 1px 5px rgba(0,0,0,.8);
+}
+.ab-bac-loading-percent{color:#ffe39d;font-weight:950}
+@media (max-width:767px){
+  .ab-bac-loading-bg{
+    background-image:url('assets/img/img_4986d8b8c29b.png');
+    background-size:cover;
+    background-position:center center;
+  }
+  .ab-bac-loading-panel{
+    width:min(78vw,390px);
+    bottom:calc(42px + env(safe-area-inset-bottom,0px));
+  }
+  .ab-bac-loading-title{font-size:13px;margin-bottom:9px;letter-spacing:1.4px}
+  .ab-bac-loading-bar{height:9px}
+  .ab-bac-loading-meta{font-size:10px}
+}
+@media (orientation:portrait) and (min-width:768px){
+  .ab-bac-loading-bg{
+    background-image:url('assets/img/img_4986d8b8c29b.png');
+    background-size:cover;
+    background-position:center center;
+  }
+}
+</style>
+
+<div class="ab-bac-loading" id="abBacLoading" aria-hidden="true">
+  <div class="ab-bac-loading-bg"></div>
+  <div class="ab-bac-loading-panel">
+    <div class="ab-bac-loading-title"><span class="dot"></span><span id="abLoadingRoomTitle">百家樂 LOADING</span><span class="dot"></span></div>
+    <div class="ab-bac-loading-bar"><div class="ab-bac-loading-fill" id="abBacLoadingFill"></div><div class="ab-bac-loading-shine"></div></div>
+    <div class="ab-bac-loading-meta"><span id="abLoadingStatus">正在連線真人荷官桌</span><span class="ab-bac-loading-percent" id="abBacLoadingPercent">0%</span></div>
+  </div>
+</div>
+
+<script id="v45-all-game-loading-js">
+(function(){
+  'use strict';
+  var locked=false;
+
+  var roomNames={
+    baccarat:'百家樂 VIP01',
+    dragon:'龍虎 VIP01',
+    dragontiger:'龍虎 VIP01',
+    sicbo:'骰寶 VIP01',
+    roulette:'國際輪盤 VIP01'
+  };
+
+  var statusSteps=[
+    {p:0,txt:'初始化視訊...'},
+    {p:24,txt:'載入真人桌台...'},
+    {p:48,txt:'同步桌況資料...'},
+    {p:72,txt:'同步牌路與下注區...'},
+    {p:93,txt:'準備進入房間...'}
+  ];
+
+  function norm(k){
+    k=String(k||'').toLowerCase();
+    if(k==='dragon_tiger'||k==='dragon-tiger'||k==='dragon&tiger'||k==='tiger') return 'dragon';
+    if(k==='dragontiger') return 'dragon';
+    return k;
+  }
+
+  function kindFromCard(card){
+    if(!card) return '';
+    var raw=(card.getAttribute('data-kind')||card.getAttribute('data-game')||card.getAttribute('data-room')||card.getAttribute('data-type')||'');
+    var txt=(raw+' '+(card.querySelector('img')&&card.querySelector('img').alt||'')+' '+(card.textContent||'')).toLowerCase();
+    if(/百家|baccarat/.test(txt)) return 'baccarat';
+    if(/龍虎|dragon|tiger/.test(txt)) return 'dragon';
+    if(/骰寶|sicbo/.test(txt)) return 'sicbo';
+    if(/輪盤|roulette/.test(txt)) return 'roulette';
+    return norm(raw);
+  }
+
+  function cardFromTarget(el){
+    var card=el && el.closest && el.closest('.game-card');
+    if(!card) return null;
+    var k=kindFromCard(card);
+    if(k==='baccarat'||k==='dragon'||k==='sicbo'||k==='roulette') return card;
+    return null;
+  }
+
+  function roomTitle(card,kind){
+    var alt=(card && card.querySelector('img') && card.querySelector('img').alt || '').trim();
+    if(alt){
+      alt=alt.replace(/\s*(蕾蕾|荷官|美女|真人)$/g,'').trim();
+      if(/百家|龍虎|骰寶|輪盤/.test(alt)) return alt;
+    }
+    return roomNames[kind] || '真人遊戲 VIP01';
+  }
+
+  function targetFor(kind){
+    kind=norm(kind);
+    if(window.AB_ROUTES){
+      if(kind==='baccarat' && window.AB_ROUTES.baccarat) return window.AB_ROUTES.baccarat;
+      if(kind==='dragon' && (window.AB_ROUTES.dragon||window.AB_ROUTES.dragonTiger)) return window.AB_ROUTES.dragon||window.AB_ROUTES.dragonTiger;
+      if(kind==='sicbo' && window.AB_ROUTES.sicbo) return window.AB_ROUTES.sicbo;
+      if(kind==='roulette' && window.AB_ROUTES.roulette) return window.AB_ROUTES.roulette;
+    }
+    return ({baccarat:'baccarat.html',dragon:'dragon.html',sicbo:'sicbo.html',roulette:'roulette.html'})[kind] || 'index.html';
+  }
+
+  function showLoading(opts){
+    if(locked) return;
+    locked=true;
+    opts=opts||{};
+    var target=opts.target||'index.html';
+    var title=opts.title||'真人遊戲 VIP01';
+    var box=document.getElementById('abBacLoading');
+    var fill=document.getElementById('abBacLoadingFill');
+    var pct=document.getElementById('abBacLoadingPercent');
+    var titleEl=document.getElementById('abLoadingRoomTitle');
+    var statusEl=document.getElementById('abLoadingStatus');
+    if(!box){ window.location.href=target; return; }
+
+    if(titleEl) titleEl.textContent='正在進入 '+title;
+    if(statusEl) statusEl.textContent=statusSteps[0].txt;
+    if(fill) fill.style.width='0%';
+    if(pct) pct.textContent='0%';
+
+    box.classList.add('show');
+    box.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+
+    var start=Date.now();
+    var duration=2700;
+    function ease(t){return 1-Math.pow(1-t,2.15);}
+    function stepText(v){
+      var txt=statusSteps[0].txt;
+      for(var i=0;i<statusSteps.length;i++) if(v>=statusSteps[i].p) txt=statusSteps[i].txt;
+      return txt;
+    }
+    function tick(){
+      var raw=Math.min(1,(Date.now()-start)/duration);
+      var val=Math.min(99,Math.floor(ease(raw)*100));
+      if(fill) fill.style.width=val+'%';
+      if(pct) pct.textContent=val+'%';
+      if(statusEl) statusEl.textContent=stepText(val);
+      if(raw<1) requestAnimationFrame(tick);
+      else{
+        if(fill) fill.style.width='100%';
+        if(pct) pct.textContent='100%';
+        if(statusEl) statusEl.textContent='進入房間...';
+        setTimeout(function(){ window.location.href=target; },240);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('click',function(ev){
+    var card=cardFromTarget(ev.target);
+    if(!card) return;
+    var kind=kindFromCard(card);
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    showLoading({target:targetFor(kind),title:roomTitle(card,kind)});
+  },true);
+
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Enter' && ev.key!==' ') return;
+    var card=cardFromTarget(ev.target);
+    if(!card) return;
+    var kind=kindFromCard(card);
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    showLoading({target:targetFor(kind),title:roomTitle(card,kind)});
+  },true);
+
+  window.abShowRoomLoading=function(kind,title,target){
+    kind=norm(kind);
+    showLoading({target:target||targetFor(kind),title:title||roomNames[kind]||'真人遊戲 VIP01'});
+  };
+})();
+</script>
+
+
+<script id="v51-real-bgm-js">
+(function(){
+  const audio=document.getElementById('abBgmAudio');
+  const select=document.getElementById('abBgmSelect');
+  const volume=document.getElementById('abBgmVolume');
+  const volumeText=document.getElementById('abBgmVolumeText');
+  const sw=document.getElementById('abBgmSwitch');
+  const preview=document.getElementById('abBgmPreview');
+  const stopBtn=document.getElementById('abBgmStop');
+  const saveBtn=document.getElementById('abBgmSave');
+  const autoGame=document.getElementById('abBgmAutoGame');
+  const now=document.getElementById('abBgmNow');
+  if(!audio||!select||!volume||!sw) return;
+
+  const tracks={
+    none:{name:'無背景音樂',src:''},
+    lounge:{name:'AB Lounge｜大廳主題',src:'music/lounge-is-lounge.mp3'},
+    casino:{name:'AB Casino｜百家樂',src:'music/lounge-music.mp3'},
+    vip:{name:'AB VIP｜龍虎 / 高額桌',src:'music/velvet-steps.mp3'},
+    roulette:{name:'AB Roulette｜輪盤',src:'music/chill-cozy-lounge.mp3'},
+    sicbo:{name:'AB Sicbo｜骰寶',src:'music/chardonnay-dreams.mp3'},
+    paris:{name:'Paris Light｜會員中心',src:'music/light-sketch-of-paris.mp3'},
+    piano:{name:'Piano Room｜遊戲紀錄',src:'music/piano-solo.mp3'}
+  };
+  const key='ab_bgm_settings_v51';
+  let state={enabled:false,track:'lounge',volume:65,auto:false};
+  try{Object.assign(state,JSON.parse(localStorage.getItem(key)||'{}'));}catch(e){}
+
+  function toast(msg){
+    if(window.abToast) window.abToast(msg);
+    else console.log(msg);
+  }
+  function updateNow(msg){
+    if(!now) return;
+    const t=tracks[state.track]||tracks.none;
+    now.textContent=msg || (state.enabled&&state.track!=='none' ? '目前播放：'+t.name : '目前：未播放');
+  }
+  function syncUI(){
+    select.value=state.track||'lounge';
+    volume.value=state.volume;
+    if(volumeText) volumeText.textContent=state.volume+'%';
+    sw.classList.toggle('on',!!state.enabled);
+    if(autoGame) autoGame.checked=!!state.auto;
+    audio.volume=Math.max(0,Math.min(1,(Number(state.volume)||0)/100));
+    updateNow();
+  }
+  function setTrack(track){
+    state.track=track;
+    const t=tracks[track]||tracks.none;
+    if(!t.src){ audio.pause(); audio.removeAttribute('src'); audio.load(); updateNow('目前：未播放'); return; }
+    const old=audio.getAttribute('src')||'';
+    if(old!==t.src){ audio.src=t.src; audio.load(); }
+    updateNow('目前選擇：'+t.name);
+  }
+  function playCurrent(){
+    if(!state.enabled || state.track==='none'){ audio.pause(); updateNow('目前：未播放'); return; }
+    setTrack(state.track);
+    audio.volume=Math.max(0,Math.min(1,(Number(state.volume)||0)/100));
+    const p=audio.play();
+    if(p&&p.catch){p.catch(()=>{updateNow('已選擇：'+(tracks[state.track]?.name||'背景音樂')+'，請點「試聽」或「儲存設定」播放');});}
+    updateNow('目前播放：'+(tracks[state.track]?.name||'背景音樂'));
+  }
+  function save(){
+    localStorage.setItem(key,JSON.stringify(state));
+    toast('背景音樂設定已儲存');
+  }
+
+  select.addEventListener('change',function(){
+    state.track=this.value;
+    state.enabled=state.track!=='none';
+    syncUI();
+    setTrack(state.track);
+    if(state.enabled) playCurrent();
+  });
+  volume.addEventListener('input',function(){
+    state.volume=Number(this.value)||0;
+    audio.volume=state.volume/100;
+    if(volumeText) volumeText.textContent=state.volume+'%';
+  });
+  sw.addEventListener('click',function(){
+    setTimeout(function(){
+      state.enabled=sw.classList.contains('on');
+      if(!state.enabled) audio.pause(); else playCurrent();
+      updateNow();
+    },0);
+  });
+  if(autoGame) autoGame.addEventListener('change',function(){state.auto=this.checked;});
+  if(preview) preview.addEventListener('click',function(){state.enabled=true;sw.classList.add('on');playCurrent();});
+  if(stopBtn) stopBtn.addEventListener('click',function(){state.enabled=false;sw.classList.remove('on');audio.pause();updateNow('目前：未播放');save();});
+  if(saveBtn) saveBtn.addEventListener('click',function(){state.enabled=sw.classList.contains('on') && select.value!=='none';state.track=select.value;state.volume=Number(volume.value)||65;state.auto=!!(autoGame&&autoGame.checked);save();if(state.enabled)playCurrent();else audio.pause();syncUI();});
+
+  // 自動依遊戲切換：攔截進房 Loading 前先切音樂，不影響原連動
+  function autoTrackFromKind(kind){
+    kind=(kind||'').toLowerCase();
+    if(kind.includes('baccarat')||kind.includes('bac')) return 'casino';
+    if(kind.includes('dragon')||kind.includes('tiger')) return 'vip';
+    if(kind.includes('sicbo')) return 'sicbo';
+    if(kind.includes('roulette')) return 'roulette';
+    return 'lounge';
+  }
+  const oldShow=window.abShowRoomLoading;
+  window.abShowRoomLoading=function(kind,title,target){
+    if(state.auto){state.track=autoTrackFromKind(kind);state.enabled=true;syncUI();playCurrent();save();}
+    if(typeof oldShow==='function') return oldShow(kind,title,target);
+  };
+
+  // 瀏覽器禁止自動播放時，使用者首次點擊後再嘗試恢復播放
+  let unlocked=false;
+  document.addEventListener('click',function(){
+    if(unlocked) return; unlocked=true;
+    if(state.enabled && state.track!=='none' && audio.paused) playCurrent();
+  },{once:true,capture:true});
+
+  syncUI();
+  setTrack(state.track);
+})();
+</script>
+
+<style id="v52-hundred-polish-css">
+/* =========================
+   v52 功能完整度補齊：收藏 / 最近遊玩 / 搜尋 / 音效中心
+   ========================= */
+.ab52-smart-lobby{position:relative;z-index:2;padding:0 10px 10px;margin-top:-6px;display:grid;gap:8px}
+.ab52-searchbar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-radius:16px;padding:8px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018)),linear-gradient(135deg,#2c2e39,#171922);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 18px rgba(0,0,0,.30)}
+.ab52-searchbar input{height:34px;border:0;outline:0;border-radius:12px;background:rgba(0,0,0,.24);color:#fff;font-family:inherit;font-size:13px;font-weight:850;padding:0 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.ab52-searchbar input::placeholder{color:#9aa3b6}.ab52-searchbar button{height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.10);color:#fff;font-family:inherit;font-size:12px;font-weight:950;background:linear-gradient(180deg,#353642,#20222c);padding:0 10px;box-shadow:0 5px 10px rgba(0,0,0,.28)}
+.ab52-strip{display:none;border-radius:16px;padding:9px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.014)),linear-gradient(135deg,#242733,#14161e);border:1px solid rgba(255,255,255,.075);box-shadow:0 8px 18px rgba(0,0,0,.28)}
+.ab52-strip.on{display:block}.ab52-strip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#cfd4e4;font-size:12px;font-weight:950}.ab52-strip-head span{color:#8fdcff;font-size:11px}.ab52-chiprow{display:flex;gap:7px;overflow:auto;padding-bottom:1px;scrollbar-width:none}.ab52-chiprow::-webkit-scrollbar{display:none}
+.ab52-chip{flex:0 0 auto;height:29px;border-radius:15px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,#343642,#20222c);color:#fff;font-family:inherit;font-size:12px;font-weight:900;padding:0 10px;box-shadow:0 4px 8px rgba(0,0,0,.24)}
+.ab52-chip.favorite{background:linear-gradient(180deg,#d6a24c,#7d4d12);box-shadow:0 0 10px rgba(214,162,76,.25),0 4px 8px rgba(0,0,0,.24)}
+.ab52-star{position:absolute;right:7px;bottom:7px;z-index:95;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:grid;place-items:center;background:rgba(8,9,14,.55);backdrop-filter:blur(6px);color:#cdd2df;font-size:16px;line-height:1;box-shadow:0 5px 12px rgba(0,0,0,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ab52-star.on{color:#ffd76a;background:rgba(70,42,8,.76);box-shadow:0 0 10px rgba(255,215,106,.36),0 5px 12px rgba(0,0,0,.45)}
+.game-card.ab52-hidden{display:none!important}.game-card.ab52-highlight{box-shadow:0 0 0 2px rgba(255,215,106,.42),0 10px 22px rgba(0,0,0,.55)!important}
+.ab52-empty{font-size:12px;color:#8d96aa;font-weight:850;padding:2px 1px}.ab52-mini-toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(8px);z-index:500;max-width:min(86vw,360px);padding:10px 13px;border-radius:16px;background:rgba(12,13,19,.90);border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 18px rgba(142,54,255,.22);font-size:12px;font-weight:900;color:#fff;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}.ab52-mini-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.ab52-sfx-panel{display:grid;gap:9px;margin-top:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}.ab52-sfx-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ab52-sfx-item{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:38px;border-radius:13px;padding:8px 10px;background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.065);font-size:12px;font-weight:900;color:#dbe0ee}.ab52-sfx-item small{display:block;color:#96a0b5;font-size:10px;font-weight:800;margin-top:2px}.ab52-sfx-mini{width:34px;height:20px;border-radius:11px;background:#252733;border:1px solid rgba(255,255,255,.10);position:relative;flex:0 0 34px}.ab52-sfx-mini:before{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#8d95a8;transition:.18s}.ab52-sfx-mini.on{background:linear-gradient(180deg,#b947ff,#6814d9);box-shadow:0 0 8px rgba(142,54,255,.36)}.ab52-sfx-mini.on:before{left:16px;background:#fff}
+@media (min-width:768px){.ab52-smart-lobby{padding-left:14px;padding-right:14px}.ab52-searchbar{max-width:760px}.ab52-strip{max-width:760px}.ab52-smart-lobby{align-items:start}.ab52-star{width:34px;height:34px;font-size:18px}}
+@media (max-width:380px){.ab52-searchbar{grid-template-columns:1fr 58px;gap:6px}.ab52-searchbar button{padding:0 8px}.ab52-sfx-grid{grid-template-columns:1fr}}
+</style>
+
+<script id="v52-hundred-polish-js">
+(function(){
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const store={fav:'ab52_favorite_rooms',recent:'ab52_recent_rooms',sfx:'ab52_sfx_settings'};
+  const names={baccarat:'百家樂',dragon:'龍虎',tiger:'龍虎',sicbo:'骰寶',roulette:'輪盤'};
+  function getJSON(k,d){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch(e){return d;}}
+  function setJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
+  function toast(msg){ if(window.abToast) window.abToast(msg); else miniToast(msg); }
+  function miniToast(msg){let t=$('.ab52-mini-toast');if(!t){t=document.createElement('div');t.className='ab52-mini-toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('on');clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('on'),1600);}
+  function cardKey(card,i){return card.getAttribute('data-room')||card.getAttribute('data-id')||((card.dataset.kind||'game')+'-'+i);}
+  function cardName(card,i){
+    const alt=card.querySelector('img')?.getAttribute('alt')||'';
+    if(alt) return alt.replace(/\s+/g,' ').trim();
+    const kind=(card.dataset.kind||'game').toLowerCase();
+    const label=names[kind]||names[kind.split('-')[0]]||'真人遊戲';
+    return label+(i+1);
+  }
+  function getCards(){return $$('.game-card').map((card,i)=>({card,i,key:cardKey(card,i),name:cardName(card,i),kind:(card.dataset.kind||'').toLowerCase()}));}
+  function ensureSmartPanel(){
+    if($('#ab52SmartLobby')) return;
+    const grid=$('.game-grid'); if(!grid) return;
+    const panel=document.createElement('section'); panel.className='ab52-smart-lobby'; panel.id='ab52SmartLobby';
+    panel.innerHTML=`
+      <div class="ab52-searchbar"><input id="ab52RoomSearch" type="search" placeholder="搜尋房間：百家 / 龍虎 / 骰寶 / 輪盤"><button id="ab52ClearSearch" type="button">清除</button></div>
+      <div class="ab52-strip" id="ab52FavStrip"><div class="ab52-strip-head">⭐ 我的最愛 <span>點星星收藏房間</span></div><div class="ab52-chiprow" id="ab52FavRow"></div></div>
+      <div class="ab52-strip" id="ab52RecentStrip"><div class="ab52-strip-head">🕒 最近遊玩 <span>快速回到剛剛房間</span></div><div class="ab52-chiprow" id="ab52RecentRow"></div></div>`;
+    grid.parentNode.insertBefore(panel,grid);
+  }
+  function renderStrips(){
+    const cards=getCards(); const byKey=Object.fromEntries(cards.map(x=>[x.key,x]));
+    const fav=getJSON(store.fav,[]).filter(k=>byKey[k]); const recent=getJSON(store.recent,[]).filter(k=>byKey[k]);
+    setJSON(store.fav,fav); setJSON(store.recent,recent);
+    const favStrip=$('#ab52FavStrip'), favRow=$('#ab52FavRow'), recentStrip=$('#ab52RecentStrip'), recentRow=$('#ab52RecentRow');
+    if(favRow){favRow.innerHTML=fav.length?fav.map(k=>`<button class="ab52-chip favorite" data-go="${k}" type="button">⭐ ${byKey[k].name}</button>`).join(''):'<div class="ab52-empty">尚未收藏，點房卡右下角星星即可加入。</div>';}
+    if(recentRow){recentRow.innerHTML=recent.length?recent.map(k=>`<button class="ab52-chip" data-go="${k}" type="button">${byKey[k].name}</button>`).join(''):'<div class="ab52-empty">尚無最近遊玩紀錄。</div>';}
+    favStrip&&favStrip.classList.toggle('on',fav.length>0); recentStrip&&recentStrip.classList.toggle('on',recent.length>0);
+    $$('.ab52-chip[data-go]').forEach(btn=>btn.onclick=function(){ const item=byKey[this.dataset.go]; if(item){item.card.classList.add('ab52-highlight');setTimeout(()=>item.card.classList.remove('ab52-highlight'),900); item.card.scrollIntoView({block:'center',behavior:'smooth'}); setTimeout(()=>item.card.click(),280);} });
+    $$('.ab52-star').forEach(st=>st.classList.toggle('on',fav.includes(st.dataset.key)));
+  }
+  function addStars(){
+    getCards().forEach(({card,key,name})=>{ if(card.querySelector('.ab52-star')) return; const b=document.createElement('button'); b.type='button'; b.className='ab52-star'; b.dataset.key=key; b.title='收藏 '+name; b.textContent='★'; b.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation(); if(ev.stopImmediatePropagation)ev.stopImmediatePropagation(); let fav=getJSON(store.fav,[]); if(fav.includes(key)){fav=fav.filter(x=>x!==key); toast('已取消收藏：'+name);} else {fav.unshift(key); fav=[...new Set(fav)].slice(0,8); toast('已加入我的最愛：'+name);} setJSON(store.fav,fav); renderStrips(); playSfx('click');},true); card.appendChild(b); });
+  }
+  function saveRecent(card){ const item=getCards().find(x=>x.card===card); if(!item) return; let recent=getJSON(store.recent,[]).filter(k=>k!==item.key); recent.unshift(item.key); recent=recent.slice(0,6); setJSON(store.recent,recent); renderStrips(); }
+  function bindSearch(){
+    const input=$('#ab52RoomSearch'), clear=$('#ab52ClearSearch'); if(!input) return;
+    function apply(){ const q=input.value.trim().toLowerCase(); getCards().forEach(({card,name,kind})=>{ const hay=(name+' '+kind).toLowerCase(); card.classList.toggle('ab52-hidden',!!q && !hay.includes(q)); }); }
+    input.addEventListener('input',apply); clear&&clear.addEventListener('click',()=>{input.value='';apply();input.focus();playSfx('click');});
+  }
+  // 音效中心：使用 WebAudio 產生短音效，不需要額外音效檔
+  const defaultSfx={ui:true,enter:true,notify:true,win:true}; let sfx=getJSON(store.sfx,defaultSfx);
+  let ctx=null; function audioCtx(){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();return ctx;}catch(e){return null;}}
+  function beep(freq,dur,vol,type){ const c=audioCtx(); if(!c) return; const o=c.createOscillator(), g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; g.gain.value=0.0001; o.connect(g); g.connect(c.destination); const now=c.currentTime; g.gain.exponentialRampToValueAtTime(Math.max(vol,0.001),now+0.012); g.gain.exponentialRampToValueAtTime(0.0001,now+dur); o.start(now); o.stop(now+dur+.02); }
+  function playSfx(kind){ if(kind==='click'&&!sfx.ui) return; if(kind==='enter'&&!sfx.enter) return; if(kind==='notify'&&!sfx.notify) return; if(kind==='win'&&!sfx.win) return; if(kind==='enter'){beep(520,.09,.035,'triangle');setTimeout(()=>beep(780,.12,.032,'triangle'),70);} else if(kind==='notify'){beep(660,.10,.026,'sine');} else if(kind==='win'){beep(700,.08,.03,'sine');setTimeout(()=>beep(920,.12,.03,'sine'),70);} else {beep(440,.055,.018,'sine');} }
+  window.ab52PlaySfx=playSfx;
+  function ensureSfxPanel(){
+    const bgm=$('#abBgmPanel'); if(!bgm || $('#ab52SfxPanel')) return;
+    const panel=document.createElement('div'); panel.className='ab52-sfx-panel'; panel.id='ab52SfxPanel';
+    panel.innerHTML=`<div class="ab-bgm-label">音效中心</div><div class="ab52-sfx-grid">
+      <div class="ab52-sfx-item"><span>介面點擊<small>按鈕 / 選單</small></span><button type="button" class="ab52-sfx-mini" data-sfx="ui" aria-label="介面點擊"></button></div>
+      <div class="ab52-sfx-item"><span>進房提示<small>Loading / 進入房間</small></span><button type="button" class="ab52-sfx-mini" data-sfx="enter" aria-label="進房提示"></button></div>
+      <div class="ab52-sfx-item"><span>系統通知<small>提示 / 彈窗</small></span><button type="button" class="ab52-sfx-mini" data-sfx="notify" aria-label="系統通知"></button></div>
+      <div class="ab52-sfx-item"><span>開獎提示<small>預留房間音效</small></span><button type="button" class="ab52-sfx-mini" data-sfx="win" aria-label="開獎提示"></button></div>
+    </div>`;
+    bgm.appendChild(panel);
+    function sync(){ $$('.ab52-sfx-mini').forEach(b=>b.classList.toggle('on',!!sfx[b.dataset.sfx])); }
+    panel.addEventListener('click',function(e){const b=e.target.closest('.ab52-sfx-mini'); if(!b)return; const k=b.dataset.sfx; sfx[k]=!sfx[k]; setJSON(store.sfx,sfx); sync(); playSfx(k==='ui'?'click':k==='enter'?'enter':'notify'); toast((b.getAttribute('aria-label')||'音效')+'：'+(sfx[k]?'開啟':'關閉'));});
+    sync();
+  }
+  function init(){ ensureSmartPanel(); addStars(); renderStrips(); bindSearch(); ensureSfxPanel();
+    document.addEventListener('click',function(e){ if(e.target.closest('.ab52-star,.ab52-chip,#ab52ClearSearch')) return; if(e.target.closest('button,.nav-item,.drawer-item,.report-tab,.main-tab,.sub-tab,.switch,select,input')) playSfx('click'); },true);
+    document.addEventListener('click',function(e){ const card=e.target.closest('.game-card'); if(card && !e.target.closest('.ab52-star')){ saveRecent(card); playSfx('enter'); } },true);
+    const oldToast=window.abToast; if(typeof oldToast==='function'){ window.abToast=function(msg){ playSfx('notify'); return oldToast.apply(this,arguments); }; }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+</body>
+</html>
