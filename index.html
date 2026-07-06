@@ -3530,20 +3530,17 @@ document.addEventListener('DOMContentLoaded', () => {
 .ab52-strip{display:none;border-radius:16px;padding:9px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.014)),linear-gradient(135deg,#242733,#14161e);border:1px solid rgba(255,255,255,.075);box-shadow:0 8px 18px rgba(0,0,0,.28)}
 .ab52-strip.on{display:block}.ab52-strip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#cfd4e4;font-size:12px;font-weight:950}.ab52-strip-head span{color:#8fdcff;font-size:11px}.ab52-chiprow{display:flex;gap:7px;overflow:auto;padding-bottom:1px;scrollbar-width:none}.ab52-chiprow::-webkit-scrollbar{display:none}
 .ab52-chip{flex:0 0 auto;height:29px;border-radius:15px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,#343642,#20222c);color:#fff;font-family:inherit;font-size:12px;font-weight:900;padding:0 10px;box-shadow:0 4px 8px rgba(0,0,0,.24)}
-.ab52-chip.favorite{background:linear-gradient(180deg,#d6a24c,#7d4d12);box-shadow:0 0 10px rgba(214,162,76,.25),0 4px 8px rgba(0,0,0,.24)}
-.ab52-star{position:absolute;right:7px;bottom:7px;z-index:95;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:grid;place-items:center;background:rgba(8,9,14,.55);backdrop-filter:blur(6px);color:#cdd2df;font-size:16px;line-height:1;box-shadow:0 5px 12px rgba(0,0,0,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ab52-star.on{color:#ffd76a;background:rgba(70,42,8,.76);box-shadow:0 0 10px rgba(255,215,106,.36),0 5px 12px rgba(0,0,0,.45)}
 .game-card.ab52-hidden{display:none!important}.game-card.ab52-highlight{box-shadow:0 0 0 2px rgba(255,215,106,.42),0 10px 22px rgba(0,0,0,.55)!important}
 .ab52-empty{font-size:12px;color:#8d96aa;font-weight:850;padding:2px 1px}.ab52-mini-toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(8px);z-index:500;max-width:min(86vw,360px);padding:10px 13px;border-radius:16px;background:rgba(12,13,19,.90);border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 18px rgba(142,54,255,.22);font-size:12px;font-weight:900;color:#fff;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}.ab52-mini-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .ab52-sfx-panel{display:grid;gap:9px;margin-top:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}.ab52-sfx-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ab52-sfx-item{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:38px;border-radius:13px;padding:8px 10px;background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.065);font-size:12px;font-weight:900;color:#dbe0ee}.ab52-sfx-item small{display:block;color:#96a0b5;font-size:10px;font-weight:800;margin-top:2px}.ab52-sfx-mini{width:34px;height:20px;border-radius:11px;background:#252733;border:1px solid rgba(255,255,255,.10);position:relative;flex:0 0 34px}.ab52-sfx-mini:before{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#8d95a8;transition:.18s}.ab52-sfx-mini.on{background:linear-gradient(180deg,#b947ff,#6814d9);box-shadow:0 0 8px rgba(142,54,255,.36)}.ab52-sfx-mini.on:before{left:16px;background:#fff}
-@media (min-width:768px){.ab52-smart-lobby{padding-left:14px;padding-right:14px}.ab52-searchbar{max-width:760px}.ab52-strip{max-width:760px}.ab52-smart-lobby{align-items:start}.ab52-star{width:34px;height:34px;font-size:18px}}
+@media (min-width:768px){.ab52-smart-lobby{padding-left:14px;padding-right:14px}.ab52-searchbar{max-width:760px}.ab52-strip{max-width:760px}.ab52-smart-lobby{align-items:start}}
 @media (max-width:380px){.ab52-searchbar{grid-template-columns:1fr 58px;gap:6px}.ab52-searchbar button{padding:0 8px}.ab52-sfx-grid{grid-template-columns:1fr}}
 </style>
 
 <script id="v52-hundred-polish-js">
 (function(){
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const store={fav:'ab52_favorite_rooms',recent:'ab52_recent_rooms',sfx:'ab52_sfx_settings'};
+  const store={recent:'ab52_recent_rooms',sfx:'ab52_sfx_settings'};
   const names={baccarat:'百家樂',dragon:'龍虎',tiger:'龍虎',sicbo:'骰寶',roulette:'輪盤'};
   function getJSON(k,d){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch(e){return d;}}
   function setJSON(k,v){localStorage.setItem(k,JSON.stringify(v));}
@@ -3564,23 +3561,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const panel=document.createElement('section'); panel.className='ab52-smart-lobby'; panel.id='ab52SmartLobby';
     panel.innerHTML=`
       <div class="ab52-searchbar"><input id="ab52RoomSearch" type="search" placeholder="搜尋房間：百家 / 龍虎 / 骰寶 / 輪盤"><button id="ab52ClearSearch" type="button">清除</button></div>
-      <div class="ab52-strip" id="ab52FavStrip"><div class="ab52-strip-head">⭐ 我的最愛 <span>點星星收藏房間</span></div><div class="ab52-chiprow" id="ab52FavRow"></div></div>
       <div class="ab52-strip" id="ab52RecentStrip"><div class="ab52-strip-head">🕒 最近遊玩 <span>快速回到剛剛房間</span></div><div class="ab52-chiprow" id="ab52RecentRow"></div></div>`;
     grid.parentNode.insertBefore(panel,grid);
   }
   function renderStrips(){
     const cards=getCards(); const byKey=Object.fromEntries(cards.map(x=>[x.key,x]));
-    const fav=getJSON(store.fav,[]).filter(k=>byKey[k]); const recent=getJSON(store.recent,[]).filter(k=>byKey[k]);
-    setJSON(store.fav,fav); setJSON(store.recent,recent);
-    const favStrip=$('#ab52FavStrip'), favRow=$('#ab52FavRow'), recentStrip=$('#ab52RecentStrip'), recentRow=$('#ab52RecentRow');
-    if(favRow){favRow.innerHTML=fav.length?fav.map(k=>`<button class="ab52-chip favorite" data-go="${k}" type="button">⭐ ${byKey[k].name}</button>`).join(''):'<div class="ab52-empty">尚未收藏，點房卡右下角星星即可加入。</div>';}
+    const recent=getJSON(store.recent,[]).filter(k=>byKey[k]);
+    setJSON(store.recent,recent);
+    const recentStrip=$('#ab52RecentStrip'), recentRow=$('#ab52RecentRow');
     if(recentRow){recentRow.innerHTML=recent.length?recent.map(k=>`<button class="ab52-chip" data-go="${k}" type="button">${byKey[k].name}</button>`).join(''):'<div class="ab52-empty">尚無最近遊玩紀錄。</div>';}
-    favStrip&&favStrip.classList.toggle('on',fav.length>0); recentStrip&&recentStrip.classList.toggle('on',recent.length>0);
+    recentStrip&&recentStrip.classList.toggle('on',recent.length>0);
     $$('.ab52-chip[data-go]').forEach(btn=>btn.onclick=function(){ const item=byKey[this.dataset.go]; if(item){item.card.classList.add('ab52-highlight');setTimeout(()=>item.card.classList.remove('ab52-highlight'),900); item.card.scrollIntoView({block:'center',behavior:'smooth'}); setTimeout(()=>item.card.click(),280);} });
-    $$('.ab52-star').forEach(st=>st.classList.toggle('on',fav.includes(st.dataset.key)));
-  }
-  function addStars(){
-    getCards().forEach(({card,key,name})=>{ if(card.querySelector('.ab52-star')) return; const b=document.createElement('button'); b.type='button'; b.className='ab52-star'; b.dataset.key=key; b.title='收藏 '+name; b.textContent='★'; b.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation(); if(ev.stopImmediatePropagation)ev.stopImmediatePropagation(); let fav=getJSON(store.fav,[]); if(fav.includes(key)){fav=fav.filter(x=>x!==key); toast('已取消收藏：'+name);} else {fav.unshift(key); fav=[...new Set(fav)].slice(0,8); toast('已加入我的最愛：'+name);} setJSON(store.fav,fav); renderStrips(); playSfx('click');},true); card.appendChild(b); });
   }
   function saveRecent(card){ const item=getCards().find(x=>x.card===card); if(!item) return; let recent=getJSON(store.recent,[]).filter(k=>k!==item.key); recent.unshift(item.key); recent=recent.slice(0,6); setJSON(store.recent,recent); renderStrips(); }
   function bindSearch(){
@@ -3608,9 +3599,9 @@ document.addEventListener('DOMContentLoaded', () => {
     panel.addEventListener('click',function(e){const b=e.target.closest('.ab52-sfx-mini'); if(!b)return; const k=b.dataset.sfx; sfx[k]=!sfx[k]; setJSON(store.sfx,sfx); sync(); playSfx(k==='ui'?'click':k==='enter'?'enter':'notify'); toast((b.getAttribute('aria-label')||'音效')+'：'+(sfx[k]?'開啟':'關閉'));});
     sync();
   }
-  function init(){ ensureSmartPanel(); addStars(); renderStrips(); bindSearch(); ensureSfxPanel();
-    document.addEventListener('click',function(e){ if(e.target.closest('.ab52-star,.ab52-chip,#ab52ClearSearch')) return; if(e.target.closest('button,.nav-item,.drawer-item,.report-tab,.main-tab,.sub-tab,.switch,select,input')) playSfx('click'); },true);
-    document.addEventListener('click',function(e){ const card=e.target.closest('.game-card'); if(card && !e.target.closest('.ab52-star')){ saveRecent(card); playSfx('enter'); } },true);
+  function init(){ ensureSmartPanel(); renderStrips(); bindSearch(); ensureSfxPanel();
+    document.addEventListener('click',function(e){ if(e.target.closest('.ab52-chip,#ab52ClearSearch')) return; if(e.target.closest('button,.nav-item,.drawer-item,.report-tab,.main-tab,.sub-tab,.switch,select,input')) playSfx('click'); },true);
+    document.addEventListener('click',function(e){ const card=e.target.closest('.game-card'); if(card){ saveRecent(card); playSfx('enter'); } },true);
     const oldToast=window.abToast; if(typeof oldToast==='function'){ window.abToast=function(msg){ playSfx('notify'); return oldToast.apply(this,arguments); }; }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
