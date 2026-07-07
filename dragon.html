@@ -107,6 +107,20 @@ body{min-height:100vh;background:radial-gradient(circle at 18% 0%,rgba(143,60,25
 .nickname-modal-actions button{flex:1;height:38px;border:0;border-radius:999px;font-size:12px;font-weight:950;color:#fff;cursor:pointer}
 #nicknameCancelBtn{background:linear-gradient(180deg,#343844,#181b22);border:1px solid rgba(255,255,255,.10)}
 #nicknameSaveBtn{background:linear-gradient(180deg,#b947ff,#5d16cc);box-shadow:0 0 12px rgba(143,60,255,.28)}
+
+/* VIKA FIX：龍虎語言設定彈窗（直接補回原本功能，不重做其他面板） */
+.dragon-lang-mask{position:fixed;inset:0;z-index:61000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.66);backdrop-filter:blur(8px);padding:18px}
+.dragon-lang-mask.show{display:flex}
+.dragon-lang-panel{width:min(100%,360px);border-radius:24px;padding:16px;background:radial-gradient(circle at 18% 0%,rgba(143,60,255,.22),transparent 34%),linear-gradient(180deg,#25242b 0%,#111219 100%);border:1px solid rgba(247,201,107,.38);box-shadow:0 18px 42px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.10);color:#fff}
+.dragon-lang-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dragon-lang-title{font-size:15px;font-weight:950;color:#ffe6a8;letter-spacing:.8px;border-left:2px solid #f7c96b;padding-left:8px}
+.dragon-lang-close{width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:#ffe6a8;font-size:22px;font-weight:900;line-height:1;display:grid;place-items:center;cursor:pointer}
+.dragon-lang-list{display:grid;gap:9px;margin:10px 0 14px}
+.dragon-lang-option{height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));color:#eaf4ff;font-size:13px;font-weight:950;display:flex;align-items:center;justify-content:space-between;padding:0 12px;cursor:pointer}
+.dragon-lang-option span{font-size:11px;color:rgba(255,255,255,.58);font-weight:850}
+.dragon-lang-option.active{border-color:rgba(247,201,107,.90);background:radial-gradient(circle at 50% 0%,rgba(247,201,107,.18),transparent 46%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.012));box-shadow:0 0 0 1px rgba(247,201,107,.45),0 0 14px rgba(247,201,107,.22)}
+.dragon-lang-option.active:after{content:'✓';width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#f7c96b,#a96b19);color:#15110a;font-size:13px;font-weight:950}
+.dragon-lang-confirm{width:100%;height:38px;border:0;border-radius:999px;background:linear-gradient(180deg,#b947ff,#5d16cc);box-shadow:0 0 12px rgba(143,60,255,.28);color:#fff;font-size:12px;font-weight:950;cursor:pointer}
 </style>
 <style>
 /* =========================
@@ -2113,6 +2127,23 @@ document.addEventListener('DOMContentLoaded',function(){
 
 <div class="global-drawer-panel" id="roomDrawerPanel"><div class="drawer-header"><span>🐉 熱門遊戲房</span><div class="drawer-close" id="drawerCloseBtn">×</div></div><div class="room-list" id="roomList"></div></div>
 <div class="help-modal-overlay" id="helpModal"><div class="help-modal"><div class="help-header"><h3 id="helpTitle">遊戲規則</h3><div class="help-close" id="helpClose">×</div></div><div class="help-content" id="helpContent">龍虎各發一張牌，點數較大者勝；A最小，K最大。若點數相同為和。</div></div></div>
+
+<div class="dragon-lang-mask" id="dragonLangMask">
+  <div class="dragon-lang-panel" role="dialog" aria-modal="true" aria-labelledby="dragonLangTitle">
+    <div class="dragon-lang-head">
+      <div class="dragon-lang-title" id="dragonLangTitle">語言設定</div>
+      <button class="dragon-lang-close" id="dragonLangClose" type="button">×</button>
+    </div>
+    <div class="dragon-lang-list" id="dragonLangList">
+      <button class="dragon-lang-option active" data-lang="zh-TW" type="button">繁體中文 <span>Traditional</span></button>
+      <button class="dragon-lang-option" data-lang="zh-CN" type="button">简体中文 <span>Simplified</span></button>
+      <button class="dragon-lang-option" data-lang="en" type="button">English <span>English</span></button>
+      <button class="dragon-lang-option" data-lang="ja" type="button">日本語 <span>Japanese</span></button>
+      <button class="dragon-lang-option" data-lang="ko" type="button">한국어 <span>Korean</span></button>
+    </div>
+    <button class="dragon-lang-confirm" id="dragonLangConfirm" type="button">確認</button>
+  </div>
+</div>
 <script>
 (function(){
 let curChip=100,balance=888000,countdown=15,timer=null,locked=false;const betKeys=['dragon','tiger','tie','dragonDouble','dragonSingle','tigerSingle','tigerDouble','dragonRed','dragonBlack','tigerRed','tigerBlack','dragon2','tie2','tiger2'];const bets=new Map(),pending=new Map(),betChipStacks=new Map(),pendingChipStacks=new Map();betKeys.forEach(k=>{bets.set(k,0);pending.set(k,0);betChipStacks.set(k,[]);pendingChipStacks.set(k,[])});let history=['虎','虎','虎','龍','虎','虎','龍','龍','龍','虎','龍','龍','龍','龍','虎','和','龍','虎','龍','龍','虎','虎','龍','虎','虎','龍','龍','虎','龍','虎','虎','虎','龍','龍','和','虎','龍','虎','虎','龍','龍','虎','虎','虎','龍','龍','龍','虎','和','虎','龍','虎','龍','虎','龍','龍','虎','虎','虎','龍','虎','龍','龍','虎'];
@@ -2277,7 +2308,7 @@ function start(){if(timer)clearInterval(timer);timer=setInterval(tick,1000)}
 function buildBigRoad(hist){let grid={};let last=null,row=0,col=-1;function occupied(r,c){return grid[r+'-'+c]}function place(r,c,res){grid[r+'-'+c]={res,tie:0};return grid[r+'-'+c]}for(const res of hist){if(res==='和'){let cell=grid[row+'-'+col];if(cell)cell.tie=(cell.tie||0)+1;continue}if(last===null){col=0;row=0;place(row,col,res);last=res;continue}if(res!==last){col++;row=0;while(occupied(row,col))col++;place(row,col,res);last=res;continue}let nr=row+1,nc=col;if(nr>5||occupied(nr,nc)){nr=row;nc=col+1;while(occupied(nr,nc))nc++}row=nr;col=nc;place(row,col,res)}return grid}
 function renderRoads(){let d=history.filter(x=>x==='龍').length,t=history.filter(x=>x==='虎').length,h=history.filter(x=>x==='和').length;$('statDragon').textContent=d;$('statTiger').textContent=t;$('statTie').textContent=h;$('statTotal').textContent=history.length;let bead=$('beadGrid');bead.innerHTML='';for(let i=0;i<36;i++){let div=document.createElement('div');div.className='road-cell';let res=history.slice(-36)[i];if(res){let b=document.createElement('div');b.className='bead-ball '+(res==='龍'?'ball-dragon':res==='虎'?'ball-tiger':'ball-tie');b.textContent=res;b.style.fontSize='8px';div.appendChild(b)}bead.appendChild(div)}let grid=buildBigRoad(history);let cells=Object.keys(grid).map(k=>({r:+k.split('-')[0],c:+k.split('-')[1],v:grid[k]}));let maxC=Math.max(17,...cells.map(x=>x.c));let start=Math.max(0,maxC-17);let big=$('bigGrid');big.innerHTML='';for(let r=0;r<6;r++){for(let c=start;c<start+18;c++){let div=document.createElement('div');div.className='road-cell';let v=grid[r+'-'+c];if(v){let b=document.createElement('div');b.className='big-ball '+(v.res==='龍'?'big-dragon':'big-tiger');div.appendChild(b);if(v.tie)div.classList.add('tie-slash')}big.appendChild(div)}}renderSub('bigEyeGrid','hollow');renderSub('smallGrid','small-dot');renderSub('roachGrid','slash-mini')}
 function renderSub(id,type){let el=$(id);el.innerHTML='';let seq=history.filter(x=>x!=='和').slice(-30);for(let i=0;i<30;i++){let c=document.createElement('div');c.className='sub-cell';let res=seq[i];if(res){let m=document.createElement('div');m.className=type+(res==='虎'?' blue':'');c.appendChild(m)}el.appendChild(c)}}
-function initUI(){document.querySelectorAll('[data-bet]').forEach(el=>el.onclick=()=>addBet(el.dataset.bet));$('confirmBtn').onclick=confirm;$('cancelBtn').onclick=cancel;document.querySelectorAll('.play-tab').forEach(tab=>tab.onclick=()=>{document.querySelectorAll('.play-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');document.querySelectorAll('.bet-page').forEach(p=>p.classList.remove('active'));$('page-'+tab.dataset.page).classList.add('active')});const sideMenu=$('videoSideMenuPanel'), sideBtn=$('videoSideMenuBtn'); if(sideBtn&&sideMenu){sideBtn.onclick=(e)=>{e.stopPropagation();sideMenu.classList.toggle('collapsed')}; document.addEventListener('click',(e)=>{if(!sideMenu.contains(e.target)&&!sideBtn.contains(e.target)) sideMenu.classList.add('collapsed')})} const doMenu=(action)=>{if(action==='rules')showModal('龍虎規則','龍虎各發一張牌，A最小、K最大，點數大者勝；同點為和。可下注龍、虎、和、龍虎單雙、紅黑。'); if(action==='record'){ if(window.openDragonBetSlipV138){ window.openDragonBetSlipV138(); return; } showModal('遊戲注單','目前總下注：'+$('totalBetAmount').textContent); } if(action==='sound')showModal('音效控制','荷官音量 70%｜遊戲音效 50%｜一鍵靜音'); if(action==='limit')showModal('限紅資訊','本桌限紅：20 - 1000'); if(action==='lang')showModal('語言設定','繁體中文 / English / 日本語 / 한국어')}; document.querySelectorAll('[data-menu-action]').forEach(btn=>btn.onclick=function(){doMenu(this.dataset.menuAction); sideMenu?.classList.add('collapsed')}); $('videoExitBtn').onclick=()=>toast('返回大廳'); const fav=$('videoFavoriteBtn'); if(fav)fav.onclick=()=>{fav.classList.toggle('active');toast(fav.classList.contains('active')?'已收藏此桌':'已取消收藏')};$('videoDrawerHandle').onclick=()=>{$('roomDrawerPanel').classList.add('open');renderRooms()};$('drawerCloseBtn').onclick=()=>$('roomDrawerPanel').classList.remove('open');$('chatToggle').onclick=()=>$('chatRoom').classList.toggle('open');$('sendChatBtn').onclick=()=>{let v=$('chatInput').value.trim();if(!v)return;let msg=document.createElement('div');msg.className='chat-msg';msg.textContent='你：'+v;$('chatMessages').appendChild(msg);$('chatInput').value=''};$('helpClose').onclick=()=>$('helpModal').classList.remove('show'); const hotClose=$('hotBetClose'); if(hotClose) hotClose.onclick=(e)=>{e.stopPropagation();closeHotBet();toast('熱門下注已收起')}}
+function initUI(){document.querySelectorAll('[data-bet]').forEach(el=>el.onclick=()=>addBet(el.dataset.bet));$('confirmBtn').onclick=confirm;$('cancelBtn').onclick=cancel;document.querySelectorAll('.play-tab').forEach(tab=>tab.onclick=()=>{document.querySelectorAll('.play-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');document.querySelectorAll('.bet-page').forEach(p=>p.classList.remove('active'));$('page-'+tab.dataset.page).classList.add('active')});const sideMenu=$('videoSideMenuPanel'), sideBtn=$('videoSideMenuBtn'); if(sideBtn&&sideMenu){sideBtn.onclick=(e)=>{e.stopPropagation();sideMenu.classList.toggle('collapsed')}; document.addEventListener('click',(e)=>{if(!sideMenu.contains(e.target)&&!sideBtn.contains(e.target)) sideMenu.classList.add('collapsed')})} const doMenu=(action)=>{if(action==='rules')showModal('龍虎規則','龍虎各發一張牌，A最小、K最大，點數大者勝；同點為和。可下注龍、虎、和、龍虎單雙、紅黑。'); if(action==='record'){ if(window.openDragonBetSlipV138){ window.openDragonBetSlipV138(); return; } showModal('遊戲注單','目前總下注：'+$('totalBetAmount').textContent); } if(action==='sound')showModal('音效控制','荷官音量 70%｜遊戲音效 50%｜一鍵靜音'); if(action==='limit')showModal('限紅資訊','本桌限紅：20 - 1000'); if(action==='lang'){ if(window.openDragonLangModal){ window.openDragonLangModal(); } else { showModal('語言設定','繁體中文 / 简体中文 / English / 日本語 / 한국어'); } }}; document.querySelectorAll('[data-menu-action]').forEach(btn=>btn.onclick=function(){doMenu(this.dataset.menuAction); sideMenu?.classList.add('collapsed')}); $('videoExitBtn').onclick=()=>toast('返回大廳'); const fav=$('videoFavoriteBtn'); if(fav)fav.onclick=()=>{fav.classList.toggle('active');toast(fav.classList.contains('active')?'已收藏此桌':'已取消收藏')};$('videoDrawerHandle').onclick=()=>{$('roomDrawerPanel').classList.add('open');renderRooms()};$('drawerCloseBtn').onclick=()=>$('roomDrawerPanel').classList.remove('open');$('chatToggle').onclick=()=>$('chatRoom').classList.toggle('open');$('sendChatBtn').onclick=()=>{let v=$('chatInput').value.trim();if(!v)return;let msg=document.createElement('div');msg.className='chat-msg';msg.textContent='你：'+v;$('chatMessages').appendChild(msg);$('chatInput').value=''};$('helpClose').onclick=()=>$('helpModal').classList.remove('show'); const hotClose=$('hotBetClose'); if(hotClose) hotClose.onclick=(e)=>{e.stopPropagation();closeHotBet();toast('熱門下注已收起')}}
 function showModal(t,c){$('helpTitle').textContent=t;$('helpContent').textContent=c;$('helpModal').classList.add('show')}
 
 function openHotBet(){const h=$('hotBet'); if(h) h.classList.remove('closed')}
@@ -5688,6 +5719,128 @@ body.dt-sound-open .radar-countdown, body.dt-menu-open .radar-countdown{opacity:
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindGift);
   else bindGift();
+})();
+</script>
+
+
+<script id="dragon-lang-stable-fix-js">
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function toastMsg(text){
+    if (typeof window.toast === 'function') { window.toast(text); return; }
+    var d=document.createElement('div');
+    d.className='toast';
+    d.textContent=text;
+    document.body.appendChild(d);
+    setTimeout(function(){ d.remove(); }, 1800);
+  }
+  function ensureDragonLangPanel(){
+    var mask=$('dragonLangMask');
+    if(!mask){
+      mask=document.createElement('div');
+      mask.className='dragon-lang-mask';
+      mask.id='dragonLangMask';
+      mask.innerHTML =
+        '<div class="dragon-lang-panel" role="dialog" aria-modal="true" aria-labelledby="dragonLangTitle">' +
+          '<div class="dragon-lang-head">' +
+            '<div class="dragon-lang-title" id="dragonLangTitle">語言設定</div>' +
+            '<button class="dragon-lang-close" id="dragonLangClose" type="button" aria-label="關閉">×</button>' +
+          '</div>' +
+          '<div class="dragon-lang-list" id="dragonLangList">' +
+            '<button class="dragon-lang-option active" data-lang="zh-TW" type="button">繁體中文 <span>Traditional</span></button>' +
+            '<button class="dragon-lang-option" data-lang="zh-CN" type="button">简体中文 <span>Simplified</span></button>' +
+            '<button class="dragon-lang-option" data-lang="en" type="button">English <span>English</span></button>' +
+            '<button class="dragon-lang-option" data-lang="ja" type="button">日本語 <span>Japanese</span></button>' +
+            '<button class="dragon-lang-option" data-lang="ko" type="button">한국어 <span>Korean</span></button>' +
+          '</div>' +
+          '<button class="dragon-lang-confirm" id="dragonLangConfirm" type="button">確認</button>' +
+        '</div>';
+      document.body.appendChild(mask);
+    }
+    return mask;
+  }
+  function closeLang(){
+    var mask=$('dragonLangMask');
+    if(mask){ mask.classList.remove('show'); mask.setAttribute('aria-hidden','true'); }
+  }
+  function openLang(){
+    var mask=ensureDragonLangPanel();
+    var menu=$('videoSideMenuPanel');
+    if(menu) menu.classList.add('collapsed');
+    mask.classList.add('show');
+    mask.setAttribute('aria-hidden','false');
+  }
+  function bindLang(){
+    var mask=ensureDragonLangPanel();
+
+    document.addEventListener('click', function(e){
+      var btn=e.target.closest('[data-menu-action="lang"]');
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      openLang();
+    }, true);
+
+    mask.addEventListener('click', function(e){
+      if(e.target === mask) closeLang();
+    });
+
+    var panel = mask.querySelector('.dragon-lang-panel');
+    if(panel){
+      panel.addEventListener('click', function(e){ e.stopPropagation(); });
+    }
+
+    var closeBtn=$('dragonLangClose');
+    if(closeBtn){
+      closeBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        closeLang();
+      });
+    }
+
+    var selected = localStorage.getItem('dragon_lang') || 'zh-TW';
+    function applyActive(lang){
+      mask.querySelectorAll('.dragon-lang-option').forEach(function(opt){
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
+    }
+    applyActive(selected);
+
+    mask.querySelectorAll('.dragon-lang-option').forEach(function(opt){
+      opt.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        selected = opt.dataset.lang || 'zh-TW';
+        applyActive(selected);
+      });
+    });
+
+    var confirm=$('dragonLangConfirm');
+    if(confirm){
+      confirm.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        localStorage.setItem('dragon_lang', selected);
+        closeLang();
+        var label = selected === 'zh-TW' ? '繁體中文' :
+                    selected === 'zh-CN' ? '简体中文' :
+                    selected === 'en' ? 'English' :
+                    selected === 'ja' ? '日本語' : '한국어';
+        toastMsg('語言已切換：' + label);
+      });
+    }
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeLang();
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bindLang);
+  }else{
+    bindLang();
+  }
 })();
 </script>
 
