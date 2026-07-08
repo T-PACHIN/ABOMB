@@ -4441,6 +4441,7 @@ ready(function(){
     current = (rooms.find(function(r){return r.id===current&&r.game==='dragon';}) ? current : 'DT1');
     list.className='room-list';
     list.innerHTML='<div class="dt-v136-sort"><div class="dt-v136-sort-title"><span>🔥 好路提示自動排序</span><span class="dt-v136-live-dot"></span></div><div class="dt-v136-tabs"><button class="dt-v136-tab '+(mode==='goodroad'?'active':'')+'" data-mode="goodroad">好路</button><button class="dt-v136-tab '+(mode==='hot'?'active':'')+'" data-mode="hot">人氣</button><button class="dt-v136-tab '+(mode==='default'?'active':'')+'" data-mode="default">全部</button></div></div><div class="dt-v136-section"><b>推薦房間</b><small>同步大廳房間</small></div>'+ordered().map(function(r){var active=r.id===current;var state=(!active&&r.state)?'<div class="dt-v136-state">'+esc(r.state)+'</div>':'';var here=active?'<div class="dt-v136-here"><span class="dt-v136-home">⌂</span><span>您在這裡</span></div>':'';return '<div class="dt-v136-card '+(active?'current':'')+'" data-id="'+esc(r.id)+'" data-game="'+esc(r.game)+'"><div class="dt-v136-card-head"><div class="dt-v136-name">'+esc(r.name)+'</div><div class="dt-v136-players">'+esc(r.players)+'</div></div><div class="dt-v136-road">'+road(r)+here+state+'<span class="dt-v136-tag">'+esc(r.label)+'</span><span class="dt-v136-enter">›</span></div></div>';}).join('');
+    updateSwitchCountdowns();
     list.querySelectorAll('.dt-v136-tab').forEach(function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();mode=b.getAttribute('data-mode')||'goodroad';render();};});
     list.querySelectorAll('.dt-v136-card').forEach(function(card){card.onclick=function(e){e.preventDefault();e.stopPropagation();var id=card.getAttribute('data-id'),game=card.getAttribute('data-game'),name=(card.querySelector('.dt-v136-name')||{}).textContent||'';localStorage.setItem('abDTCurrentSwitchRoom',id);current=id; if(game==='dragon'){var tt=document.querySelector('.table-title'); if(tt)tt.textContent='龍虎 VIP｜限紅 100-20,000'; if(typeof toast==='function')toast('已切換 '+name);} else {if(typeof toast==='function')toast('準備前往 '+name);} panel.classList.remove('open'); setTimeout(render,20);};});
   }
@@ -4451,6 +4452,23 @@ ready(function(){
 });
 })();
 </script>
+
+<style id="dt-switch-card-countdown-css">
+/* 換桌卡片倒數：只加在原本卡片路紙右上，不壓人數 */
+#roomDrawerPanel .dt-v136-card{position:relative!important;}
+#roomDrawerPanel .dt-v136-road{position:relative!important;}
+#roomDrawerPanel .dt-v136-room-countdown{
+  position:absolute!important;right:6px!important;top:5px!important;z-index:12!important;
+  min-width:34px!important;height:20px!important;padding:0 7px!important;border-radius:999px!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  background:rgba(0,0,0,.72)!important;border:1px solid rgba(247,201,107,.72)!important;
+  color:#ffe6a8!important;font-size:11px!important;font-weight:1000!important;line-height:1!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.45),0 0 8px rgba(247,201,107,.20)!important;
+  pointer-events:none!important;text-shadow:0 1px 2px rgba(0,0,0,.85)!important;
+}
+#roomDrawerPanel .dt-v136-room-countdown.urgent{border-color:#ff4d5f!important;color:#ff9aa5!important;box-shadow:0 0 10px rgba(255,77,95,.38)!important;}
+#roomDrawerPanel .dt-v136-room-countdown.sealed{min-width:42px!important;color:#fff!important;background:rgba(120,18,28,.88)!important;border-color:#ff6b78!important;font-size:10px!important;}
+</style>
 <style id="ab-v137-no-countdown-word-and-linked-switch-css">
 /* V137：移除「倒數」文字，只保留秒數 */
 .radar-countdown:before{content:""!important;display:none!important;}
@@ -4496,6 +4514,17 @@ ready(function(){
   function roadSicbo(r){return '<div class="dt-v136-grid sicbo">'+(r.seq||[]).slice(0,20).map(function(d){var sum=d[0]+d[1]+d[2],sz=sum>=11?'big':'small';return '<span class="dt-v136-cell dt-v136-sicbo-cell"><b class="dt-v136-total '+sz+'">'+sum+'</b><span class="dt-v136-dice">'+diceFace(d[0])+diceFace(d[1])+diceFace(d[2])+'</span><em class="dt-v136-meta">'+(sz==='big'?'大':'小')+' / '+(sum%2?'單':'雙')+'</em></span>';}).join('')+'</div>'}
   function roadRoulette(r){return '<div class="dt-v136-grid roulette">'+(r.seq||[]).slice(0,30).map(function(n){var c=n===0?'green':(redNums[n]?'red':'black');return '<span class="dt-v136-cell" style="display:grid;place-items:center"><b class="dt-v136-num '+c+'">'+n+'</b></span>';}).join('')+'</div>'}
   function road(r){return r.game==='sicbo'?roadSicbo(r):(r.game==='roulette'?roadRoulette(r):roadCircle(r));}
+  function countdownDuration(r){return r.game==='roulette'?35:15;}
+  function updateSwitchCountdowns(){
+    var now=Math.floor(Date.now()/1000);
+    list.querySelectorAll('[data-v137-countdown]').forEach(function(el){
+      var dur=parseInt(el.getAttribute('data-duration')||'15',10);
+      var rem=dur-(now%dur);
+      el.classList.remove('urgent','sealed');
+      if(rem===dur){el.textContent='封盤';el.classList.add('sealed');}
+      else{el.textContent=String(rem); if(rem<=5)el.classList.add('urgent');}
+    });
+  }
   function updateCurrentRoomUI(r){
     try{
       localStorage.setItem('abCurrentRoomId',r.id);
@@ -4523,7 +4552,7 @@ ready(function(){
     current=localStorage.getItem('abCurrentRoomId')||localStorage.getItem('abDTCurrentSwitchRoom')||current;
     current = findRoom(current).game==='dragon' ? current : 'DT1';
     list.className='room-list';
-    list.innerHTML='<div class="dt-v136-sort"><div class="dt-v136-sort-title"><span>🔥 好路提示自動排序</span><span class="dt-v136-live-dot"></span></div><div class="dt-v136-tabs"><button class="dt-v136-tab '+(mode==='goodroad'?'active':'')+'" data-v137-mode="goodroad">好路</button><button class="dt-v136-tab '+(mode==='hot'?'active':'')+'" data-v137-mode="hot">人氣</button><button class="dt-v136-tab '+(mode==='default'?'active':'')+'" data-v137-mode="default">全部</button></div></div><div class="dt-v136-section"><b>推薦房間</b><small>同步大廳房間</small></div>'+ordered().map(function(r){var active=r.id===current;var state=(!active&&r.state)?'<div class="dt-v136-state">'+esc(r.state)+'</div>':'';var here=active?'<div class="dt-v136-here"><span class="dt-v136-home">⌂</span><span>您在這裡</span></div>':'';return '<div class="dt-v136-card dt-v137-card '+(active?'current':'')+'" data-v137-id="'+esc(r.id)+'"><div class="dt-v136-card-head"><div class="dt-v136-name">'+esc(r.name)+'</div><div class="dt-v136-players">'+esc(r.players)+'</div></div><div class="dt-v136-road">'+road(r)+here+state+'<span class="dt-v136-tag">'+esc(r.label)+'</span><span class="dt-v136-enter">›</span></div></div>';}).join('');
+    list.innerHTML='<div class="dt-v136-sort"><div class="dt-v136-sort-title"><span>🔥 好路提示自動排序</span><span class="dt-v136-live-dot"></span></div><div class="dt-v136-tabs"><button class="dt-v136-tab '+(mode==='goodroad'?'active':'')+'" data-v137-mode="goodroad">好路</button><button class="dt-v136-tab '+(mode==='hot'?'active':'')+'" data-v137-mode="hot">人氣</button><button class="dt-v136-tab '+(mode==='default'?'active':'')+'" data-v137-mode="default">全部</button></div></div><div class="dt-v136-section"><b>推薦房間</b><small>同步大廳房間</small></div>'+ordered().map(function(r){var active=r.id===current;var state=(!active&&r.state)?'<div class="dt-v136-state">'+esc(r.state)+'</div>':'';var here=active?'<div class="dt-v136-here"><span class="dt-v136-home">⌂</span><span>您在這裡</span></div>':'';return '<div class="dt-v136-card dt-v137-card '+(active?'current':'')+'" data-v137-id="'+esc(r.id)+'"><div class="dt-v136-card-head"><div class="dt-v136-name">'+esc(r.name)+'</div><div class="dt-v136-players">'+esc(r.players)+'</div></div><div class="dt-v136-road"><span class="dt-v136-room-countdown" data-v137-countdown data-duration="'+countdownDuration(r)+'"></span>'+road(r)+here+state+'<span class="dt-v136-tag">'+esc(r.label)+'</span><span class="dt-v136-enter">›</span></div></div>';}).join('');
     list.querySelectorAll('.dt-v136-tab').forEach(function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();mode=b.getAttribute('data-v137-mode')||'goodroad';render();};});
     list.querySelectorAll('.dt-v137-card').forEach(function(card){
       card.onclick=function(e){e.preventDefault();e.stopPropagation();var r=findRoom(card.getAttribute('data-v137-id'));goRoom(r);};
@@ -4538,6 +4567,8 @@ ready(function(){
   window.abSwitchToRoomV137=function(id){goRoom(findRoom(id));};
   updateCurrentRoomUI(findRoom(current));
   render();
+  if(window.__dtSwitchCountdownTimer) clearInterval(window.__dtSwitchCountdownTimer);
+  window.__dtSwitchCountdownTimer=setInterval(updateSwitchCountdowns,1000);
 });
 })();
 </script>
