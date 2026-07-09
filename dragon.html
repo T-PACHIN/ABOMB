@@ -2047,6 +2047,138 @@ document.addEventListener('DOMContentLoaded',function(){
 @media(max-width:380px){.dt-gift-grid{grid-template-columns:repeat(5,1fr);gap:6px}.dt-gift-option{min-height:62px;border-radius:15px}.dt-gift-emoji{font-size:22px}.dt-gift-name{font-size:8px}.dt-gift-price{font-size:7px}}
 </style>
 
+
+<style id="vika-dragon-top-nickname-pill-final">
+/* VIKA FIX：龍虎上方暱稱區塊改成與百家/輪盤一致的膠囊樣式，不新增第二套 */
+.top-nav .player-info-compact{
+  margin-left:auto!important;
+  flex:0 0 auto!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  width:auto!important;
+  max-width:148px!important;
+  min-height:42px!important;
+  padding:4px 8px 4px 4px!important;
+  border-radius:16px!important;
+  background:
+    radial-gradient(circle at 18% 20%,rgba(255,255,255,.16),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025)),
+    linear-gradient(180deg,#30313c 0%,#151721 100%)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:
+    0 5px 12px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(0,0,0,.28)!important;
+  overflow:hidden!important;
+}
+.top-nav .compact-avatar{
+  width:30px!important;
+  height:30px!important;
+  flex:0 0 30px!important;
+  border-radius:50%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:14px!important;
+  color:#fff!important;
+  background:
+    radial-gradient(circle at 35% 22%,rgba(255,255,255,.38),transparent 36%),
+    linear-gradient(180deg,#b946ff 0%,#8221ff 52%,#5713bd 100%)!important;
+  box-shadow:
+    0 0 10px rgba(137,48,255,.68),
+    inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+.top-nav .player-info-compact > div:last-child{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:2px!important;
+  line-height:1.05!important;
+}
+.top-nav .compact-name{
+  max-width:100px!important;
+  min-width:0!important;
+  height:13px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:3px!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:950!important;
+  letter-spacing:.1px!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.65)!important;
+}
+.top-nav .compact-name-text{
+  display:block!important;
+  min-width:0!important;
+  max-width:76px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  color:#fff!important;
+}
+.top-nav .compact-name-edit{
+  flex:0 0 auto!important;
+  width:12px!important;
+  height:12px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:transparent!important;
+  color:#ffe16d!important;
+  font-size:10px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  cursor:pointer!important;
+  text-shadow:0 0 7px rgba(255,225,109,.58)!important;
+}
+.top-nav .compact-name-edit:active{transform:scale(.90)!important;}
+.top-nav .compact-detail{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  min-width:0!important;
+  max-width:104px!important;
+  height:11px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  font-size:8px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  color:#bde6ff!important;
+  letter-spacing:-.1px!important;
+}
+.top-nav .compact-detail span:first-child{
+  color:#bde6ff!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.top-nav .compact-detail .player-points,
+.top-nav #balanceDisplay{
+  flex:0 0 auto!important;
+  color:#ffd36a!important;
+  font-size:8px!important;
+  font-weight:950!important;
+  font-variant-numeric:tabular-nums!important;
+  text-shadow:0 0 5px rgba(255,211,106,.28)!important;
+}
+@media(max-width:380px){
+  .top-nav .player-info-compact{max-width:136px!important;padding-right:7px!important;}
+  .top-nav .compact-name-text{max-width:68px!important;}
+  .top-nav .compact-detail{max-width:96px!important;font-size:7.5px!important;gap:4px!important;}
+  .top-nav #balanceDisplay{font-size:7.5px!important;}
+}
+</style>
+
 </head>
 <body>
 <div class="app-container">
@@ -5592,11 +5724,24 @@ body.dt-sound-open .radar-countdown, body.dt-menu-open .radar-countdown{opacity:
     var saveBtn=document.getElementById('nicknameSaveBtn');
     if(!nameEl||!editBtn||!mask||!input||!closeBtn||!cancelBtn||!saveBtn) return;
 
-    var storageKey='dragonTigerNickname';
-    try{
-      var saved=localStorage.getItem(storageKey);
-      if(saved&&saved.trim()) nameEl.textContent=saved.trim();
-    }catch(e){}
+    var storageKeys=['abNickname','playerNickname','casinoNickname','ab_player_nickname','dragonTigerNickname'];
+    function getSavedName(){
+      for(var i=0;i<storageKeys.length;i++){
+        try{
+          var v=localStorage.getItem(storageKeys[i]);
+          if(v && v.trim()) return v.trim();
+        }catch(e){}
+      }
+      return '旋風俠客';
+    }
+    function saveAllKeys(next){
+      for(var i=0;i<storageKeys.length;i++){
+        try{ localStorage.setItem(storageKeys[i],next); }catch(e){}
+      }
+    }
+
+    var saved=getSavedName();
+    if(saved) nameEl.textContent=saved;
 
     function openNicknameModal(){
       var current=(nameEl.textContent||'').trim()||'旋風俠客';
@@ -5614,7 +5759,7 @@ body.dt-sound-open .radar-countdown, body.dt-menu-open .radar-countdown{opacity:
       if(!next) return;
       if(next.length>12) next=next.slice(0,12);
       nameEl.textContent=next;
-      try{localStorage.setItem(storageKey,next);}catch(e){}
+      saveAllKeys(next);
       closeNicknameModal();
     }
 
