@@ -2439,7 +2439,20 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="ab-bgm-now" id="abBgmNow">目前：未播放</div>
       </div>
     </div>
-    <div class="ab-soft-card"><div class="ab-mini-title">語言</div><div class="ab-tabs"><button class="ab-tab active">繁中</button><button class="ab-tab">簡中</button><button class="ab-tab">English</button></div></div>
+    <div class="ab-soft-card" id="languageSettingsCard">
+      <div class="ab-mini-title">語言</div>
+      <div class="ab-tabs" id="languageTabs">
+        <button class="ab-tab active" type="button" data-lang="zh-TW">繁中</button>
+        <button class="ab-tab" type="button" data-lang="zh-CN">簡中</button>
+        <button class="ab-tab" type="button" data-lang="ja-JP">日本語</button>
+        <button class="ab-tab" type="button" data-lang="ko-KR">한국어</button>
+        <button class="ab-tab" type="button" data-lang="en-US">English</button>
+      </div>
+      <div class="lang-note show" id="langNote">目前語言：繁中</div>
+      <div class="ab-btn-row">
+        <button class="ab-action-btn" type="button" id="confirmLanguageBtn">確認</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2701,18 +2714,72 @@ document.addEventListener('DOMContentLoaded', () => {
       toast((sw.getAttribute('aria-label')||'設定')+'：'+(sw.classList.contains('on')?'開啟':'關閉'));
     },true);
   });
-  $$('#settingsModal .ab-tab').forEach(tab=>{
+  // 語言設定：按確認後真正切換 Lobby 介面文字並記住選擇
+  const languageTabs=$$('#languageTabs .ab-tab');
+  const languageNote=$('#langNote');
+  const confirmLanguageBtn=$('#confirmLanguageBtn');
+  const savedLanguage=localStorage.getItem('abLobbyLanguage')||'zh-TW';
+  let pendingLanguage=savedLanguage;
+
+  const lobbyI18n={
+    'zh-TW':{all:'全部',baccarat:'百家樂',sicbo:'骰寶',dragon:'龍虎',roulette:'輪盤',normal:'一般',good:'好路',home:'首頁',rules:'遊戲規則',announcement:'公告',settings:'設定',settingsTitle:'系統設定',gameSound:'遊戲音效',vibration:'震動提示',dealerVoice:'荷官語音',bgm:'背景音樂',musicSelect:'音樂選擇',noBgm:'無背景音樂',volume:'音量',autoMusic:'依遊戲自動切換音樂',preview:'▶ 試聽',stop:'停止',save:'儲存設定',now:'目前：未播放',language:'語言',current:'目前語言：',pending:'待確認：',confirm:'確認',saved:'語言已設定為 '},
+    'zh-CN':{all:'全部',baccarat:'百家乐',sicbo:'骰宝',dragon:'龙虎',roulette:'轮盘',normal:'一般',good:'好路',home:'首页',rules:'游戏规则',announcement:'公告',settings:'设置',settingsTitle:'系统设置',gameSound:'游戏音效',vibration:'震动提示',dealerVoice:'荷官语音',bgm:'背景音乐',musicSelect:'音乐选择',noBgm:'无背景音乐',volume:'音量',autoMusic:'依游戏自动切换音乐',preview:'▶ 试听',stop:'停止',save:'保存设置',now:'当前：未播放',language:'语言',current:'当前语言：',pending:'待确认：',confirm:'确认',saved:'语言已设置为 '},
+    'ja-JP':{all:'すべて',baccarat:'バカラ',sicbo:'シックボー',dragon:'ドラゴンタイガー',roulette:'ルーレット',normal:'通常',good:'好路',home:'ホーム',rules:'ゲームルール',announcement:'お知らせ',settings:'設定',settingsTitle:'システム設定',gameSound:'ゲーム効果音',vibration:'振動通知',dealerVoice:'ディーラー音声',bgm:'BGM',musicSelect:'音楽選択',noBgm:'BGMなし',volume:'音量',autoMusic:'ゲームごとに音楽を自動切替',preview:'▶ 試聴',stop:'停止',save:'設定を保存',now:'現在：再生なし',language:'言語',current:'現在の言語：',pending:'確認待ち：',confirm:'確認',saved:'言語を設定しました：'},
+    'ko-KR':{all:'전체',baccarat:'바카라',sicbo:'식보',dragon:'드래곤 타이거',roulette:'룰렛',normal:'일반',good:'좋은 흐름',home:'홈',rules:'게임 규칙',announcement:'공지',settings:'설정',settingsTitle:'시스템 설정',gameSound:'게임 효과음',vibration:'진동 알림',dealerVoice:'딜러 음성',bgm:'배경 음악',musicSelect:'음악 선택',noBgm:'배경 음악 없음',volume:'볼륨',autoMusic:'게임별 음악 자동 전환',preview:'▶ 미리 듣기',stop:'정지',save:'설정 저장',now:'현재: 재생 안 함',language:'언어',current:'현재 언어: ',pending:'확인 대기: ',confirm:'확인',saved:'언어가 설정되었습니다: '},
+    'en-US':{all:'All',baccarat:'Baccarat',sicbo:'Sic Bo',dragon:'Dragon Tiger',roulette:'Roulette',normal:'Normal',good:'Good Road',home:'Home',rules:'Game Rules',announcement:'Announcements',settings:'Settings',settingsTitle:'System Settings',gameSound:'Game Sound',vibration:'Vibration Alert',dealerVoice:'Dealer Voice',bgm:'Background Music',musicSelect:'Music Selection',noBgm:'No Background Music',volume:'Volume',autoMusic:'Auto-switch music by game',preview:'▶ Preview',stop:'Stop',save:'Save Settings',now:'Current: Not Playing',language:'Language',current:'Current language: ',pending:'Pending: ',confirm:'Confirm',saved:'Language set to '}
+  };
+
+  function setText(el,text){if(el)el.textContent=text;}
+  function applyLobbyLanguage(lang){
+    const t=lobbyI18n[lang]||lobbyI18n['zh-TW'];
+    document.documentElement.lang=lang;
+    const main=$$('.main-tab');
+    [t.all,t.baccarat,t.sicbo,t.dragon,t.roulette].forEach((v,i)=>setText(main[i],v));
+    const subs=$$('.sub-tab'); setText(subs[0],t.normal); setText(subs[1],t.good);
+    const navTexts=$$('.bottom-nav .nav-text');
+    [t.home,t.rules,t.announcement,t.settings].forEach((v,i)=>setText(navTexts[i],v));
+    setText($('#settingsModal .ab-modal-title'),t.settingsTitle);
+    const settingSpans=$$('#settingsModal .setting-row > span');
+    [t.gameSound,t.vibration,t.dealerVoice,t.bgm].forEach((v,i)=>setText(settingSpans[i],v));
+    setText($('#languageSettingsCard .ab-mini-title'),t.language);
+    setText(document.querySelector('label[for="abBgmSelect"]'),t.musicSelect);
+    const noBgm=$('#abBgmSelect option[value="none"]'); setText(noBgm,t.noBgm);
+    setText($('#abBgmVolume')?.previousElementSibling,t.volume);
+    const autoLabel=$('.ab-bgm-check'); if(autoLabel){const input=autoLabel.querySelector('input');autoLabel.textContent=' '+t.autoMusic;if(input)autoLabel.prepend(input);}
+    setText($('#abBgmPreview'),t.preview); setText($('#abBgmStop'),t.stop); setText($('#abBgmSave'),t.save); setText($('#abBgmNow'),t.now);
+    setText(confirmLanguageBtn,t.confirm);
+    const activeTab=languageTabs.find(tab=>tab.dataset.lang===lang)||languageTabs[0];
+    if(languageNote)languageNote.textContent=t.current+activeTab.textContent;
+  }
+
+  function setLanguageSelection(lang){
+    const matched=languageTabs.find(tab=>tab.dataset.lang===lang)||languageTabs[0];
+    languageTabs.forEach(tab=>tab.classList.toggle('active',tab===matched));
+    pendingLanguage=matched.dataset.lang;
+  }
+
+  setLanguageSelection(savedLanguage);
+  applyLobbyLanguage(savedLanguage);
+
+  languageTabs.forEach(tab=>{
     tab.addEventListener('click',e=>{
-      e.preventDefault(); e.stopImmediatePropagation();
-      $$('#settingsModal .ab-tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      let note=$('#langNote');
-      if(!note){note=document.createElement('div');note.id='langNote';note.className='lang-note';tab.closest('.ab-soft-card')?.appendChild(note);}
-      note.textContent='目前語言：'+tab.textContent;
-      note.classList.add('show');
-      toast('語言已切換為 '+tab.textContent);
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setLanguageSelection(tab.dataset.lang);
+      const t=lobbyI18n[pendingLanguage]||lobbyI18n['zh-TW'];
+      if(languageNote) languageNote.textContent=t.pending+tab.textContent;
     },true);
   });
+
+  confirmLanguageBtn?.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const activeTab=languageTabs.find(tab=>tab.classList.contains('active'))||languageTabs[0];
+    localStorage.setItem('abLobbyLanguage',pendingLanguage);
+    applyLobbyLanguage(pendingLanguage);
+    const t=lobbyI18n[pendingLanguage]||lobbyI18n['zh-TW'];
+    toast(t.saved+activeTab.textContent);
+  },true);
 
   // 首頁確認按鈕有明確反應
   $('#goMainLobbyBtn')?.addEventListener('click',e=>{
