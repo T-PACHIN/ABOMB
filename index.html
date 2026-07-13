@@ -1782,7 +1782,6 @@ body.report-modal-open .report-page{animation:reportTopIn .22s ease forwards !im
       <button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>
       <button class="drawer-item" type="button"><span>💳 帳戶明細</span><span>›</span></button>
       <button class="drawer-item" type="button"><span>🎁 優惠紀錄</span><span>›</span></button>
-      <button class="drawer-item" type="button"><span>✉️ 站內信</span><span>›</span></button>
       <button class="drawer-item" type="button"><span>⚙️ 設定中心</span><span>›</span></button>
       <button class="drawer-item danger" type="button"><span>🚪 登出</span><span>›</span></button>
     </div>
@@ -2366,7 +2365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 .ab-modal-overlay{position:fixed;inset:0;z-index:240;display:none;background:rgba(0,0,0,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .ab-modal{position:fixed;left:50%;top:calc(54px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);z-index:260;width:min(100% - 22px,408px);max-height:calc(100vh - 112px - env(safe-area-inset-bottom,0px));display:none;overflow:hidden;border-radius:22px;background:radial-gradient(circle at 14% 0%,rgba(185,71,255,.30),transparent 42%),radial-gradient(circle at 92% 12%,rgba(0,220,255,.14),transparent 38%),linear-gradient(180deg,rgba(42,43,54,.98),rgba(13,14,20,.98));border:1px solid rgba(255,255,255,.13);box-shadow:0 20px 48px rgba(0,0,0,.78),0 0 24px rgba(128,58,255,.24)}
 .ab-modal.open{display:block;animation:v42ModalIn .18s ease forwards}.ab-modal-overlay.open{display:block}@keyframes v42ModalIn{to{transform:translateX(-50%) translateY(0)}}
-.ab-modal-head{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.01))}.ab-modal-title{font-size:17px;font-weight:950;letter-spacing:.8px}.ab-modal-close{width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));color:#fff;font-size:22px;line-height:1;cursor:pointer}.ab-modal-body{padding:14px;overflow:auto;max-height:calc(100vh - 170px - env(safe-area-inset-bottom,0px))}.ab-soft-card{border-radius:17px;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#282a36,#171923);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 18px rgba(0,0,0,.30);margin-bottom:10px}.ab-mini-title{font-size:13px;font-weight:950;color:#fff;margin-bottom:8px}.ab-muted{font-size:12px;color:#aeb5c8;line-height:1.55}.ab-btn-row{display:flex;gap:9px;margin-top:12px}.ab-action-btn{height:42px;flex:1;border:0;border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:950;background:linear-gradient(180deg,#a83aff 0%,#7217ee 58%,#4610a9 100%);box-shadow:0 0 12px rgba(142,54,255,.42),inset 0 1px 0 rgba(255,255,255,.20);cursor:pointer}.ab-action-btn.ghost{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),linear-gradient(180deg,#343643,#1b1d27);border:1px solid rgba(255,255,255,.09);box-shadow:none}.ab-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:9px}.ab-tab{height:34px;padding:0 12px;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),linear-gradient(180deg,#30313d,#181a23);color:#cfd4e4;font-family:inherit;font-size:13px;font-weight:900;white-space:nowrap}.ab-tab.active{color:#fff;background:linear-gradient(180deg,#ad38ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.50)}.rule-content h4{font-size:16px;margin-bottom:8px}.rule-list{display:grid;gap:7px}.rule-line{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.045);font-size:13px}.rule-line b{color:#fff}.rule-line span:last-child{color:#8fdcff;font-weight:900}.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.table-card{position:relative;min-height:88px;border-radius:16px;padding:10px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#262936,#151722);box-shadow:0 8px 16px rgba(0,0,0,.28)}.table-card input{position:absolute;right:10px;top:10px;accent-color:#8d2eff}.table-name{font-size:14px;font-weight:950;margin-bottom:5px}.table-meta{font-size:11px;color:#aeb5c8;line-height:1.5}.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00d470;box-shadow:0 0 8px rgba(0,212,112,.65);margin-right:5px}.setting-row{display:flex;align-items:center;justify-content:space-between;height:48px;border-bottom:1px solid rgba(255,255,255,.065);font-size:14px;font-weight:900}.setting-row:last-child{border-bottom:0}.switch{width:52px;height:28px;border-radius:20px;background:#303340;border:1px solid rgba(255,255,255,.10);position:relative;cursor:pointer}.switch:before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;left:3px;top:2px;background:#fff;transition:.18s;box-shadow:0 3px 8px rgba(0,0,0,.35)}.switch.on{background:linear-gradient(90deg,#8120ff,#b947ff)}.switch.on:before{left:25px}.live-list{display:grid;gap:10px}.live-card{height:92px;border-radius:17px;overflow:hidden;position:relative;padding:11px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 20% 30%,rgba(143,220,255,.18),transparent 42%),linear-gradient(135deg,#252735,#12141c);box-shadow:0 8px 18px rgba(0,0,0,.30)}.live-card:after{content:"LIVE";position:absolute;right:12px;top:11px;font-size:10px;font-weight:950;color:#fff;background:linear-gradient(90deg,#ff2450,#ff7b4b);padding:4px 7px;border-radius:9px;box-shadow:0 0 10px rgba(255,36,80,.35)}.live-name{font-size:15px;font-weight:950;margin-bottom:8px}.live-meta{font-size:12px;color:#c9d0e2;line-height:1.55}.mail-item{padding:11px;border-radius:15px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.065);margin-bottom:8px}.mail-title{font-size:14px;font-weight:950;margin-bottom:5px}.mail-date{font-size:11px;color:#8fdcff;margin-bottom:5px}.account-kpi{display:grid;grid-template-columns:1fr 1fr;gap:9px}.account-kpi .ab-soft-card{margin-bottom:0}.money-big{font-size:22px;font-weight:950;color:#fff}.money-plus{color:#00d470}.money-minus{color:#ff4667}.drawer-item[data-drawer-action="promo"],.drawer-item[data-drawer-action="logout"],.drawer-item[data-drawer-action="settings"]{display:none!important}
+.ab-modal-head{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.01))}.ab-modal-title{font-size:17px;font-weight:950;letter-spacing:.8px}.ab-modal-close{width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));color:#fff;font-size:22px;line-height:1;cursor:pointer}.ab-modal-body{padding:14px;overflow:auto;max-height:calc(100vh - 170px - env(safe-area-inset-bottom,0px))}.ab-soft-card{border-radius:17px;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#282a36,#171923);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 18px rgba(0,0,0,.30);margin-bottom:10px}.ab-mini-title{font-size:13px;font-weight:950;color:#fff;margin-bottom:8px}.ab-muted{font-size:12px;color:#aeb5c8;line-height:1.55}.ab-btn-row{display:flex;gap:9px;margin-top:12px}.ab-action-btn{height:42px;flex:1;border:0;border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:950;background:linear-gradient(180deg,#a83aff 0%,#7217ee 58%,#4610a9 100%);box-shadow:0 0 12px rgba(142,54,255,.42),inset 0 1px 0 rgba(255,255,255,.20);cursor:pointer}.ab-action-btn.ghost{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),linear-gradient(180deg,#343643,#1b1d27);border:1px solid rgba(255,255,255,.09);box-shadow:none}.ab-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:9px}.ab-tab{height:34px;padding:0 12px;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),linear-gradient(180deg,#30313d,#181a23);color:#cfd4e4;font-family:inherit;font-size:13px;font-weight:900;white-space:nowrap}.ab-tab.active{color:#fff;background:linear-gradient(180deg,#ad38ff,#801aff 56%,#5a13c7);box-shadow:0 0 10px rgba(142,54,255,.50)}.rule-content h4{font-size:16px;margin-bottom:8px}.rule-list{display:grid;gap:7px}.rule-line{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.045);font-size:13px}.rule-line b{color:#fff}.rule-line span:last-child{color:#8fdcff;font-weight:900}.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.table-card{position:relative;min-height:118px;border-radius:16px;padding:10px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),linear-gradient(180deg,#262936,#151722);box-shadow:0 8px 16px rgba(0,0,0,.28);overflow:hidden}.table-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#00d470;box-shadow:0 0 10px rgba(0,212,112,.55)}.table-card[data-state="closing"]:before{background:#ffb62e;box-shadow:0 0 10px rgba(255,182,46,.55)}.table-card[data-state="result"]:before{background:#55b7ff;box-shadow:0 0 10px rgba(85,183,255,.55)}.table-card[data-state="shuffle"]:before{background:#8f95a6;box-shadow:none}.room-enter-btn{position:absolute;right:9px;bottom:9px;height:27px;padding:0 10px;border:0;border-radius:10px;color:#fff;font-family:inherit;font-size:11px;font-weight:950;background:linear-gradient(180deg,#a83aff,#5a13c7);box-shadow:0 0 9px rgba(142,54,255,.40);cursor:pointer}.room-enter-btn.disabled{color:#8f95a6;background:#30323b;box-shadow:none;cursor:not-allowed}.room-status-grid .table-card{padding-bottom:42px}.table-name{font-size:14px;font-weight:950;margin-bottom:7px}.table-status-line{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:950;margin-bottom:5px}.table-status-text{color:#7dffbd}.table-card[data-state="closing"] .table-status-text{color:#ffd26e}.table-card[data-state="result"] .table-status-text{color:#8fdcff}.table-card[data-state="shuffle"] .table-status-text{color:#aeb5c8}.table-countdown{margin-left:auto;min-width:30px;height:22px;padding:0 7px;border-radius:9px;display:grid;place-items:center;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.09);font-size:12px;color:#fff}.table-meta{font-size:11px;color:#aeb5c8;line-height:1.55}.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00d470;box-shadow:0 0 8px rgba(0,212,112,.65);flex:0 0 7px}.table-card[data-state="closing"] .status-dot{background:#ffb62e;box-shadow:0 0 8px rgba(255,182,46,.55)}.table-card[data-state="result"] .status-dot{background:#55b7ff;box-shadow:0 0 8px rgba(85,183,255,.55)}.table-card[data-state="shuffle"] .status-dot{background:#8f95a6;box-shadow:none}.room-live-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.room-live-time{font-size:10px;color:#8fdcff;font-weight:900}.room-live-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:#aeb5c8}.room-live-legend span{display:inline-flex;align-items:center;gap:4px}.legend-dot{width:6px;height:6px;border-radius:50%;display:inline-block}.legend-bet{background:#00d470}.legend-close{background:#ffb62e}.legend-result{background:#55b7ff}.legend-shuffle{background:#8f95a6}.setting-row{display:flex;align-items:center;justify-content:space-between;height:48px;border-bottom:1px solid rgba(255,255,255,.065);font-size:14px;font-weight:900}.setting-row:last-child{border-bottom:0}.switch{width:52px;height:28px;border-radius:20px;background:#303340;border:1px solid rgba(255,255,255,.10);position:relative;cursor:pointer}.switch:before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;left:3px;top:2px;background:#fff;transition:.18s;box-shadow:0 3px 8px rgba(0,0,0,.35)}.switch.on{background:linear-gradient(90deg,#8120ff,#b947ff)}.switch.on:before{left:25px}.live-list{display:grid;gap:10px}.live-card{height:92px;border-radius:17px;overflow:hidden;position:relative;padding:11px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 20% 30%,rgba(143,220,255,.18),transparent 42%),linear-gradient(135deg,#252735,#12141c);box-shadow:0 8px 18px rgba(0,0,0,.30)}.live-card:after{content:"LIVE";position:absolute;right:12px;top:11px;font-size:10px;font-weight:950;color:#fff;background:linear-gradient(90deg,#ff2450,#ff7b4b);padding:4px 7px;border-radius:9px;box-shadow:0 0 10px rgba(255,36,80,.35)}.live-name{font-size:15px;font-weight:950;margin-bottom:8px}.live-meta{font-size:12px;color:#c9d0e2;line-height:1.55}.mail-item{padding:11px;border-radius:15px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.065);margin-bottom:8px}.mail-title{font-size:14px;font-weight:950;margin-bottom:5px}.mail-date{font-size:11px;color:#8fdcff;margin-bottom:5px}.account-kpi{display:grid;grid-template-columns:1fr 1fr;gap:9px}.account-kpi .ab-soft-card{margin-bottom:0}.money-big{font-size:22px;font-weight:950;color:#fff}.money-plus{color:#00d470}.money-minus{color:#ff4667}.drawer-item[data-drawer-action="promo"],.drawer-item[data-drawer-action="logout"],.drawer-item[data-drawer-action="settings"]{display:none!important}
 @media (min-width:768px){.ab-modal{width:min(100% - 40px,620px);top:calc(72px + env(safe-area-inset-top,0px))}.ab-modal-body{max-height:calc(100vh - 190px)}}
 </style>
 
@@ -2387,19 +2386,22 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </section>
 
-<section class="ab-modal" id="multiModal" aria-modal="true" role="dialog">
-  <div class="ab-modal-head"><div class="ab-modal-title">多檯投注</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+<section class="ab-modal" id="roomStatusModal" aria-modal="true" role="dialog">
+  <div class="ab-modal-head"><div class="ab-modal-title">房況</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
   <div class="ab-modal-body">
-    <div class="ab-soft-card"><div class="ab-mini-title">選擇想同時開啟的桌台</div><div class="ab-muted">可先做成展示版，之後再串接真實多檯投注畫面。</div></div>
-    <div class="multi-grid">
-      <label class="table-card"><input type="checkbox" checked><div class="table-name">百家樂 A01</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 128｜好路中</div></label>
-      <label class="table-card"><input type="checkbox"><div class="table-name">百家樂 A03</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 86｜連莊</div></label>
-      <label class="table-card"><input type="checkbox"><div class="table-name">龍虎 D02</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 54｜路紙穩定</div></label>
-      <label class="table-card"><input type="checkbox"><div class="table-name">骰寶 S01</div><div class="table-meta"><span class="status-dot"></span>倒數 18 秒<br>玩家 42｜熱門桌</div></label>
-      <label class="table-card"><input type="checkbox"><div class="table-name">輪盤 R01</div><div class="table-meta"><span class="status-dot"></span>開放下注<br>玩家 39｜歐式輪盤</div></label>
-      <label class="table-card"><input type="checkbox"><div class="table-name">百家樂 VIP</div><div class="table-meta"><span class="status-dot"></span>高限額桌<br>玩家 19｜VIP</div></label>
+    <div class="ab-soft-card">
+      <div class="room-live-head"><div class="ab-mini-title">即時房間狀態</div><div class="room-live-time" id="roomLiveTime">更新中</div></div>
+      <div class="ab-muted">狀態與倒數會自動更新；可查看玩家人數、桌況標籤，並直接進入可下注的房間。</div>
+      <div class="room-live-legend"><span><i class="legend-dot legend-bet"></i>下注中</span><span><i class="legend-dot legend-close"></i>即將封盤</span><span><i class="legend-dot legend-result"></i>開牌中</span><span><i class="legend-dot legend-shuffle"></i>洗牌中</span></div>
     </div>
-    <div class="ab-btn-row"><button class="ab-action-btn ghost" type="button" data-close-v42>取消</button><button class="ab-action-btn" type="button" id="multiConfirmBtn">確認開啟</button></div>
+    <div class="multi-grid room-status-grid">
+      <div class="table-card" data-room-card data-state="betting" data-countdown="12" data-round="15"><div class="table-name">百家樂 1</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">下注中</span><span class="table-countdown">12</span></div><div class="table-meta">玩家 <span data-players>128</span>｜好路<br>局號 B240713-015</div><button class="room-enter-btn" type="button" data-room-url="baccarat.html" data-room-name="百家樂 1">進房</button></div>
+      <div class="table-card" data-room-card data-state="betting" data-countdown="8" data-round="15"><div class="table-name">百家樂 3</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">下注中</span><span class="table-countdown">8</span></div><div class="table-meta">玩家 <span data-players>86</span>｜連莊<br>局號 B240713-021</div><button class="room-enter-btn" type="button" data-room-url="baccarat.html" data-room-name="百家樂 3">進房</button></div>
+      <div class="table-card" data-room-card data-state="betting" data-countdown="15" data-round="15"><div class="table-name">龍虎 1</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">下注中</span><span class="table-countdown">15</span></div><div class="table-meta">玩家 <span data-players>54</span>｜一般桌<br>局號 D240713-009</div><button class="room-enter-btn" type="button" data-room-url="dragon.html" data-room-name="龍虎 1">進房</button></div>
+      <div class="table-card" data-room-card data-state="betting" data-countdown="13" data-round="15"><div class="table-name">骰寶 1</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">下注中</span><span class="table-countdown">13</span></div><div class="table-meta">玩家 <span data-players>42</span>｜熱門桌<br>局號 S240713-012</div><button class="room-enter-btn" type="button" data-room-url="sicbo.html" data-room-name="骰寶 1">進房</button></div>
+      <div class="table-card" data-room-card data-state="betting" data-countdown="26" data-round="35"><div class="table-name">輪盤 1</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">下注中</span><span class="table-countdown">26</span></div><div class="table-meta">玩家 <span data-players>39</span>｜歐式輪盤<br>局號 R240713-018</div><button class="room-enter-btn" type="button" data-room-url="roulette.html" data-room-name="輪盤 1">進房</button></div>
+      <div class="table-card" data-room-card data-state="shuffle" data-countdown="6" data-round="15"><div class="table-name">百家樂 5</div><div class="table-status-line"><span class="status-dot"></span><span class="table-status-text">洗牌中</span><span class="table-countdown">—</span></div><div class="table-meta">玩家 <span data-players>19</span>｜等待開局<br>系統正在準備牌靴</div><button class="room-enter-btn disabled" type="button" disabled>暫停</button></div>
+    </div>
   </div>
 </section>
 
@@ -2455,8 +2457,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </section>
 
 <section class="ab-modal" id="mailModal" aria-modal="true" role="dialog">
-  <div class="ab-modal-head"><div class="ab-modal-title">站內信</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
-  <div class="ab-modal-body"><div class="mail-item"><div class="mail-title">系統公告</div><div class="mail-date">2026-06-15</div><div class="ab-muted">AB 真人館介面更新完成，遊戲記錄與單局回放功能已開放展示。</div></div><div class="mail-item"><div class="mail-title">維護通知</div><div class="mail-date">2026-06-14</div><div class="ab-muted">每日例行維護時間為 06:00 - 06:10，期間可能短暫無法進入房間。</div></div><div class="mail-item"><div class="mail-title">帳務提醒</div><div class="mail-date">2026-06-13</div><div class="ab-muted">請以遊戲記錄與帳戶明細作為交易查詢依據。</div></div></div>
+  <div class="ab-modal-head"><div class="ab-modal-title">公告</div><button class="ab-modal-close" type="button" data-close-v42>×</button></div>
+  <div class="ab-modal-body"><div class="mail-item"><div class="mail-title">系統公告</div><div class="mail-date">2026-06-15</div><div class="ab-muted">AB 真人館介面更新完成，遊戲記錄與單局回放功能已開放展示。</div></div><div class="mail-item"><div class="mail-title">維護通知</div><div class="mail-date">2026-06-14</div><div class="ab-muted">每日例行維護時間為 06:00 - 06:10，期間可能短暫無法進入房間。</div></div><div class="mail-item"><div class="mail-title">重要提醒</div><div class="mail-date">2026-06-13</div><div class="ab-muted">請以遊戲記錄與帳戶明細作為交易查詢依據。</div></div></div>
 </section>
 
 
@@ -2476,10 +2478,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const navMap=[
     {panel:'home',text:'首頁',icon:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M9 20v-6h6v6"/></svg>'},
     {panel:'rules',text:'遊戲規則',icon:'<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H7a3 3 0 0 0-3 3V5.5Z"/><path d="M4 21V5.5M8 7h8M8 11h6"/></svg>'},
-    {panel:'multi',text:'多檯投注',icon:'<svg viewBox="0 0 24 24"><path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z"/><path d="M7.5 8h.01M16.5 8h.01M7.5 16h.01M16.5 16h.01"/></svg>'},
+    {panel:'announcement',text:'公告',icon:'<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>'},
     {panel:'settings',text:'設定',icon:'<svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.05.05a2 2 0 0 1-2.83 2.83l-.05-.05A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.05a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.05.05a2 2 0 0 1-2.83-2.83l.05-.05A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.05-.05a2 2 0 0 1 2.83-2.83l.05.05A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.05A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.05-.05a2 2 0 0 1 2.83 2.83l-.05.05A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.05A1.7 1.7 0 0 0 19.4 15Z"/></svg>'}
   ];
-  navs.forEach((btn,i)=>{const m=navMap[i];if(!m)return;btn.dataset.panel=m.panel;const icon=btn.querySelector('.nav-icon');const text=btn.querySelector('.nav-text');if(icon)icon.innerHTML=m.icon;if(text)text.textContent=m.text;btn.classList.toggle('active',i===0);btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();navs.forEach(n=>n.classList.remove('active'));btn.classList.add('active');if(m.panel==='home')openModal('homeConfirmModal');if(m.panel==='rules')openModal('rulesModal');if(m.panel==='multi')openModal('multiModal');if(m.panel==='settings')openModal('settingsModal');},true);});
+  navs.forEach((btn,i)=>{const m=navMap[i];if(!m)return;btn.dataset.panel=m.panel;const icon=btn.querySelector('.nav-icon');const text=btn.querySelector('.nav-text');if(icon)icon.innerHTML=m.icon;if(text)text.textContent=m.text;btn.classList.toggle('active',i===0);btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();navs.forEach(n=>n.classList.remove('active'));btn.classList.add('active');if(m.panel==='home')openModal('homeConfirmModal');if(m.panel==='rules')openModal('rulesModal');if(m.panel==='announcement')openModal('mailModal');if(m.panel==='settings')openModal('settingsModal');},true);});
 
   const ruleData={
     baccarat:{title:'百家樂',lines:[['閒','1 : 1'],['莊','1 : 0.95'],['免傭莊','一般莊勝 1 : 1，莊 6 點勝 0.5 : 1'],['和','1 : 8'],['閒對 / 莊對','1 : 11']]},
@@ -2492,7 +2494,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRule('baccarat');
   document.querySelectorAll('#ruleTabs .ab-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('#ruleTabs .ab-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');renderRule(tab.dataset.rule);}));
   document.querySelectorAll('.switch').forEach(sw=>sw.addEventListener('click',()=>sw.classList.toggle('on')));
-  document.getElementById('multiConfirmBtn')?.addEventListener('click',()=>alert('已加入多檯投注展示清單'));
   document.getElementById('goMainLobbyBtn')?.addEventListener('click',()=>alert('正式版可在這裡導向外層總大廳'));
 
   // 會員中心：移除登出/優惠/設定，新增現場視訊，讓每個按鍵都有視窗
@@ -2502,12 +2503,10 @@ document.addEventListener('DOMContentLoaded', () => {
       '<button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>'+ 
       '<button class="drawer-item" type="button" data-drawer-action="account"><span>💰 帳戶明細</span><span>›</span></button>'+ 
       '<button class="drawer-item" type="button" data-drawer-action="live"><span>📺 現場視訊</span><span>›</span></button>'+ 
-      '<button class="drawer-item" type="button" data-drawer-action="mail"><span>✉️ 站內信</span><span>›</span></button>'+ 
       '<button class="drawer-item" type="button" data-drawer-action="settings"><span>⚙️ 設定中心</span><span>›</span></button>';
     drawerMenu.querySelector('[data-drawer-action="report"]')?.addEventListener('click',()=>{document.body.classList.remove('drawer-open');document.body.classList.add('report-modal-open');const page=document.getElementById('gameReportPage');if(page)page.dataset.view='list';const title=document.getElementById('reportTitle');const sub=document.getElementById('reportSub');if(title)title.textContent='遊戲記錄';if(sub)sub.textContent='遊戲報表查詢';});
     drawerMenu.querySelector('[data-drawer-action="account"]')?.addEventListener('click',()=>openModal('accountModal'));
     drawerMenu.querySelector('[data-drawer-action="live"]')?.addEventListener('click',()=>openModal('liveModal'));
-    drawerMenu.querySelector('[data-drawer-action="mail"]')?.addEventListener('click',()=>openModal('mailModal'));
     drawerMenu.querySelector('[data-drawer-action="settings"]')?.addEventListener('click',()=>openModal('settingsModal'));
   }
 })();
@@ -2639,23 +2638,60 @@ document.addEventListener('DOMContentLoaded', () => {
     },true);
   });
 
-  // 多檯投注：卡片、勾選、確認都有回饋
-  $$('#multiModal .table-card').forEach(card=>{
-    const cb=card.querySelector('input[type="checkbox"]');
-    function sync(){card.classList.toggle('selected',!!cb?.checked)}
-    cb?.addEventListener('change',sync);
-    card.addEventListener('click',()=>setTimeout(sync,0));
-    sync();
+  // 房況：即時狀態、倒數、玩家人數與單一房間進入
+  const roomCards=$$('#roomStatusModal [data-room-card]');
+  const roomLiveTime=$('#roomLiveTime');
+  function setRoomState(card,state,seconds){
+    const text=card.querySelector('.table-status-text');
+    const countdown=card.querySelector('.table-countdown');
+    const btn=card.querySelector('.room-enter-btn');
+    card.dataset.state=state;
+    if(state==='betting'){
+      text.textContent='下注中'; countdown.textContent=seconds; btn.disabled=false; btn.classList.remove('disabled'); btn.textContent='進房';
+    }else if(state==='closing'){
+      text.textContent='即將封盤'; countdown.textContent=seconds; btn.disabled=false; btn.classList.remove('disabled'); btn.textContent='進房';
+    }else if(state==='result'){
+      text.textContent='開牌中'; countdown.textContent='—'; btn.disabled=true; btn.classList.add('disabled'); btn.textContent='觀看中';
+    }else{
+      text.textContent='洗牌中'; countdown.textContent='—'; btn.disabled=true; btn.classList.add('disabled'); btn.textContent='暫停';
+    }
+  }
+  function tickRooms(){
+    roomCards.forEach((card,index)=>{
+      let state=card.dataset.state;
+      let seconds=Number(card.dataset.countdown||0);
+      const round=Number(card.dataset.round||15);
+      if(state==='betting'||state==='closing'){
+        seconds=Math.max(0,seconds-1);
+        card.dataset.countdown=String(seconds);
+        if(seconds<=5&&seconds>0) state='closing';
+        if(seconds===0){state='result';card.dataset.countdown='4';}
+      }else if(state==='result'){
+        seconds=Math.max(0,seconds-1); card.dataset.countdown=String(seconds);
+        if(seconds===0){state=(index===5?'shuffle':'betting');card.dataset.countdown=String(index===5?5:round);}
+      }else if(state==='shuffle'){
+        seconds=Math.max(0,seconds-1); card.dataset.countdown=String(seconds);
+        if(seconds===0){state='betting';card.dataset.countdown=String(round);}
+      }
+      setRoomState(card,state,Number(card.dataset.countdown||0));
+      const player=card.querySelector('[data-players]');
+      if(player&&Math.random()<.18){player.textContent=String(Math.max(1,Number(player.textContent)+(Math.random()<.5?-1:1)));}
+    });
+    if(roomLiveTime) roomLiveTime.textContent='更新 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  roomCards.forEach(card=>setRoomState(card,card.dataset.state,Number(card.dataset.countdown||0)));
+  tickRooms();
+  setInterval(tickRooms,1000);
+  $$('#roomStatusModal .room-enter-btn[data-room-url]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      if(btn.disabled) return;
+      const url=btn.dataset.roomUrl;
+      const name=btn.dataset.roomName||'遊戲房間';
+      if(typeof window.abShowRoomLoading==='function') window.abShowRoomLoading(name,name,url);
+      else window.location.href=url;
+    },true);
   });
-  $('#multiConfirmBtn')?.addEventListener('click',e=>{
-    e.preventDefault(); e.stopImmediatePropagation();
-    const selected=$$('#multiModal input[type="checkbox"]:checked').map(cb=>cb.closest('.table-card')?.querySelector('.table-name')?.textContent).filter(Boolean);
-    let note=$('#multiResultNote');
-    if(!note){note=document.createElement('div');note.id='multiResultNote';note.className='ab-modal-note';$('#multiModal .ab-modal-body')?.appendChild(note);}
-    note.textContent=selected.length?('已加入 '+selected.length+' 檯：'+selected.join('、')):'請至少選擇一個桌台';
-    note.classList.add('show');
-    toast(selected.length?'多檯投注已更新':'尚未選擇桌台');
-  },true);
 
   // 系統設定：開關、語言都有回饋
   $$('#settingsModal .switch').forEach(sw=>{
@@ -2691,7 +2727,7 @@ document.addEventListener('DOMContentLoaded', () => {
       '<button class="drawer-item" type="button" data-drawer-action="report"><span>📊 遊戲記錄</span><span>›</span></button>'+ 
       '<button class="drawer-item" type="button" data-drawer-action="account"><span>💰 帳戶明細</span><span>›</span></button>'+ 
       '<button class="drawer-item" type="button" data-drawer-action="live"><span>📺 現場視訊</span><span>›</span></button>'+ 
-      '<button class="drawer-item" type="button" data-drawer-action="mail"><span>✉️ 站內信</span><span>›</span></button>';
+      '';
     drawerMenu.addEventListener('click',e=>{
       const item=e.target.closest('.drawer-item'); if(!item) return;
       e.preventDefault(); e.stopImmediatePropagation();
@@ -2707,7 +2743,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if(action==='account'){openV43Modal('accountModal'); toast('已開啟帳戶明細');}
       if(action==='live'){openV43Modal('liveModal'); toast('已開啟現場視訊');}
-      if(action==='mail'){openV43Modal('mailModal'); toast('已開啟站內信');}
     },true);
   }
 
@@ -2724,18 +2759,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 帳戶明細列可點擊
   $$('#accountModal .rule-line').forEach(line=>line.addEventListener('click',()=>toast('帳戶明細：'+line.textContent.trim().replace(/\s+/g,' '))));
 
-  // 站內信可展開/收合
+  // 公告可展開/收合
   $$('#mailModal .mail-item').forEach(item=>{
     if(!$('.mail-detail',item)){
       const detail=document.createElement('div'); detail.className='mail-detail';
-      detail.textContent='這裡可以放完整內容、閱讀狀態與客服連結。正式版可串接後台站內信資料。';
+      detail.textContent='這裡可以放完整內容、閱讀狀態與客服連結。正式版可串接後台公告資料。';
       item.appendChild(detail);
     }
     item.style.cursor='pointer';
     item.addEventListener('click',()=>{
       item.classList.toggle('open');
       item.classList.add('selected');
-      toast((item.classList.contains('open')?'已展開 ':'已收合 ')+(item.querySelector('.mail-title')?.textContent||'站內信'));
+      toast((item.classList.contains('open')?'已展開 ':'已收合 ')+(item.querySelector('.mail-title')?.textContent||'公告'));
     });
   });
 
